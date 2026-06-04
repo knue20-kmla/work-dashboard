@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KMLA 통합 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid white;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .app-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .app-status {
+            margin-top: 15px;
+            padding: 6px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .app-status.coming-soon {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-info {
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                margin-bottom: 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        <span class="user-name">👤 {{ username }}</span>
+        <a href="{{ url_for('change_password') }}" class="btn-link">🔑 비밀번호 변경</a>
+        <a href="{{ url_for('logout') }}" class="btn-link">🚪 로그아웃</a>
+    </div>
+
+    <div class="header">
+        <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="logo">
+        <h1>KMLA 통합 시스템</h1>
+        <p class="subtitle">업무 및 수업 자동화 시스템</p>
+    </div>
+
+    <div class="container">
+        <div class="category">
+            <h2 class="category-title">📊 업무 자동화</h2>
+            <div class="apps-grid">
+                <a href="https://pdf-email-sender-rkyi.onrender.com" target="_blank" class="app-card">
+                    <div class="app-icon">📧</div>
+                    <div class="app-title">자동 발송 시스템</div>
+                    <div class="app-description">
+                        성적표 및 문서를 학생 이메일로 자동 발송합니다.
+                        구글 드라이브 폴더 선택만으로 간편하게 일괄 발송할 수 있습니다.
+                    </div>
+                    <span class="app-status">운영 중</span>
+                </a>
+
+                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="app-icon">📋</div>
+                    <div class="app-title">출석 관리 시스템</div>
+                    <div class="app-description">
+                        학생 출석을 체크하고 통계를 관리합니다.
+                    </div>
+                    <span class="app-status coming-soon">준비 중</span>
+                </div>
+
+                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="app-icon">📊</div>
+                    <div class="app-title">성적 분석 시스템</div>
+                    <div class="app-description">
+                        성적 데이터를 분석하고 시각화합니다.
+                    </div>
+                    <span class="app-status coming-soon">준비 중</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">📚 수업(한국사) 자동화</h2>
+            <div class="apps-grid">
+                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="app-icon">📖</div>
+                    <div class="app-title">과제 관리 시스템</div>
+                    <div class="app-description">
+                        한국사 과제를 배포하고 제출 현황을 관리합니다.
+                    </div>
+                    <span class="app-status coming-soon">준비 중</span>
+                </div>
+
+                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="app-icon">✅</div>
+                    <div class="app-title">퀴즈 시스템</div>
+                    <div class="app-description">
+                        온라인 퀴즈를 생성하고 자동 채점합니다.
+                    </div>
+                    <span class="app-status coming-soon">준비 중</span>
+                </div>
+
+                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
+                    <div class="app-icon">📝</div>
+                    <div class="app-title">학습 자료 라이브러리</div>
+                    <div class="app-description">
+                        한국사 수업 자료를 체계적으로 관리하고 공유합니다.
+                    </div>
+                    <span class="app-status coming-soon">준비 중</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
