@@ -71,6 +71,8 @@
             font-weight: 600;
             font-size: 14px;
             transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .logout-btn:hover {
@@ -108,6 +110,8 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            display: block;
         }
 
         .card:hover {
@@ -125,6 +129,11 @@
 
         .card.subject {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .card-icon {
@@ -170,7 +179,7 @@
             </div>
             <div class="user-info">
                 <div class="username">{{ username }}님</div>
-                <a href="/logout"><button class="logout-btn">로그아웃</button></a>
+                <a href="/logout" class="logout-btn">로그아웃</a>
             </div>
         </div>
 
@@ -178,23 +187,23 @@
         <div class="section">
             <div class="section-title">🏛️ 학교 업무 시스템</div>
             <div class="card-grid">
-                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-auto-emailer/', '_blank')">
+                <a href="https://haji6337.github.io/kmla-auto-emailer/" target="_blank" class="card school">
                     <div class="card-icon">📧</div>
                     <div class="card-title">자동 발송 시스템</div>
                     <div class="card-desc">이메일 자동 발송 및 관리</div>
-                </div>
+                </a>
 
-                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-id-card/', '_blank')">
+                <a href="https://haji6337.github.io/kmla-id-card/" target="_blank" class="card school">
                     <div class="card-icon">🎫</div>
                     <div class="card-title">학생증 재발급</div>
                     <div class="card-desc">학생증 재발급 신청 관리</div>
-                </div>
+                </a>
 
-                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-budget/', '_blank')">
+                <a href="https://haji6337.github.io/kmla-budget/" target="_blank" class="card school">
                     <div class="card-icon">💰</div>
                     <div class="card-title">프로젝트 예산 관리</div>
                     <div class="card-desc">학생 프로젝트 예산 신청 및 관리</div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -202,21 +211,21 @@
         <div class="section">
             <div class="section-title">👥 학급 업무 시스템</div>
             <div class="card-grid">
-                <div class="card class" onclick="window.open('https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec', '_blank')">
+                <a href="https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec" target="_blank" class="card class">
                     <div class="card-icon">✨</div>
                     <div class="card-title">창의적 체험활동 관리</div>
                     <div class="card-desc">창체 활동 기록 및 조회</div>
                     <div class="badge new">NEW</div>
-                </div>
+                </a>
 
-                <div class="card class" onclick="alert('생기부 분석 시스템 준비 중입니다')">
+                <div class="card class disabled" onclick="alert('생기부 분석 시스템 준비 중입니다')">
                     <div class="card-icon">📝</div>
                     <div class="card-title">생기부 분석 시스템</div>
                     <div class="card-desc">생활기록부 작성 및 분석</div>
                     <div class="badge">준비중</div>
                 </div>
 
-                <div class="card class" onclick="alert('모의고사 분석 시스템 준비 중입니다')">
+                <div class="card class disabled" onclick="alert('모의고사 분석 시스템 준비 중입니다')">
                     <div class="card-icon">📊</div>
                     <div class="card-title">모의고사 분석 시스템</div>
                     <div class="card-desc">모의고사 성적 분석 및 통계</div>
@@ -227,42 +236,48 @@
 
         <!-- 교과 업무 시스템 -->
         <div class="section">
-            <div class="section-title">📚 교과 업무 시스템</div>
+            <div class="section-title">📚 교과 업무 시스템 (한국사)</div>
             <div class="card-grid">
-                <div class="card subject" onclick="location.href='/lecture_plan'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">📋</div>
                     <div class="card-title">강의 계획 생성</div>
                     <div class="card-desc">AI 기반 수업 계획서 자동 생성</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="card subject" onclick="location.href='/worksheet'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">📄</div>
                     <div class="card-title">학습지 생성</div>
                     <div class="card-desc">주제별 맞춤 학습지 제작</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="card subject" onclick="location.href='/quiz'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">❓</div>
                     <div class="card-title">퀴즈 생성</div>
                     <div class="card-desc">자동 퀴즈 문제 생성</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="card subject" onclick="location.href='/summary'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">📖</div>
                     <div class="card-title">교재 요약</div>
                     <div class="card-desc">교재 내용 자동 요약</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="card subject" onclick="location.href='/debate'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">💬</div>
                     <div class="card-title">토론 주제 생성</div>
                     <div class="card-desc">수업용 토론 주제 제안</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="card subject" onclick="location.href='/essay'">
+                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
                     <div class="card-icon">✍️</div>
                     <div class="card-title">논술 평가</div>
                     <div class="card-desc">학생 논술 자동 평가 및 피드백</div>
+                    <div class="badge">준비중</div>
                 </div>
             </div>
         </div>
