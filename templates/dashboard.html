@@ -141,60 +141,74 @@
         }
 
         .user-section {
+            display: none;
+        }
+
+        .header-user {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 24px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.2);
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 2;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
+            color: #667eea;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             margin-right: 12px;
-            font-size: 16px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .user-name {
             font-size: 14px;
             font-weight: 600;
+            color: white;
         }
 
         .user-role {
             font-size: 11px;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.8);
         }
 
         .logout-btn {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
             color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .logout-btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
         }
 
         .main-content {
@@ -252,23 +266,50 @@
         .section-header {
             display: flex;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e5e7eb;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: #1a1d29;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
         }
 
         .section-count {
             margin-left: 12px;
-            background: #e5e7eb;
-            color: #6b7280;
-            padding: 4px 12px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 16px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.3);
         }
 
         .cards-grid {
@@ -398,6 +439,9 @@
             .main-content {
                 margin-left: 240px;
             }
+            .header-user {
+                right: 24px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -410,6 +454,17 @@
             }
             .header-banner {
                 padding: 32px 20px;
+            }
+            .header-user {
+                position: static;
+                transform: none;
+                margin-top: 20px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .logout-btn {
+                width: 100%;
+                text-align: center;
             }
             .content-area {
                 padding: 24px 20px;
@@ -483,17 +538,6 @@
                 <span class="nav-badge soon">준비중</span>
             </div>
         </div>
-
-        <div class="user-section">
-            <div class="user-info">
-                <div class="user-avatar">{{ username[0] }}</div>
-                <div>
-                    <div class="user-name">{{ username }}</div>
-                    <div class="user-role">교사</div>
-                </div>
-            </div>
-            <a href="/logout"><button class="logout-btn">로그아웃</button></a>
-        </div>
     </div>
 
     <div class="main-content">
@@ -501,6 +545,16 @@
             <div class="header-content">
                 <h1 class="header-title">통합 업무 대시보드</h1>
                 <p class="header-subtitle">민족사관고등학교 교사 업무 자동화 플랫폼</p>
+            </div>
+            <div class="header-user">
+                <div class="user-info">
+                    <div class="user-avatar">{{ username[0] }}</div>
+                    <div>
+                        <div class="user-name">{{ username }}</div>
+                        <div class="user-role">교사</div>
+                    </div>
+                </div>
+                <a href="/logout" class="logout-btn">로그아웃</a>
             </div>
         </div>
 
