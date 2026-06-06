@@ -699,5 +699,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // 로고 섹션과 헤더 배너의 높이를 동적으로 맞춤
+        function matchHeaderHeight() {
+            const logoSection = document.querySelector('.logo-section');
+            const headerBanner = document.querySelector('.header-banner');
+
+            if (logoSection && headerBanner) {
+                // 헤더 배너의 실제 높이를 가져옴
+                const headerHeight = headerBanner.offsetHeight;
+                // 로고 섹션의 높이를 헤더 배너와 동일하게 설정
+                logoSection.style.height = headerHeight + 'px';
+                logoSection.style.display = 'flex';
+                logoSection.style.flexDirection = 'column';
+                logoSection.style.justifyContent = 'center';
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener('load', matchHeaderHeight);
+        // 창 크기 변경 시 재조정
+        window.addEventListener('resize', matchHeaderHeight);
+    </script>
 </body>
 </html>
