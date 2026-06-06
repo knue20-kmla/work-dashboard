@@ -36,9 +36,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
