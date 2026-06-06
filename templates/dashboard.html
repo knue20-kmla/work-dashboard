@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KMLA 통합 시스템</title>
+    <title>KMLA 통합 업무 시스템</title>
     <style>
         * {
             margin: 0;
@@ -13,260 +13,256 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 50px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            display: block;
-            border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        .header-content {
+            flex: 1;
         }
 
         h1 {
-            color: white;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.9);
+            color: #666;
             font-size: 16px;
         }
 
         .user-info {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
+            text-align: right;
         }
 
-        .user-name {
-            color: white;
+        .username {
+            font-size: 18px;
+            color: #333;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+            margin-bottom: 10px;
         }
 
-        .btn-link {
+        .logout-btn {
+            background: #f44336;
             color: white;
-            text-decoration: none;
-            padding: 8px 16px;
+            padding: 10px 20px;
+            border: none;
             border-radius: 8px;
-            transition: all 0.3s;
+            cursor: pointer;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
+            font-size: 14px;
+            transition: background 0.3s;
         }
 
-        .btn-link:hover {
-            background: rgba(255, 255, 255, 0.25);
+        .logout-btn:hover {
+            background: #d32f2f;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .category {
-            margin-bottom: 50px;
-        }
-
-        .category-title {
-            color: white;
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-left: 10px;
-            border-left: 4px solid white;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .app-card {
+        .section {
             background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
             cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .app-card:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
         }
 
-        .app-icon {
+        .card.school {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card.class {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card.subject {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-icon {
             font-size: 48px;
             margin-bottom: 15px;
         }
 
-        .app-title {
+        .card-title {
+            color: white;
             font-size: 20px;
             font-weight: 700;
-            color: #1e3c72;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .app-description {
+        .card-desc {
+            color: rgba(255,255,255,0.9);
             font-size: 14px;
-            color: #666;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
-        .app-status {
-            margin-top: 15px;
-            padding: 6px 12px;
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-radius: 15px;
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
-            display: inline-block;
+            margin-top: 10px;
         }
 
-        .app-status.coming-soon {
-            background: #fff3e0;
-            color: #f57c00;
-        }
-
-        @media (max-width: 768px) {
-            .apps-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .user-info {
-                position: relative;
-                top: auto;
-                right: auto;
-                justify-content: center;
-                margin-bottom: 30px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
+        .badge.new {
+            background: #ff6b6b;
         }
     </style>
 </head>
 <body>
-    <div class="user-info">
-        <span class="user-name">👤 {{ username }}</span>
-        <a href="{{ url_for('change_password') }}" class="btn-link">🔑 비밀번호 변경</a>
-        <a href="{{ url_for('logout') }}" class="btn-link">🚪 로그아웃</a>
-    </div>
-
-    <div class="header">
-        <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="logo">
-        <h1>KMLA 통합 시스템</h1>
-        <p class="subtitle">업무 및 수업 자동화 시스템</p>
-    </div>
-
     <div class="container">
-        <div class="category">
-            <h2 class="category-title">📊 업무 자동화</h2>
-            <div class="apps-grid">
-                <a href="https://pdf-email-sender-rkyi.onrender.com" target="_blank" class="app-card">
-                    <div class="app-icon">📧</div>
-                    <div class="app-title">자동 발송 시스템</div>
-                    <div class="app-description">
-                        성적표 및 문서를 학생 이메일로 자동 발송합니다.
-                        구글 드라이브 폴더 선택만으로 간편하게 일괄 발송할 수 있습니다.
-                    </div>
-                    <span class="app-status">운영 중</span>
-                </a>
+        <div class="header">
+            <div class="header-content">
+                <h1>🏫 KMLA 통합 업무 시스템</h1>
+                <div class="subtitle">민족사관고등학교 교사 업무 자동화 플랫폼</div>
+            </div>
+            <div class="user-info">
+                <div class="username">{{ username }}님</div>
+                <a href="/logout"><button class="logout-btn">로그아웃</button></a>
+            </div>
+        </div>
 
-                <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="app-card">
-                    <div class="app-icon">🪪</div>
-                    <div class="app-title">학생증 재발급 시스템</div>
-                    <div class="app-description">
-                        학생증 분실 또는 손상 시 온라인으로 재발급을 신청할 수 있습니다.
-                    </div>
-                    <span class="app-status">운영 중</span>
-                </a>
+        <!-- 학교 업무 시스템 -->
+        <div class="section">
+            <div class="section-title">🏛️ 학교 업무 시스템</div>
+            <div class="card-grid">
+                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-auto-emailer/', '_blank')">
+                    <div class="card-icon">📧</div>
+                    <div class="card-title">자동 발송 시스템</div>
+                    <div class="card-desc">이메일 자동 발송 및 관리</div>
+                </div>
 
-                <a href="https://knue20-kmla.github.io/budget/" target="_blank" class="app-card">
-                    <div class="app-icon">💰</div>
-                    <div class="app-title">학생 프로젝트 예산 관리 시스템</div>
-                    <div class="app-description">
-                        학생 프로젝트의 예산을 신청하고 집행 내역을 관리합니다.
-                        Google Apps Script 기반 웹 애플리케이션입니다.
-                    </div>
-                    <span class="app-status">운영 중</span>
-                </a>
+                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-id-card/', '_blank')">
+                    <div class="card-icon">🎫</div>
+                    <div class="card-title">학생증 재발급</div>
+                    <div class="card-desc">학생증 재발급 신청 관리</div>
+                </div>
 
-                <a href="https://knue20-kmla.github.io/reative-activity/" target="_blank" class="app-card">
-                    <div class="app-icon">📝</div>
-                    <div class="app-title">창의적 체험활동 기록 관리 시스템</div>
-                    <div class="app-description">
-                        학생들의 창의적 체험활동 기록을 조회하고 관리합니다.
-                        Google Apps Script 기반 웹 애플리케이션입니다.
-                    </div>
-                    <span class="app-status">운영 중</span>
-                </a>
-
-                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
-                    <div class="app-icon">📊</div>
-                    <div class="app-title">성적 분석 시스템</div>
-                    <div class="app-description">
-                        성적 데이터를 분석하고 시각화합니다.
-                    </div>
-                    <span class="app-status coming-soon">준비 중</span>
+                <div class="card school" onclick="window.open('https://haji6337.github.io/kmla-budget/', '_blank')">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">프로젝트 예산 관리</div>
+                    <div class="card-desc">학생 프로젝트 예산 신청 및 관리</div>
                 </div>
             </div>
         </div>
 
-        <div class="category">
-            <h2 class="category-title">📚 수업(한국사) 자동화</h2>
-            <div class="apps-grid">
-                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
-                    <div class="app-icon">📖</div>
-                    <div class="app-title">과제 관리 시스템</div>
-                    <div class="app-description">
-                        한국사 과제를 배포하고 제출 현황을 관리합니다.
-                    </div>
-                    <span class="app-status coming-soon">준비 중</span>
+        <!-- 학급 업무 시스템 -->
+        <div class="section">
+            <div class="section-title">👥 학급 업무 시스템</div>
+            <div class="card-grid">
+                <div class="card class" onclick="window.open('https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec', '_blank')">
+                    <div class="card-icon">✨</div>
+                    <div class="card-title">창의적 체험활동 관리</div>
+                    <div class="card-desc">창체 활동 기록 및 조회</div>
+                    <div class="badge new">NEW</div>
                 </div>
 
-                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
-                    <div class="app-icon">✅</div>
-                    <div class="app-title">퀴즈 시스템</div>
-                    <div class="app-description">
-                        온라인 퀴즈를 생성하고 자동 채점합니다.
-                    </div>
-                    <span class="app-status coming-soon">준비 중</span>
+                <div class="card class" onclick="alert('생기부 분석 시스템 준비 중입니다')">
+                    <div class="card-icon">📝</div>
+                    <div class="card-title">생기부 분석 시스템</div>
+                    <div class="card-desc">생활기록부 작성 및 분석</div>
+                    <div class="badge">준비중</div>
                 </div>
 
-                <div class="app-card" style="opacity: 0.7; cursor: not-allowed;">
-                    <div class="app-icon">📝</div>
-                    <div class="app-title">학습 자료 라이브러리</div>
-                    <div class="app-description">
-                        한국사 수업 자료를 체계적으로 관리하고 공유합니다.
-                    </div>
-                    <span class="app-status coming-soon">준비 중</span>
+                <div class="card class" onclick="alert('모의고사 분석 시스템 준비 중입니다')">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">모의고사 분석 시스템</div>
+                    <div class="card-desc">모의고사 성적 분석 및 통계</div>
+                    <div class="badge">준비중</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 교과 업무 시스템 -->
+        <div class="section">
+            <div class="section-title">📚 교과 업무 시스템</div>
+            <div class="card-grid">
+                <div class="card subject" onclick="location.href='/lecture_plan'">
+                    <div class="card-icon">📋</div>
+                    <div class="card-title">강의 계획 생성</div>
+                    <div class="card-desc">AI 기반 수업 계획서 자동 생성</div>
+                </div>
+
+                <div class="card subject" onclick="location.href='/worksheet'">
+                    <div class="card-icon">📄</div>
+                    <div class="card-title">학습지 생성</div>
+                    <div class="card-desc">주제별 맞춤 학습지 제작</div>
+                </div>
+
+                <div class="card subject" onclick="location.href='/quiz'">
+                    <div class="card-icon">❓</div>
+                    <div class="card-title">퀴즈 생성</div>
+                    <div class="card-desc">자동 퀴즈 문제 생성</div>
+                </div>
+
+                <div class="card subject" onclick="location.href='/summary'">
+                    <div class="card-icon">📖</div>
+                    <div class="card-title">교재 요약</div>
+                    <div class="card-desc">교재 내용 자동 요약</div>
+                </div>
+
+                <div class="card subject" onclick="location.href='/debate'">
+                    <div class="card-icon">💬</div>
+                    <div class="card-title">토론 주제 생성</div>
+                    <div class="card-desc">수업용 토론 주제 제안</div>
+                </div>
+
+                <div class="card subject" onclick="location.href='/essay'">
+                    <div class="card-icon">✍️</div>
+                    <div class="card-title">논술 평가</div>
+                    <div class="card-desc">학생 논술 자동 평가 및 피드백</div>
                 </div>
             </div>
         </div>
