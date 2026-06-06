@@ -12,272 +12,531 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1a1d29;
+            color: white;
+            padding: 24px;
+            overflow-y: auto;
         }
 
-        .header {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+        .logo-section {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .logo-subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
         }
 
-        .header-content {
+        .nav-item:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .nav-item-text {
             flex: 1;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        h1 {
-            color: #667eea;
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 5px;
+        .nav-badge {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
         }
 
-        .subtitle {
-            color: #666;
-            font-size: 16px;
+        .nav-badge.new {
+            background: #ff6b6b;
+        }
+
+        .user-section {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .user-info {
-            text-align: right;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
         }
 
-        .username {
-            font-size: 18px;
-            color: #333;
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .user-name {
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 10px;
         }
 
         .logout-btn {
-            background: #f44336;
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
             color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background 0.3s;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #d32f2f;
+            background: rgba(255,255,255,0.12);
         }
 
-        .section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+        .main-content {
+            margin-left: 280px;
+            padding: 32px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1d29;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .section-title {
-            font-size: 24px;
-            color: #667eea;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
+            color: #1a1d29;
         }
 
-        .card-grid {
+        .section-count {
+            margin-left: 12px;
+            background: #e5e7eb;
+            color: #6b7280;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
 
         .card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
             text-decoration: none;
             display: block;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
-        }
-
-        .card.school {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .card.class {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .card.subject {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            border-color: #667eea;
         }
 
         .card.disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-color: #e5e7eb;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
         .card-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-icon.school {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-icon.class {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card-icon.subject {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-info {
+            flex: 1;
         }
 
         .card-title {
-            color: white;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 8px;
+            color: #1a1d29;
+            margin-bottom: 4px;
         }
 
         .card-desc {
-            color: rgba(255,255,255,0.9);
-            font-size: 14px;
+            font-size: 13px;
+            color: #6b7280;
             line-height: 1.5;
         }
 
-        .badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.3);
+        .card-badge {
+            background: #667eea;
             color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 600;
-            margin-top: 10px;
+            display: inline-block;
+            margin-top: 12px;
         }
 
-        .badge.new {
+        .card-badge.new {
             background: #ff6b6b;
+        }
+
+        .card-badge.soon {
+            background: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <h1>🏫 KMLA 통합 업무 시스템</h1>
-                <div class="subtitle">민족사관고등학교 교사 업무 자동화 플랫폼</div>
+    <div class="sidebar">
+        <div class="logo-section">
+            <div class="logo">🏫 KMLA</div>
+            <div class="logo-subtitle">통합 업무 시스템</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">학교 업무</div>
+            <a href="https://pdf-email-sender-rkyi.onrender.com" target="_blank" class="nav-item">
+                <span class="nav-item-icon">📧</span>
+                <span class="nav-item-text">자동 발송</span>
+            </a>
+            <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="nav-item">
+                <span class="nav-item-icon">🎫</span>
+                <span class="nav-item-text">학생증 재발급</span>
+            </a>
+            <a href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" class="nav-item">
+                <span class="nav-item-icon">💰</span>
+                <span class="nav-item-text">예산 관리</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">학급 업무</div>
+            <a href="https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec" target="_blank" class="nav-item">
+                <span class="nav-item-icon">✨</span>
+                <span class="nav-item-text">창체 관리</span>
+                <span class="nav-badge new">NEW</span>
+            </a>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">📝</span>
+                <span class="nav-item-text">생기부 분석</span>
+                <span class="nav-badge soon">준비중</span>
             </div>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">📊</span>
+                <span class="nav-item-text">모의고사 분석</span>
+                <span class="nav-badge soon">준비중</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">교과 업무</div>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">📋</span>
+                <span class="nav-item-text">강의 계획</span>
+                <span class="nav-badge soon">준비중</span>
+            </div>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">📄</span>
+                <span class="nav-item-text">학습지 생성</span>
+                <span class="nav-badge soon">준비중</span>
+            </div>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">📖</span>
+                <span class="nav-item-text">교재 요약</span>
+                <span class="nav-badge soon">준비중</span>
+            </div>
+            <div class="nav-item disabled">
+                <span class="nav-item-icon">💬</span>
+                <span class="nav-item-text">학생 질문 DB</span>
+                <span class="nav-badge soon">준비중</span>
+            </div>
+        </div>
+
+        <div class="user-section">
             <div class="user-info">
-                <div class="username">{{ username }}님</div>
-                <a href="/logout" class="logout-btn">로그아웃</a>
+                <div class="user-avatar">{{ username[0] }}</div>
+                <div class="user-name">{{ username }}</div>
+            </div>
+            <a href="/logout"><button class="logout-btn">로그아웃</button></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="header-title">통합 대시보드</h1>
+            <p class="header-subtitle">민족사관고등학교 교사 업무 자동화 플랫폼</p>
+        </div>
+
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">학교 업무 시스템</h2>
+                <span class="section-count">3</span>
+            </div>
+            <div class="cards-grid">
+                <a href="https://pdf-email-sender-rkyi.onrender.com" target="_blank" class="card">
+                    <div class="card-header">
+                        <div class="card-icon school">📧</div>
+                        <div class="card-info">
+                            <div class="card-title">자동 발송 시스템</div>
+                            <div class="card-desc">성적표 및 문서를 학생 이메일로 자동 발송합니다</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="card">
+                    <div class="card-header">
+                        <div class="card-icon school">🎫</div>
+                        <div class="card-info">
+                            <div class="card-title">학생증 재발급</div>
+                            <div class="card-desc">학생증 재발급 신청 관리 시스템</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" class="card">
+                    <div class="card-header">
+                        <div class="card-icon school">💰</div>
+                        <div class="card-info">
+                            <div class="card-title">프로젝트 예산 관리</div>
+                            <div class="card-desc">학생 프로젝트 예산 신청 및 관리</div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <!-- 학교 업무 시스템 -->
-        <div class="section">
-            <div class="section-title">🏛️ 학교 업무 시스템</div>
-            <div class="card-grid">
-                <a href="https://pdf-email-sender-rkyi.onrender.com" target="_blank" class="card school">
-                    <div class="card-icon">📧</div>
-                    <div class="card-title">자동 발송 시스템</div>
-                    <div class="card-desc">이메일 자동 발송 및 관리</div>
-                </a>
-
-                <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="card school">
-                    <div class="card-icon">🎫</div>
-                    <div class="card-title">학생증 재발급</div>
-                    <div class="card-desc">학생증 재발급 신청 관리</div>
-                </a>
-
-                <a href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" class="card school">
-                    <div class="card-icon">💰</div>
-                    <div class="card-title">프로젝트 예산 관리</div>
-                    <div class="card-desc">학생 프로젝트 예산 신청 및 관리</div>
-                </a>
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">학급 업무 시스템</h2>
+                <span class="section-count">3</span>
             </div>
-        </div>
-
-        <!-- 학급 업무 시스템 -->
-        <div class="section">
-            <div class="section-title">👥 학급 업무 시스템</div>
-            <div class="card-grid">
-                <a href="https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec" target="_blank" class="card class">
-                    <div class="card-icon">✨</div>
-                    <div class="card-title">창의적 체험활동 관리</div>
-                    <div class="card-desc">창체 활동 기록 및 조회</div>
-                    <div class="badge new">NEW</div>
+            <div class="cards-grid">
+                <a href="https://script.google.com/macros/s/AKfycbyHi6HRjPqPH0_wwDaNwpMoIlgkcRfAGG6dA4ExQvIYo6hdMd7Vhkceloja39C6MqCS9g/exec" target="_blank" class="card">
+                    <div class="card-header">
+                        <div class="card-icon class">✨</div>
+                        <div class="card-info">
+                            <div class="card-title">창의적 체험활동 관리</div>
+                            <div class="card-desc">창체 활동 기록, 조회 및 통계 관리</div>
+                            <span class="card-badge new">NEW</span>
+                        </div>
+                    </div>
                 </a>
 
-                <div class="card class disabled" onclick="alert('생기부 분석 시스템 준비 중입니다')">
-                    <div class="card-icon">📝</div>
-                    <div class="card-title">생기부 분석 시스템</div>
-                    <div class="card-desc">생활기록부 작성 및 분석</div>
-                    <div class="badge">준비중</div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon class">📝</div>
+                        <div class="card-info">
+                            <div class="card-title">생기부 분석 시스템</div>
+                            <div class="card-desc">생활기록부 작성 및 분석 도구</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card class disabled" onclick="alert('모의고사 분석 시스템 준비 중입니다')">
-                    <div class="card-icon">📊</div>
-                    <div class="card-title">모의고사 분석 시스템</div>
-                    <div class="card-desc">모의고사 성적 분석 및 통계</div>
-                    <div class="badge">준비중</div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon class">📊</div>
+                        <div class="card-info">
+                            <div class="card-title">모의고사 분석 시스템</div>
+                            <div class="card-desc">모의고사 성적 분석 및 통계</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 교과 업무 시스템 -->
-        <div class="section">
-            <div class="section-title">📚 교과 업무 시스템 (한국사)</div>
-            <div class="card-grid">
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">📋</div>
-                    <div class="card-title">강의 계획 생성</div>
-                    <div class="card-desc">AI 기반 수업 계획서 자동 생성</div>
-                    <div class="badge">준비중</div>
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">교과 업무 시스템 (한국사)</h2>
+                <span class="section-count">4</span>
+            </div>
+            <div class="cards-grid">
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon subject">📋</div>
+                        <div class="card-info">
+                            <div class="card-title">강의 계획 생성</div>
+                            <div class="card-desc">AI 기반 수업 계획서 자동 생성</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">📄</div>
-                    <div class="card-title">학습지 생성</div>
-                    <div class="card-desc">주제별 맞춤 학습지 제작</div>
-                    <div class="badge">준비중</div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon subject">📄</div>
+                        <div class="card-info">
+                            <div class="card-title">학습지 생성</div>
+                            <div class="card-desc">주제별 맞춤 학습지 제작</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">❓</div>
-                    <div class="card-title">퀴즈 생성</div>
-                    <div class="card-desc">자동 퀴즈 문제 생성</div>
-                    <div class="badge">준비중</div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon subject">📖</div>
+                        <div class="card-info">
+                            <div class="card-title">교재 요약</div>
+                            <div class="card-desc">교재 내용 자동 요약 및 정리</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">📖</div>
-                    <div class="card-title">교재 요약</div>
-                    <div class="card-desc">교재 내용 자동 요약</div>
-                    <div class="badge">준비중</div>
-                </div>
-
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">💬</div>
-                    <div class="card-title">토론 주제 생성</div>
-                    <div class="card-desc">수업용 토론 주제 제안</div>
-                    <div class="badge">준비중</div>
-                </div>
-
-                <div class="card subject disabled" onclick="alert('교과 업무 시스템은 준비 중입니다')">
-                    <div class="card-icon">✍️</div>
-                    <div class="card-title">논술 평가</div>
-                    <div class="card-desc">학생 논술 자동 평가 및 피드백</div>
-                    <div class="badge">준비중</div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <div class="card-icon subject">💬</div>
+                        <div class="card-info">
+                            <div class="card-title">학생 질문 DB</div>
+                            <div class="card-desc">학생 질문 수집 및 답변 관리</div>
+                            <span class="card-badge soon">준비중</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
