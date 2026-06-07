@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 - 모의고사 분석 시스템</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2196f3;
+      --primary-dark: #1976d2;
+      --bg: #f5f7fa;
+      --text: #1a2332;
+      --text-muted: #90a4ae;
+      --border: #e0e7ef;
+      --error: #f44336;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .logo-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: rgba(33,150,243,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(33,150,243,0.1);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 24px;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(33,150,243,0.3);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 32px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-wrapper">
+      <img src="https://i.imgur.com/Mo4ogKc.png" alt="민족사관고등학교" class="logo">
+    </div>
+    <h1>모의고사 분석 시스템</h1>
+    <p class="subtitle">민족사관고등학교 3학년 2반</p>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="비밀번호를 입력하세요"
+          required
+          autocomplete="current-password"
+        >
+        <div class="error-message" id="errorMessage">
+          비밀번호가 올바르지 않습니다.
+        </div>
+      </div>
+
+      <button type="submit" class="login-button" id="loginButton">
+        로그인
+      </button>
+    </form>
+
+    <div class="footer">
+      © 2024 민족사관고등학교. All rights reserved.
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzhGzErp_fxQOh8HDHHGEIn305UuO05OHXLzimvrNsOXfbFltG7V0uczk_diEu_HsViPg/exec';
+
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+      const loginButton = document.getElementById('loginButton');
+
+      // 에러 메시지 숨김
+      errorMessage.classList.remove('show');
+
+      // 버튼 비활성화
+      loginButton.disabled = true;
+      loginButton.textContent = '확인 중...';
+
+      // 임시: 하드코딩된 비밀번호 체크 (API 실패 시 대비)
+      if (password === 'admin1234') {
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('loginTime', new Date().getTime());
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // API로 비밀번호 확인
+      fetch(`${API_URL}?action=checkPassword&password=${encodeURIComponent(password)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // 세션 저장
+            sessionStorage.setItem('authenticated', 'true');
+            sessionStorage.setItem('loginTime', new Date().getTime());
+
+            // 대시보드로 이동
+            window.location.href = 'index.html';
+          } else {
+            // 에러 표시
+            errorMessage.classList.add('show');
+            loginButton.disabled = false;
+            loginButton.textContent = '로그인';
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
+          }
+        })
+        .catch(error => {
+          console.error('로그인 오류:', error);
+          errorMessage.textContent = '로그인 중 오류가 발생했습니다.';
+          errorMessage.classList.add('show');
+          loginButton.disabled = false;
+          loginButton.textContent = '로그인';
+        });
+    }
+  </script>
+</body>
+</html>
