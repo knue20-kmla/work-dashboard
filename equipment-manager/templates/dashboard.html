@@ -186,8 +186,28 @@
         }
         .content-grid {
             display: grid;
+            gap: 16px;
+        }
+        .section-grid {
+            display: grid;
             grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
             gap: 16px;
+            align-items: start;
+        }
+        .section-grid.single {
+            grid-template-columns: 1fr;
+        }
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #334155;
         }
         .panel {
             padding: 18px;
@@ -582,7 +602,7 @@
         summary::-webkit-details-marker { display: none; }
         details[open] summary { margin-bottom: 14px; }
         @media (max-width: 1100px) {
-            .hero, .content-grid { grid-template-columns: 1fr; }
+            .hero, .section-grid { grid-template-columns: 1fr; }
             .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 720px) {
@@ -674,7 +694,10 @@
         </section>
 
         <section class="content-grid">
-            <div class="panel-stack">
+            <div class="section-heading">
+                <div class="section-title">기자재 관리</div>
+            </div>
+            <div class="section-grid">
                 <div class="panel">
                     <div class="panel-header">
                         <div>
@@ -768,55 +791,6 @@
                     <div class="empty">조건에 맞는 기자재가 없습니다.</div>
                     {% endif %}
                 </div>
-
-                <div class="panel" id="history-panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">대여 이력</div>
-                            <div class="subtle">최근 기록부터 최대 12건 표시합니다.</div>
-                        </div>
-                    </div>
-                    {% if history %}
-                    <div class="history-table">
-                        <div class="history-row header">
-                            <div>품목 / 대여자</div>
-                            <div>수량</div>
-                            <div>수업명</div>
-                            <div>팀명</div>
-                            <div>대여일</div>
-                            <div>반납일</div>
-                            <div>상태</div>
-                        </div>
-                        {% for loan in history[:12] %}
-                        <div class="history-row">
-                            <div class="history-name">
-                                {{ loan.item_name }}
-                                <div class="subtle">{{ loan.borrower }}</div>
-                            </div>
-                            <div>{{ loan.quantity }}</div>
-                            <div>{{ loan.class_name or '-' }}</div>
-                            <div>{{ loan.team_name or '-' }}</div>
-                            <div>{{ loan.borrowed_at or '-' }}</div>
-                            <div>{{ loan.returned_at or loan.due_at or '-' }}</div>
-                            <div>
-                                {% if loan.status == 'borrowed' %}
-                                <span class="badge badge-ok">{{ loan_status_label(loan.status) }}</span>
-                                {% elif loan.status == 'returned' %}
-                                <span class="badge badge-off">{{ loan_status_label(loan.status) }}</span>
-                                {% else %}
-                                <span class="badge badge-pending">{{ loan_status_label(loan.status) }}</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div class="empty">아직 기록이 없습니다.</div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="panel-stack">
                 <div class="panel" id="register-panel">
                     <div class="panel-header">
                         <div>
@@ -838,7 +812,12 @@
                         <button class="btn btn-primary" type="submit">등록</button>
                     </form>
                 </div>
+            </div>
 
+            <div class="section-heading">
+                <div class="section-title">대여 및 반납 승인</div>
+            </div>
+            <div class="section-grid single">
                 <div class="panel" id="loan-panel">
                     <div class="panel-header">
                         <div>
@@ -948,6 +927,95 @@
                             {% endif %}
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="section-heading">
+                <div class="section-title">이력 조회</div>
+            </div>
+            <div class="section-grid">
+                <div class="panel" id="history-panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">대여 진행 이력</div>
+                            <div class="subtle">반납 완료 전 상태의 최근 기록을 최대 12건 표시합니다.</div>
+                        </div>
+                    </div>
+                    {% set ongoing_history = history | rejectattr('status', 'equalto', 'returned') | list %}
+                    {% if ongoing_history %}
+                    <div class="history-table">
+                        <div class="history-row header">
+                            <div>품목 / 대여자</div>
+                            <div>수량</div>
+                            <div>수업명</div>
+                            <div>팀명</div>
+                            <div>대여일</div>
+                            <div>반납일</div>
+                            <div>상태</div>
+                        </div>
+                        {% for loan in ongoing_history[:12] %}
+                        <div class="history-row">
+                            <div class="history-name">
+                                {{ loan.item_name }}
+                                <div class="subtle">{{ loan.borrower }}</div>
+                            </div>
+                            <div>{{ loan.quantity }}</div>
+                            <div>{{ loan.class_name or '-' }}</div>
+                            <div>{{ loan.team_name or '-' }}</div>
+                            <div>{{ loan.borrowed_at or '-' }}</div>
+                            <div>{{ loan.returned_at or loan.due_at or '-' }}</div>
+                            <div>
+                                {% if loan.status == 'borrowed' %}
+                                <span class="badge badge-ok">{{ loan_status_label(loan.status) }}</span>
+                                {% else %}
+                                <span class="badge badge-pending">{{ loan_status_label(loan.status) }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty">진행 중인 이력이 없습니다.</div>
+                    {% endif %}
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">반납 완료 이력</div>
+                            <div class="subtle">반납 승인이 완료된 최근 기록을 최대 12건 표시합니다.</div>
+                        </div>
+                    </div>
+                    {% set returned_history = history | selectattr('status', 'equalto', 'returned') | list %}
+                    {% if returned_history %}
+                    <div class="history-table">
+                        <div class="history-row header">
+                            <div>품목 / 대여자</div>
+                            <div>수량</div>
+                            <div>수업명</div>
+                            <div>팀명</div>
+                            <div>대여일</div>
+                            <div>반납일</div>
+                            <div>상태</div>
+                        </div>
+                        {% for loan in returned_history[:12] %}
+                        <div class="history-row">
+                            <div class="history-name">
+                                {{ loan.item_name }}
+                                <div class="subtle">{{ loan.borrower }}</div>
+                            </div>
+                            <div>{{ loan.quantity }}</div>
+                            <div>{{ loan.class_name or '-' }}</div>
+                            <div>{{ loan.team_name or '-' }}</div>
+                            <div>{{ loan.borrowed_at or '-' }}</div>
+                            <div>{{ loan.returned_at or '-' }}</div>
+                            <div><span class="badge badge-off">{{ loan_status_label(loan.status) }}</span></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty">반납 완료 이력이 없습니다.</div>
+                    {% endif %}
                 </div>
             </div>
         </section>
