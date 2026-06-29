@@ -171,6 +171,27 @@
             padding: 14px;
             background: #fcfdff;
         }
+        .equipment-image {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #dbe4f0;
+            margin-bottom: 12px;
+            background: #f8fafc;
+        }
+        .equipment-image-placeholder {
+            display: grid;
+            place-items: center;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 12px;
+            color: #94a3b8;
+            font-size: 13px;
+            background: #f8fafc;
+        }
         .equipment-top {
             display: flex;
             justify-content: space-between;
@@ -343,6 +364,11 @@
                 <div class="equipment-grid">
                     {% for item in items %}
                     <div class="equipment-card">
+                        {% if item.image_data %}
+                        <img src="{{ item.image_data }}" alt="{{ item.name }}" class="equipment-image">
+                        {% else %}
+                        <div class="equipment-image-placeholder">사진 없음</div>
+                        {% endif %}
                         <div class="equipment-top">
                             <div>
                                 <div class="equipment-name">{{ item.name }}</div>

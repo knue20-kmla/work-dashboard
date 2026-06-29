@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 from datetime import datetime
@@ -19,7 +20,9 @@ DATA_DIR = BASE_DIR / "data"
 USERS_FILE = DATA_DIR / "users.json"
 ITEMS_FILE = DATA_DIR / "items.json"
 LOANS_FILE = DATA_DIR / "loans.json"
+CATEGORY_FILE = DATA_DIR / "categories.json"
 CATEGORY_OPTIONS = ["컴퓨터 부품", "카메라", "아두이노", "실험 장비", "기타"]
+MAX_IMAGE_SIZE = 2 * 1024 * 1024
 SAMPLE_ITEMS = [
     {
         "name": "프로젝터",
@@ -123,6 +126,35 @@ def resolve_department(form):
     return form.get("department", "").strip()
 
 
+def normalize_categories(categories):
+    seen = set()
+    normalized = []
+    for category in categories:
+        value = str(category).strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        normalized.append(value)
+    return normalized
+
+
+def read_image_data(file_storage, current_image=None):
+    if not file_storage or not file_storage.filename:
+        return current_image
+
+    raw = file_storage.read()
+    if not raw:
+        return current_image
+
+    if len(raw) > MAX_IMAGE_SIZE:
+        flash("사진 파일은 2MB 이하로 등록해 주세요.", "warning")
+        return current_image
+
+    mime_type = file_storage.mimetype or "image/jpeg"
+    encoded = base64.b64encode(raw).decode("ascii")
+    return f"data:{mime_type};base64,{encoded}"
+
+
 def supabase_enabled():
     return all(
         [
@@ -153,6 +185,7 @@ def initialize_storage():
                 "id": index,
                 **item,
                 "asset_no": generate_asset_no(items),
+                "image_data": "",
                 "created_at": now_iso(),
             }
             items.append(row)
@@ -160,6 +193,9 @@ def initialize_storage():
 
     if not LOANS_FILE.exists():
         write_json(LOANS_FILE, [])
+
+    if not CATEGORY_FILE.exists():
+        write_json(CATEGORY_FILE, CATEGORY_OPTIONS)
 
     seed_supabase()
 
@@ -180,6 +216,7 @@ def seed_supabase():
                 {
                     **item,
                     "asset_no": generate_asset_no(existing_items),
+                    "image_data": "",
                     "created_at": now_iso(),
                 }
             ).execute()
@@ -222,6 +259,78 @@ def load_loans():
 
 def save_loans(loans):
     write_json(LOANS_FILE, loans)
+
+
+def load_categories():
+    client = get_supabase_client()
+    base_categories = read_json(CATEGORY_FILE, CATEGORY_OPTIONS)
+
+    if client:
+        try:
+            result = client.table("equipment_categories").select("name").order("name").execute()
+            remote_categories = [entry["name"] for entry in (result.data or [])]
+            return normalize_categories(base_categories + remote_categories)
+        except Exception:
+            return normalize_categories(base_categories)
+
+    return normalize_categories(base_categories)
+
+
+def save_categories(categories):
+    write_json(CATEGORY_FILE, normalize_categories(categories))
+
+
+def create_category_record(name):
+    category_name = name.strip()
+    if not category_name:
+        return False
+
+    client = get_supabase_client()
+    existing = load_categories()
+    if category_name in existing:
+        return False
+
+    if client:
+        try:
+            client.table("equipment_categories").insert(
+                {"name": category_name, "created_at": now_iso()}
+            ).execute()
+            save_categories(existing + [category_name])
+            return True
+        except Exception:
+            save_categories(existing + [category_name])
+            flash("분류 테이블이 아직 없어 임시 목록으로만 저장했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            return True
+
+    save_categories(existing + [category_name])
+    return True
+
+
+def delete_category_record(name):
+    category_name = name.strip()
+    if not category_name:
+        return False
+
+    items = load_items()
+    if any(item.get("category") == category_name for item in items):
+        flash("사용 중인 분류는 삭제할 수 없습니다.", "warning")
+        return False
+
+    client = get_supabase_client()
+    categories = [entry for entry in load_categories() if entry != category_name]
+
+    if client:
+        try:
+            client.table("equipment_categories").delete().eq("name", category_name).execute()
+            save_categories(categories)
+            return True
+        except Exception:
+            save_categories(categories)
+            flash("분류 테이블이 아직 없어 임시 목록에서만 삭제했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            return True
+
+    save_categories(categories)
+    return True
 
 
 def find_member_by_email(email):
@@ -337,7 +446,7 @@ def build_dashboard_data():
 
     active_loans = [loan for loan in loans if loan["status"] == "borrowed"]
     history = sorted(loans, key=lambda loan: loan["id"], reverse=True)
-    categories = sorted({item["category"] for item in items if item["category"]})
+    categories = normalize_categories(load_categories() + [item["category"] for item in items if item["category"]])
 
     stats = {
         "total_items": len(items),
@@ -370,6 +479,7 @@ def create_item_record():
         "quantity_total": quantity_total,
         "quantity_available": quantity_total,
         "notes": request.form.get("notes", "").strip(),
+        "image_data": read_image_data(request.files.get("image_file"), current_image=""),
     }
 
     if not item["name"]:
@@ -377,8 +487,14 @@ def create_item_record():
 
     client = get_supabase_client()
     if client:
-        client.table("equipment_items").insert({**item, "created_at": now_iso()}).execute()
-        return True
+        try:
+            client.table("equipment_items").insert({**item, "created_at": now_iso()}).execute()
+            return True
+        except Exception:
+            fallback_item = {key: value for key, value in item.items() if key != "image_data"}
+            client.table("equipment_items").insert({**fallback_item, "created_at": now_iso()}).execute()
+            flash("사진 저장용 컬럼이 아직 없어 사진 없이 등록했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            return True
 
     item["id"] = next_id(items)
     item["created_at"] = now_iso()
@@ -417,12 +533,22 @@ def update_item_record(item_id):
         "quantity_total": quantity_total,
         "quantity_available": quantity_available,
         "notes": request.form.get("notes", "").strip(),
+        "image_data": read_image_data(request.files.get("image_file"), current_image=item.get("image_data", "")),
     }
+
+    if request.form.get("remove_image") == "1":
+        payload["image_data"] = ""
 
     client = get_supabase_client()
     if client:
-        client.table("equipment_items").update(payload).eq("id", item_id).execute()
-        return True
+        try:
+            client.table("equipment_items").update(payload).eq("id", item_id).execute()
+            return True
+        except Exception:
+            fallback_payload = {key: value for key, value in payload.items() if key != "image_data"}
+            client.table("equipment_items").update(fallback_payload).eq("id", item_id).execute()
+            flash("사진 저장용 컬럼이 아직 없어 사진 변경 없이 저장했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            return True
 
     item.update(payload)
     save_items(items)
@@ -549,7 +675,7 @@ def inject_globals():
     return {
         "member_user": get_member_session(),
         "supabase_ready": supabase_enabled(),
-        "category_options": CATEGORY_OPTIONS,
+        "category_options": load_categories(),
     }
 
 
@@ -664,6 +790,20 @@ def dashboard():
 @login_required
 def create_item():
     create_item_record()
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/categories", methods=["POST"])
+@login_required
+def create_category():
+    create_category_record(request.form.get("category_name", ""))
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/categories/delete", methods=["POST"])
+@login_required
+def delete_category():
+    delete_category_record(request.form.get("category_name", ""))
     return redirect(url_for("dashboard"))
 
 
