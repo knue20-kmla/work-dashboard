@@ -185,49 +185,54 @@
             color: #64748b;
             font-size: 13px;
         }
-        .equipment-grid {
+        .equipment-table {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 8px;
+        }
+        .equipment-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) 110px 120px 92px 110px minmax(0, 1fr) 42px;
             gap: 12px;
-        }
-        .equipment-card, .loan-item {
-            border: 1px solid #e2e8f0;
+            align-items: center;
+            padding: 12px 14px;
             border-radius: 14px;
-            padding: 14px;
-            background: #fcfdff;
-        }
-        .equipment-image {
-            width: 100%;
-            aspect-ratio: 16 / 10;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid #dbe4f0;
-            margin-bottom: 12px;
-            background: #f8fafc;
-        }
-        .equipment-image-placeholder {
-            display: grid;
-            place-items: center;
-            width: 100%;
-            aspect-ratio: 16 / 10;
-            border-radius: 12px;
-            border: 1px dashed #cbd5e1;
-            margin-bottom: 12px;
-            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            background: #fbfcfe;
             font-size: 13px;
-            background: #f8fafc;
         }
-        .equipment-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
+        .equipment-row.header {
+            background: #eef4fb;
+            border-color: #d9e4f2;
+            color: #475569;
+            font-weight: 700;
+        }
+        .equipment-row div {
+            min-width: 0;
+        }
+        .equipment-name-button {
+            border: none;
+            background: none;
+            padding: 0;
+            text-align: left;
+            font: inherit;
+            color: #0f172a;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .equipment-name-button:disabled {
+            cursor: default;
+        }
+        .equipment-name-button.has-image {
+            color: #1d4ed8;
+        }
+        .equipment-name-button.has-image:hover {
+            text-decoration: underline;
         }
         .equipment-pick {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: flex-end;
+            gap: 10px;
         }
         .equipment-pick input[type="checkbox"] {
             width: 16px;
@@ -251,6 +256,12 @@
         }
         .badge-ok { background: #dcfce7; color: #166534; }
         .badge-off { background: #e2e8f0; color: #475569; }
+        .loan-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: #fcfdff;
+        }
         .equipment-meta, .loan-meta {
             display: grid;
             gap: 6px;
@@ -341,6 +352,60 @@
             font-size: 14px;
             background: #f8fafc;
         }
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.58);
+            z-index: 50;
+        }
+        .image-modal.active {
+            display: flex;
+        }
+        .image-modal-card {
+            width: min(760px, 100%);
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #dbe4f0;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+            overflow: hidden;
+        }
+        .image-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .image-modal-head strong {
+            font-size: 16px;
+        }
+        .image-modal-close {
+            border: none;
+            background: #eef4fb;
+            color: #334155;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .image-modal-body {
+            padding: 18px;
+            background: #f8fafc;
+        }
+        .image-modal-body img {
+            width: 100%;
+            max-height: 72vh;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
+        }
         @media (max-width: 1100px) {
             .hero, .content-grid { grid-template-columns: 1fr; }
             .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -349,6 +414,12 @@
             .page { padding: 14px; }
             .hero { padding: 22px; }
             .stats, .form-grid { grid-template-columns: 1fr; }
+            .equipment-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .equipment-row.header {
+                display: none;
+            }
             .loan-row {
                 grid-template-columns: 1fr 1fr;
             }
@@ -433,22 +504,45 @@
                 <div class="panel-title">대여 가능한 기자재</div>
                 <div class="subtle" style="margin-bottom:14px;">현재 등록된 기자재와 대여 가능 수량을 확인할 수 있습니다.</div>
                 {% if items %}
-                <div class="equipment-grid">
+                <div class="equipment-table">
+                    <div class="equipment-row header">
+                        <div>품명</div>
+                        <div>번호</div>
+                        <div>위치</div>
+                        <div>수량</div>
+                        <div>대여 가능</div>
+                        <div>비고</div>
+                        <div></div>
+                    </div>
                     {% for item in items %}
-                    <div class="equipment-card">
-                        {% if item.image_data %}
-                        <img src="{{ item.image_data }}" alt="{{ item.name }}" class="equipment-image">
-                        {% else %}
-                        <div class="equipment-image-placeholder">사진 없음</div>
-                        {% endif %}
-                        <div class="equipment-top">
-                            <div>
-                                <div class="equipment-name">{{ item.name }}</div>
-                                <div class="subtle">{{ item.category }}</div>
-                            </div>
+                    <div class="equipment-row">
+                        <div>
+                            <button
+                                type="button"
+                                class="equipment-name-button {% if item.image_data %}has-image{% endif %}"
+                                {% if item.image_data %}
+                                data-image-src="{{ item.image_data }}"
+                                data-image-title="{{ item.name }}"
+                                {% else %}
+                                disabled
+                                {% endif %}
+                            >{{ item.name }}</button>
+                            <div class="subtle">{{ item.category }}</div>
+                        </div>
+                        <div>{{ item.asset_no or '-' }}</div>
+                        <div>{{ item.location or '-' }}</div>
+                        <div>{{ item.quantity_available }} / {{ item.quantity_total }}</div>
+                        <div>
+                            {% if item.quantity_available > 0 %}
+                            <span class="badge badge-ok">대여 가능</span>
+                            {% else %}
+                            <span class="badge badge-off">재고 없음</span>
+                            {% endif %}
+                        </div>
+                        <div>{{ item.notes or '-' }}</div>
+                        <div>
                             {% if item.quantity_available > 0 %}
                             <label class="equipment-pick">
-                                <span class="badge badge-ok">대여 가능</span>
                                 <input
                                     type="checkbox"
                                     class="item-picker"
@@ -457,15 +551,7 @@
                                     data-available="{{ item.quantity_available }}"
                                 >
                             </label>
-                            {% else %}
-                            <span class="badge badge-off">재고 없음</span>
                             {% endif %}
-                        </div>
-                        <div class="equipment-meta">
-                            <div><strong>자산번호</strong> {{ item.asset_no or '-' }}</div>
-                            <div><strong>보관 위치</strong> {{ item.location or '-' }}</div>
-                            <div><strong>가능 수량</strong> {{ item.quantity_available }} / {{ item.quantity_total }}</div>
-                            <div><strong>비고</strong> {{ item.notes or '-' }}</div>
                         </div>
                     </div>
                     {% endfor %}
@@ -563,6 +649,17 @@
             </div>
         </section>
     </div>
+    <div class="image-modal" id="image-modal" aria-hidden="true">
+        <div class="image-modal-card">
+            <div class="image-modal-head">
+                <strong id="image-modal-title">기자재 사진</strong>
+                <button type="button" class="image-modal-close" id="image-modal-close" aria-label="닫기">&times;</button>
+            </div>
+            <div class="image-modal-body">
+                <img src="" alt="" id="image-modal-image">
+            </div>
+        </div>
+    </div>
     <script>
         const itemCheckboxes = Array.from(document.querySelectorAll('.item-picker'));
         const borrowSelect = document.getElementById('borrow-item-select');
@@ -570,6 +667,11 @@
         const returnDateInputs = Array.from(document.querySelectorAll('.return-date-input'));
         const selectedReturnLoanId = document.getElementById('selected-return-loan-id');
         const selectedReturnDate = document.getElementById('selected-return-date');
+        const imageModal = document.getElementById('image-modal');
+        const imageModalTitle = document.getElementById('image-modal-title');
+        const imageModalImage = document.getElementById('image-modal-image');
+        const imageModalClose = document.getElementById('image-modal-close');
+        const imageButtons = Array.from(document.querySelectorAll('.equipment-name-button.has-image'));
 
         function syncBorrowOptions() {
             if (!borrowSelect) return;
@@ -646,6 +748,30 @@
                     selectedReturnDate.value = input.value;
                 }
             });
+        });
+
+        function closeImageModal() {
+            imageModal.classList.remove('active');
+            imageModal.setAttribute('aria-hidden', 'true');
+            imageModalImage.src = '';
+            imageModalImage.alt = '';
+        }
+
+        imageButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                imageModalTitle.textContent = button.dataset.imageTitle || '기자재 사진';
+                imageModalImage.src = button.dataset.imageSrc || '';
+                imageModalImage.alt = button.dataset.imageTitle || '기자재 사진';
+                imageModal.classList.add('active');
+                imageModal.setAttribute('aria-hidden', 'false');
+            });
+        });
+
+        imageModalClose.addEventListener('click', closeImageModal);
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                closeImageModal();
+            }
         });
 
         syncBorrowOptions();
