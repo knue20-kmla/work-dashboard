@@ -24,43 +24,41 @@
         }
         .hero {
             display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+            grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
             gap: 20px;
-            padding: 28px;
+            align-items: center;
+            padding: 24px 28px;
             margin-bottom: 18px;
         }
         .brand {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 18px;
+            gap: 16px;
+            margin-bottom: 0;
         }
         .brand img {
-            width: 62px;
-            height: 62px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: #ffffff;
             padding: 4px;
             border: 1px solid #e2e8f0;
         }
+        .brand-copy {
+            display: grid;
+            gap: 4px;
+        }
         .brand strong {
             display: block;
-            font-size: 14px;
-            letter-spacing: 0.08em;
-        }
-        .brand span {
-            font-size: 12px;
+            font-size: 13px;
+            letter-spacing: 0.14em;
             color: #64748b;
         }
-        .hero h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            color: #475569;
-            line-height: 1.6;
-            font-size: 14px;
-            max-width: 720px;
+        .brand span {
+            font-size: 28px;
+            line-height: 1.15;
+            font-weight: 800;
+            color: #0f172a;
         }
         .hero-side {
             display: grid;
@@ -268,13 +266,11 @@
             <div>
                 <div class="brand">
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo">
-                    <div>
+                    <div class="brand-copy">
                         <strong>KMLA</strong>
                         <span>Project Equipment Desk</span>
                     </div>
                 </div>
-                <h1>기자재 대여 및 반납</h1>
-                <p>일반 사용자는 회원 로그인 후 대여와 반납을 진행하고, 관리자는 별도 관리자 화면에서 기자재 목록과 전체 이력을 관리합니다.</p>
             </div>
             <div class="hero-side">
                 {% if member_user %}
@@ -284,7 +280,6 @@
                 </div>
                 <div class="hero-actions">
                     <a href="{{ url_for('member_logout') }}" class="secondary">일반 사용자 로그아웃</a>
-                    <a href="{{ url_for('admin') }}" class="primary">관리자 로그인</a>
                 </div>
                 {% else %}
                 <div class="hero-box">
@@ -298,7 +293,6 @@
                 <div class="hero-actions">
                     <a href="{{ url_for('member_login') }}" class="primary">일반 사용자 로그인</a>
                     <a href="{{ url_for('member_signup') }}" class="secondary">회원가입</a>
-                    <a href="{{ url_for('admin') }}" class="secondary">관리자 로그인</a>
                 </div>
                 {% endif %}
             </div>
