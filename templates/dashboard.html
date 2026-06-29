@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,7 @@
         }
 
         .logo-section {
-            padding: 48px 24px;
+            padding: 32px 20px 28px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         }
@@ -39,53 +39,65 @@
         .school-logo {
             width: 80px;
             height: 80px;
-            margin: 0 auto 16px;
+            margin: 0 auto 10px;
             display: block;
             border-radius: 50%;
             background: white;
-            padding: 8px;
+            padding: 2px;
+            object-fit: contain;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .logo {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
             color: white;
-            margin-bottom: 4px;
+            margin-bottom: 0;
             text-align: center;
+            line-height: 1.35;
         }
 
         .logo-subtitle {
-            font-size: 12px;
-            color: rgba(255,255,255,0.7);
-            text-align: center;
-            letter-spacing: 0.5px;
+            display: none;
         }
 
         .nav-section {
-            padding: 24px 16px;
+            padding: 10px 12px;
+            margin: 12px 10px 0;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .sidebar > .nav-section:first-of-type {
+            margin-top: 36px;
+        }
+
+        .sidebar > .logo-section + .nav-section {
+            margin-top: 36px;
         }
 
         .nav-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            padding: 0 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.92);
+            text-transform: none;
+            letter-spacing: 0;
+            margin-bottom: 8px;
+            padding: 0 2px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 9px 10px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             text-decoration: none;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.78);
         }
 
         .nav-item:hover {
@@ -111,22 +123,24 @@
 
         .nav-item-icon {
             width: 20px;
-            margin-right: 12px;
-            font-size: 18px;
+            margin-right: 10px;
+            font-size: 15px;
+            opacity: 0.9;
         }
 
         .nav-item-text {
             flex: 1;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
+            line-height: 1.2;
         }
 
         .nav-badge {
             background: rgba(255,255,255,0.2);
             color: white;
-            padding: 2px 8px;
+            padding: 1px 7px;
             border-radius: 10px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
         }
 
@@ -205,9 +219,29 @@
             display: inline-block;
         }
 
+        .admin-btn {
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.14);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
         .logout-btn:hover {
             background: rgba(255,255,255,0.3);
             border-color: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+
+        .admin-btn:hover {
+            background: rgba(255,255,255,0.24);
+            border-color: rgba(255,255,255,0.38);
             transform: translateY(-2px);
         }
 
@@ -220,7 +254,7 @@
 
         .header-banner {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 48px 40px;
+            padding: 44px 40px 44px 72px;
             color: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             position: relative;
@@ -241,6 +275,8 @@
         .header-content {
             position: relative;
             z-index: 1;
+            max-width: 640px;
+            padding-left: 28px;
         }
 
         .header-title {
@@ -253,21 +289,29 @@
         .header-subtitle {
             font-size: 15px;
             color: rgba(255,255,255,0.9);
+            max-width: 560px;
         }
 
         .content-area {
-            padding: 32px 40px;
+            padding: 24px 28px 36px;
+            max-width: 1360px;
+            margin: 0 auto;
         }
 
         .content-section {
-            margin-bottom: 48px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            border: 1px solid #e6ebf2;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
             border-bottom: 2px solid #e5e7eb;
             position: relative;
         }
@@ -283,7 +327,7 @@
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 21px;
             font-weight: 700;
             color: #1a1d29;
             letter-spacing: -0.5px;
@@ -305,31 +349,32 @@
             margin-left: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 16px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             box-shadow: 0 2px 8px rgba(102,126,234,0.3);
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
         }
 
         .card {
             background: white;
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 14px;
+            padding: 18px 16px;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.05);
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            border: 1px solid #e5eaf1;
             text-decoration: none;
             display: block;
             position: relative;
             overflow: hidden;
+            min-height: 132px;
         }
 
         .card::before {
@@ -338,20 +383,16 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.3s;
         }
 
         .card:hover {
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-            transform: translateY(-4px);
-            border-color: #667eea;
-        }
-
-        .card:hover::before {
-            opacity: 1;
+            box-shadow: 0 12px 24px rgba(15,23,42,0.1);
+            transform: translateY(-2px);
+            border-color: #cfd8ea;
         }
 
         .card.disabled {
@@ -361,26 +402,17 @@
 
         .card.disabled:hover {
             transform: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-color: transparent;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.05);
+            border-color: #e5eaf1;
         }
 
         .card-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 16px;
+            display: block;
+            margin-bottom: 0;
         }
 
         .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-right: 16px;
-            flex-shrink: 0;
+            display: none;
         }
 
         .card-icon.school {
@@ -397,30 +429,31 @@
 
         .card-info {
             flex: 1;
+            min-width: 0;
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #1a1d29;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .card-desc {
-            font-size: 14px;
+            font-size: 13px;
             color: #6b7280;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .card-badge {
             background: #667eea;
             color: white;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             display: inline-block;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .card-badge.new {
@@ -455,6 +488,9 @@
             .header-banner {
                 padding: 32px 20px;
             }
+            .header-content {
+                padding-left: 0;
+            }
             .header-user {
                 position: static;
                 transform: none;
@@ -467,7 +503,11 @@
                 text-align: center;
             }
             .content-area {
-                padding: 24px 20px;
+                padding: 20px 16px;
+            }
+            .content-section {
+                padding: 18px;
+                border-radius: 16px;
             }
         }
     </style>
@@ -477,7 +517,6 @@
         <div class="logo-section">
             <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="school-logo">
             <div class="logo">KMLA</div>
-            <div class="logo-subtitle">민족사관고등학교</div>
         </div>
 
         <div class="nav-section">
@@ -537,12 +576,7 @@
             </div>
             <div class="nav-item disabled">
                 <span class="nav-item-icon">📄</span>
-                <span class="nav-item-text">학습지 생성</span>
-                <span class="nav-badge soon">준비중</span>
-            </div>
-            <div class="nav-item disabled">
-                <span class="nav-item-icon">📖</span>
-                <span class="nav-item-text">교재 요약</span>
+                <span class="nav-item-text">교재 및 학습지 DB</span>
                 <span class="nav-badge soon">준비중</span>
             </div>
             <a href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec" target="_blank" class="nav-item">
@@ -551,13 +585,6 @@
             </a>
         </div>
 
-        <div class="nav-section">
-            <div class="nav-title">시스템 관리</div>
-            <a href="/change-password" class="nav-item">
-                <span class="nav-item-icon">🔑</span>
-                <span class="nav-item-text">비밀번호 변경</span>
-            </a>
-        </div>
     </div>
 
     <div class="main-content">
@@ -574,6 +601,7 @@
                         <div class="user-role">교사</div>
                     </div>
                 </div>
+                <a href="/change-password" class="admin-btn">관리자 설정</a>
                 <a href="/logout" class="logout-btn">로그아웃</a>
             </div>
         </div>
@@ -582,7 +610,7 @@
             <div class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">학교 업무 시스템</h2>
-                    <span class="section-count">4</span>
+                    <span class="section-count">3</span>
                 </div>
                 <div class="cards-grid">
                     <a href="https://pdf-email-sender-1.onrender.com" target="_blank" class="card">
@@ -709,19 +737,8 @@
                         <div class="card-header">
                             <div class="card-icon subject">📄</div>
                             <div class="card-info">
-                                <div class="card-title">학습지 생성</div>
-                                <div class="card-desc">주제별 맞춤 학습지 제작</div>
-                                <span class="card-badge soon">준비중</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card disabled">
-                        <div class="card-header">
-                            <div class="card-icon subject">📖</div>
-                            <div class="card-info">
-                                <div class="card-title">교재 요약</div>
-                                <div class="card-desc">교재 내용 자동 요약 및 정리</div>
+                                <div class="card-title">교재 및 학습지 DB</div>
+                                <div class="card-desc">교재 자료와 학습지를 통합 관리하는 준비중 기능</div>
                                 <span class="card-badge soon">준비중</span>
                             </div>
                         </div>
@@ -765,3 +782,4 @@
     </script>
 </body>
 </html>
+
