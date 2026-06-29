@@ -271,7 +271,7 @@
         }
         .loan-row {
             display: grid;
-            grid-template-columns: minmax(0, 2fr) 72px 108px 108px;
+            grid-template-columns: 28px minmax(0, 1.7fr) 72px 108px 108px 140px;
             gap: 12px;
             align-items: center;
             padding: 10px 12px;
@@ -285,6 +285,15 @@
             border-color: #d9e4f2;
             color: #475569;
             font-weight: 700;
+        }
+        .return-check {
+            width: 16px;
+            height: 16px;
+            accent-color: #2563eb;
+        }
+        .return-date-input:disabled {
+            background: #f8fafc;
+            color: #94a3b8;
         }
         .loan-row div {
             min-width: 0;
@@ -518,28 +527,31 @@
                     {% if member_user and member_loans %}
                     <div class="loan-table">
                         <div class="loan-row header">
+                            <div></div>
                             <div>품명</div>
                             <div>수량</div>
                             <div>대여일</div>
-                            <div>반납일</div>
+                            <div>반납예정일</div>
+                            <div>반납일 입력</div>
                         </div>
                         {% for loan in member_loans %}
                         <div class="loan-row">
+                            <div>
+                                <input type="checkbox" class="return-check" data-loan-id="{{ loan.id }}">
+                            </div>
                             <div class="loan-item-name">{{ loan.item_name }}</div>
                             <div>{{ loan.quantity }}</div>
                             <div>{{ loan.borrowed_at or '-' }}</div>
                             <div>{{ loan.due_at or '-' }}</div>
+                            <div>
+                                <input type="date" class="return-date-input" data-loan-id="{{ loan.id }}" disabled>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                     <form method="post" action="{{ url_for('public_return') }}" class="compact-form">
-                        <select name="loan_id" required>
-                            <option value="">반납할 대여 건 선택</option>
-                            {% for loan in member_loans %}
-                            <option value="{{ loan.id }}">{{ loan.item_name }} / {{ loan.quantity }}개 / {{ loan.borrowed_at }}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="date" name="returned_at">
+                        <input type="hidden" name="loan_id" id="selected-return-loan-id" required>
+                        <input type="hidden" name="returned_at" id="selected-return-date">
                         <button class="btn btn-warning" type="submit">반납 처리</button>
                     </form>
                     {% elif member_user %}
@@ -554,6 +566,10 @@
     <script>
         const itemCheckboxes = Array.from(document.querySelectorAll('.item-picker'));
         const borrowSelect = document.getElementById('borrow-item-select');
+        const returnChecks = Array.from(document.querySelectorAll('.return-check'));
+        const returnDateInputs = Array.from(document.querySelectorAll('.return-date-input'));
+        const selectedReturnLoanId = document.getElementById('selected-return-loan-id');
+        const selectedReturnDate = document.getElementById('selected-return-date');
 
         function syncBorrowOptions() {
             if (!borrowSelect) return;
@@ -590,6 +606,46 @@
 
         itemCheckboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', syncBorrowOptions);
+        });
+
+        function syncReturnSelection(activeCheckbox = null) {
+            returnChecks.forEach((checkbox) => {
+                const loanId = checkbox.dataset.loanId;
+                const dateInput = returnDateInputs.find((input) => input.dataset.loanId === loanId);
+                const isActive = activeCheckbox && checkbox === activeCheckbox && checkbox.checked;
+
+                if (dateInput) {
+                    dateInput.disabled = !isActive;
+                    if (!isActive) {
+                        dateInput.value = '';
+                    }
+                }
+
+                if (checkbox !== activeCheckbox) {
+                    checkbox.checked = false;
+                }
+            });
+
+            if (activeCheckbox && activeCheckbox.checked) {
+                selectedReturnLoanId.value = activeCheckbox.dataset.loanId;
+                const linkedDateInput = returnDateInputs.find((input) => input.dataset.loanId === activeCheckbox.dataset.loanId);
+                selectedReturnDate.value = linkedDateInput ? linkedDateInput.value : '';
+            } else {
+                selectedReturnLoanId.value = '';
+                selectedReturnDate.value = '';
+            }
+        }
+
+        returnChecks.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => syncReturnSelection(checkbox));
+        });
+
+        returnDateInputs.forEach((input) => {
+            input.addEventListener('change', () => {
+                if (selectedReturnLoanId.value === input.dataset.loanId) {
+                    selectedReturnDate.value = input.value;
+                }
+            });
         });
 
         syncBorrowOptions();
