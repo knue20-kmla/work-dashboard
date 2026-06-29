@@ -167,8 +167,19 @@
         .equipment-top {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 10px;
             margin-bottom: 10px;
+        }
+        .equipment-pick {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .equipment-pick input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #1d4ed8;
         }
         .equipment-name {
             font-size: 16px;
@@ -331,7 +342,16 @@
                                 <div class="subtle">{{ item.category }}</div>
                             </div>
                             {% if item.quantity_available > 0 %}
-                            <span class="badge badge-ok">대여 가능</span>
+                            <label class="equipment-pick">
+                                <span class="badge badge-ok">대여 가능</span>
+                                <input
+                                    type="checkbox"
+                                    class="item-picker"
+                                    value="{{ item.id }}"
+                                    data-name="{{ item.name }}"
+                                    data-available="{{ item.quantity_available }}"
+                                >
+                            </label>
                             {% else %}
                             <span class="badge badge-off">재고 없음</span>
                             {% endif %}
@@ -356,8 +376,8 @@
                     <div class="subtle" style="margin-bottom:14px;">일반 사용자 로그인 후 본인 계정으로 대여를 등록합니다.</div>
                     {% if member_user %}
                     <form method="post" action="{{ url_for('public_borrow') }}" class="compact-form">
-                        <select name="item_id" required>
-                            <option value="">기자재 선택</option>
+                        <select name="item_id" id="borrow-item-select" required>
+                            <option value="">기자재를 먼저 체크해 주세요</option>
                             {% for item in all_items if item.quantity_available > 0 %}
                             <option value="{{ item.id }}">{{ item.name }} / 가능 {{ item.quantity_available }}</option>
                             {% endfor %}
@@ -371,7 +391,18 @@
                                 <option value="융합탐구">융합탐구</option>
                             </select>
                             <input type="text" name="team_name" placeholder="팀명">
-                            <input type="text" name="department" placeholder="소속">
+                            <select name="grade">
+                                <option value="">학년 선택</option>
+                                <option value="1">1학년</option>
+                                <option value="2">2학년</option>
+                                <option value="3">3학년</option>
+                            </select>
+                            <select name="classroom">
+                                <option value="">반 선택</option>
+                                {% for class_no in range(1, 11) %}
+                                <option value="{{ class_no }}">{{ class_no }}반</option>
+                                {% endfor %}
+                            </select>
                             <input type="number" name="quantity" min="1" value="1" placeholder="수량">
                             <input type="text" name="purpose" placeholder="사용 목적">
                             <input type="date" name="due_at">
@@ -421,5 +452,48 @@
             </div>
         </section>
     </div>
+    <script>
+        const itemCheckboxes = Array.from(document.querySelectorAll('.item-picker'));
+        const borrowSelect = document.getElementById('borrow-item-select');
+
+        function syncBorrowOptions() {
+            if (!borrowSelect) return;
+
+            const selectedItems = itemCheckboxes.filter((checkbox) => checkbox.checked);
+            const previousValue = borrowSelect.value;
+
+            borrowSelect.innerHTML = '';
+
+            if (selectedItems.length === 0) {
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = '기자재를 먼저 체크해 주세요';
+                borrowSelect.appendChild(placeholder);
+                borrowSelect.value = '';
+                return;
+            }
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = '체크한 기자재 중 선택';
+            borrowSelect.appendChild(placeholder);
+
+            selectedItems.forEach((checkbox) => {
+                const option = document.createElement('option');
+                option.value = checkbox.value;
+                option.textContent = `${checkbox.dataset.name} / 가능 ${checkbox.dataset.available}`;
+                borrowSelect.appendChild(option);
+            });
+
+            const hasPrevious = selectedItems.some((checkbox) => checkbox.value === previousValue);
+            borrowSelect.value = hasPrevious ? previousValue : selectedItems[0].value;
+        }
+
+        itemCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', syncBorrowOptions);
+        });
+
+        syncBorrowOptions();
+    </script>
 </body>
 </html>

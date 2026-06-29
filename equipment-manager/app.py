@@ -115,6 +115,14 @@ def resolve_category(form):
     return custom or selected
 
 
+def resolve_department(form):
+    grade = form.get("grade", "").strip()
+    classroom = form.get("classroom", "").strip()
+    if grade and classroom:
+        return f"{grade}학년 {classroom}반"
+    return form.get("department", "").strip()
+
+
 def supabase_enabled():
     return all(
         [
@@ -470,7 +478,7 @@ def create_loan_record(actor, member=None):
         "phone": phone,
         "class_name": request.form.get("class_name", "").strip(),
         "team_name": request.form.get("team_name", "").strip(),
-        "department": request.form.get("department", "").strip(),
+        "department": resolve_department(request.form),
         "purpose": request.form.get("purpose", "").strip(),
         "quantity": quantity,
         "borrowed_at": parse_date_or_today(request.form.get("borrowed_at", "")),
