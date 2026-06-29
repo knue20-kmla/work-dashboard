@@ -440,7 +440,7 @@
                 <div class="user-line">
                     <div class="user-box">
                         <strong>{{ username }}</strong>
-                        <span>관리자 로그인 상태</span>
+                        <span>{% if admin_role == 'superadmin' %}메인 관리자 로그인 상태{% else %}서브관리자 로그인 상태{% endif %}</span>
                     </div>
                 </div>
                 <div class="side-note">
@@ -588,6 +588,42 @@
             </div>
 
             <div class="panel-stack">
+                {% if admin_role == 'superadmin' %}
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">관리자 권한 관리</div>
+                            <div class="subtle">메인 관리자 비밀번호 변경과 서브관리자 계정 추가를 관리합니다.</div>
+                        </div>
+                    </div>
+                    <div class="category-list" style="margin-bottom:14px;">
+                        {% for admin_user in admin_users %}
+                        <div class="category-item">
+                            <span>{{ admin_user.username }}{% if admin_user.role == 'superadmin' %} / 메인 관리자{% else %} / 서브관리자{% endif %}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <details>
+                        <summary>메인 관리자 비밀번호 변경</summary>
+                        <form method="post" action="{{ url_for('change_admin_password') }}" class="compact-form">
+                            <input type="password" name="current_password" placeholder="현재 비밀번호" required>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">비밀번호 변경</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>서브관리자 추가</summary>
+                        <form method="post" action="{{ url_for('create_subadmin') }}" class="compact-form">
+                            <input type="text" name="subadmin_username" placeholder="서브관리자 아이디" required>
+                            <input type="password" name="subadmin_password" placeholder="비밀번호" required>
+                            <input type="password" name="subadmin_password_confirm" placeholder="비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">서브관리자 추가</button>
+                        </form>
+                    </details>
+                </div>
+                {% endif %}
+
                 <div class="panel">
                     <div class="panel-header">
                         <div>

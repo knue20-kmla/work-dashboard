@@ -225,8 +225,122 @@ def seed_supabase():
         pass
 
 
+def normalize_admin_users(raw_users):
+    if isinstance(raw_users, dict):
+        normalized = []
+        for username, password_hash in raw_users.items():
+            normalized.append(
+                {
+                    "username": username,
+                    "password_hash": password_hash,
+                    "role": "superadmin" if username == "admin" else "subadmin",
+                    "created_at": now_iso(),
+                }
+            )
+        return normalized
+
+    if isinstance(raw_users, list):
+        normalized = []
+        for entry in raw_users:
+            username = str(entry.get("username", "")).strip()
+            password_hash = str(entry.get("password_hash", "")).strip()
+            if not username or not password_hash:
+                continue
+            normalized.append(
+                {
+                    "username": username,
+                    "password_hash": password_hash,
+                    "role": entry.get("role", "subadmin"),
+                    "created_at": entry.get("created_at", now_iso()),
+                }
+            )
+        return normalized
+
+    return []
+
+
 def load_admin_users():
-    return read_json(USERS_FILE, {})
+    client = get_supabase_client()
+    local_users = normalize_admin_users(read_json(USERS_FILE, {"admin": generate_password_hash("admin1234")}))
+
+    if client:
+        try:
+            result = client.table("admin_users").select("*").order("username").execute()
+            remote_users = normalize_admin_users(result.data or [])
+            if remote_users:
+                return remote_users
+        except Exception:
+            return local_users
+
+    return local_users
+
+
+def save_admin_users(users):
+    write_json(USERS_FILE, normalize_admin_users(users))
+
+
+def find_admin_user(username):
+    return next((user for user in load_admin_users() if user["username"] == username), None)
+
+
+def sync_admin_users_to_local(users):
+    save_admin_users(users)
+
+
+def update_admin_password(username, new_password):
+    users = load_admin_users()
+    target = next((user for user in users if user["username"] == username), None)
+    if not target:
+        return False
+
+    new_hash = generate_password_hash(new_password)
+    target["password_hash"] = new_hash
+
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("admin_users").update({"password_hash": new_hash}).eq("username", username).execute()
+            sync_admin_users_to_local(users)
+            return True
+        except Exception:
+            sync_admin_users_to_local(users)
+            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            return True
+
+    sync_admin_users_to_local(users)
+    return True
+
+
+def create_admin_user(username, password, role="subadmin"):
+    normalized_username = username.strip()
+    if not normalized_username or not password:
+        return False
+
+    users = load_admin_users()
+    if any(user["username"] == normalized_username for user in users):
+        return False
+
+    new_user = {
+        "username": normalized_username,
+        "password_hash": generate_password_hash(password),
+        "role": role,
+        "created_at": now_iso(),
+    }
+    users.append(new_user)
+
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("admin_users").insert(new_user).execute()
+            sync_admin_users_to_local(users)
+            return True
+        except Exception:
+            sync_admin_users_to_local(users)
+            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            return True
+
+    sync_admin_users_to_local(users)
+    return True
 
 
 def load_items():
@@ -407,6 +521,19 @@ def login_required(view_func):
     def wrapped(*args, **kwargs):
         if "username" not in session:
             return redirect(url_for("login"))
+        return view_func(*args, **kwargs)
+
+    return wrapped
+
+
+def superadmin_required(view_func):
+    @wraps(view_func)
+    def wrapped(*args, **kwargs):
+        if "username" not in session:
+            return redirect(url_for("login"))
+        if session.get("admin_role") != "superadmin":
+            flash("메인 관리자만 접근할 수 있습니다.", "warning")
+            return redirect(url_for("dashboard"))
         return view_func(*args, **kwargs)
 
     return wrapped
@@ -708,10 +835,11 @@ def login():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
-        users = load_admin_users()
+        admin_user = find_admin_user(username)
 
-        if username in users and check_password_hash(users[username], password):
-            session["username"] = username
+        if admin_user and check_password_hash(admin_user["password_hash"], password):
+            session["username"] = admin_user["username"]
+            session["admin_role"] = admin_user.get("role", "subadmin")
             return redirect(url_for("dashboard"))
         error = "아이디 또는 비밀번호가 올바르지 않습니다."
 
@@ -785,19 +913,71 @@ def member_logout():
 @app.route("/logout")
 def logout():
     session.pop("username", None)
+    session.pop("admin_role", None)
     return redirect(url_for("login"))
 
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html", username=session["username"], **build_dashboard_data())
+    return render_template(
+        "dashboard.html",
+        username=session["username"],
+        admin_role=session.get("admin_role", "subadmin"),
+        admin_users=load_admin_users(),
+        **build_dashboard_data(),
+    )
 
 
 @app.route("/items", methods=["POST"])
 @login_required
 def create_item():
     create_item_record()
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/password", methods=["POST"])
+@superadmin_required
+def change_admin_password():
+    current_password = request.form.get("current_password", "")
+    new_password = request.form.get("new_password", "")
+    new_password_confirm = request.form.get("new_password_confirm", "")
+
+    current_admin = find_admin_user(session["username"])
+    if not current_admin or not check_password_hash(current_admin["password_hash"], current_password):
+        flash("현재 비밀번호가 올바르지 않습니다.", "error")
+        return redirect(url_for("dashboard"))
+
+    if not new_password or new_password != new_password_confirm:
+        flash("새 비밀번호 확인이 일치하지 않습니다.", "error")
+        return redirect(url_for("dashboard"))
+
+    if update_admin_password(session["username"], new_password):
+        flash("메인 관리자 비밀번호를 변경했습니다.", "success")
+    else:
+        flash("비밀번호 변경에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/subadmins", methods=["POST"])
+@superadmin_required
+def create_subadmin():
+    username = request.form.get("subadmin_username", "").strip()
+    password = request.form.get("subadmin_password", "")
+    password_confirm = request.form.get("subadmin_password_confirm", "")
+
+    if not username or not password:
+        flash("아이디와 비밀번호를 입력해 주세요.", "error")
+        return redirect(url_for("dashboard"))
+
+    if password != password_confirm:
+        flash("서브관리자 비밀번호 확인이 일치하지 않습니다.", "error")
+        return redirect(url_for("dashboard"))
+
+    if create_admin_user(username, password, role="subadmin"):
+        flash("서브관리자를 추가했습니다.", "success")
+    else:
+        flash("이미 존재하는 관리자 아이디이거나 생성에 실패했습니다.", "error")
     return redirect(url_for("dashboard"))
 
 
