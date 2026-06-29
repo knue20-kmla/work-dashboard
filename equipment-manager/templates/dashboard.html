@@ -1,0 +1,617 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기자재 사용 반납 관리</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f3f6fb;
+            color: #0f172a;
+        }
+        .page {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .hero-main,
+        .hero-side,
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+        }
+        .hero-main {
+            padding: 30px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+            color: white;
+        }
+        .hero-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .hero-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            object-fit: contain;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+        }
+        .hero-brand-text {
+            display: grid;
+            gap: 4px;
+        }
+        .hero-brand-text strong {
+            font-size: 14px;
+            letter-spacing: 0.08em;
+        }
+        .hero-brand-text span {
+            font-size: 12px;
+            color: rgba(255,255,255,0.76);
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+        .hero-main h1 {
+            font-size: 31px;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .hero-main p {
+            max-width: 640px;
+            color: rgba(255,255,255,0.86);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .meta-chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.16);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .hero-side {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            justify-content: space-between;
+        }
+        .user-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .user-box strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        .user-box span {
+            color: #64748b;
+            font-size: 13px;
+        }
+        .side-note {
+            padding: 14px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .hero-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .hero-actions a {
+            text-align: center;
+            padding: 12px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .hero-actions a.primary {
+            background: #1d4ed8;
+            color: white;
+        }
+        .hero-actions a.secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+        }
+        .stat-card span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .stat-card strong {
+            font-size: 28px;
+            line-height: 1;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
+            gap: 16px;
+        }
+        .panel {
+            padding: 18px;
+        }
+        .panel-stack {
+            display: grid;
+            gap: 16px;
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .panel-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+        .subtle {
+            color: #64748b;
+            font-size: 13px;
+        }
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 11px 12px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #0f172a;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.14);
+        }
+        textarea {
+            min-height: 84px;
+            resize: vertical;
+        }
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-primary { background: #1d4ed8; color: white; }
+        .btn-secondary { background: #e2e8f0; color: #0f172a; }
+        .btn-danger { background: #fee2e2; color: #991b1b; }
+        .btn-warning { background: #fef3c7; color: #92400e; }
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .equipment-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: #fcfdff;
+        }
+        .equipment-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .equipment-name {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .badge-ok { background: #dcfce7; color: #166534; }
+        .badge-off { background: #e2e8f0; color: #475569; }
+        .equipment-meta {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+        .equipment-meta strong,
+        .loan-meta strong,
+        .history-meta strong {
+            color: #0f172a;
+        }
+        .compact-form {
+            display: grid;
+            gap: 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .inline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .loan-list,
+        .history-list {
+            display: grid;
+            gap: 10px;
+        }
+        .loan-item,
+        .history-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            background: #ffffff;
+        }
+        .loan-item strong,
+        .history-item strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .loan-meta,
+        .history-meta {
+            display: grid;
+            gap: 4px;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 10px;
+        }
+        .empty {
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            background: #f8fafc;
+        }
+        details {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: #ffffff;
+        }
+        summary {
+            cursor: pointer;
+            font-weight: 800;
+            color: #0f172a;
+            list-style: none;
+        }
+        summary::-webkit-details-marker { display: none; }
+        details[open] summary { margin-bottom: 14px; }
+        @media (max-width: 1100px) {
+            .hero, .content-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 720px) {
+            .page { padding: 14px; }
+            .hero-main { padding: 22px; }
+            .stats { grid-template-columns: 1fr; }
+            .toolbar, .form-grid, .hero-actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="hero">
+            <div class="hero-main">
+                <div class="hero-brand">
+                    <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="hero-logo">
+                    <div class="hero-brand-text">
+                        <strong>KMLA</strong>
+                        <span>Project Equipment Desk</span>
+                    </div>
+                </div>
+                <span class="eyebrow">KMLA Project Equipment Desk</span>
+                <h1>프로젝트 기자재 사용 반납 관리</h1>
+                <p>기자재 등록, 대여 처리, 반납 처리, 이용 이력을 한 화면에서 관리할 수 있는 관리자용 프로그램입니다.</p>
+                <div class="hero-meta">
+                    <span class="meta-chip">기자재 등록</span>
+                    <span class="meta-chip">대여 / 반납</span>
+                    <span class="meta-chip">이력 조회</span>
+                </div>
+            </div>
+            <div class="hero-side">
+                <div class="user-line">
+                    <div class="user-box">
+                        <strong>{{ username }}</strong>
+                        <span>관리자 로그인 상태</span>
+                    </div>
+                </div>
+                <div class="side-note">
+                    현재 재고와 대여 상태를 기준으로 수량이 자동 계산됩니다. 대여 중인 기자재는 삭제할 수 없습니다.
+                </div>
+                <div class="hero-actions">
+                    <a href="{{ url_for('dashboard') }}" class="secondary">새로고침</a>
+                    <a href="{{ url_for('logout') }}" class="primary">로그아웃</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <span>등록 기자재 종류</span>
+                <strong>{{ stats.total_items }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>전체 수량</span>
+                <strong>{{ stats.total_stock }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>대여 가능 수량</span>
+                <strong>{{ stats.available_stock }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>현재 대여 중</span>
+                <strong>{{ stats.borrowed_count }}</strong>
+            </div>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel-stack">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">기자재 목록</div>
+                            <div class="subtle">검색, 필터, 수정, 삭제, 대여 가능 여부 확인</div>
+                        </div>
+                    </div>
+
+                    <form method="get" class="toolbar">
+                        <input type="text" name="q" value="{{ request.args.get('q', '') }}" placeholder="기자재명, 분류, 자산번호, 위치 검색">
+                        <select name="category">
+                            <option value="">전체 분류</option>
+                            {% for option in categories %}
+                            <option value="{{ option }}" {% if filters.category == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="status">
+                            <option value="">전체 상태</option>
+                            <option value="available" {% if filters.status == 'available' %}selected{% endif %}>대여 가능</option>
+                            <option value="unavailable" {% if filters.status == 'unavailable' %}selected{% endif %}>재고 없음</option>
+                        </select>
+                        <button class="btn btn-secondary" type="submit">조회</button>
+                    </form>
+
+                    {% if items %}
+                    <div class="equipment-grid">
+                        {% for item in items %}
+                        <div class="equipment-card">
+                            <div class="equipment-top">
+                                <div>
+                                    <div class="equipment-name">{{ item.name }}</div>
+                                    <div class="subtle">{{ item.category }}</div>
+                                </div>
+                                {% if item.quantity_available > 0 %}
+                                <span class="badge badge-ok">대여 가능</span>
+                                {% else %}
+                                <span class="badge badge-off">재고 없음</span>
+                                {% endif %}
+                            </div>
+                            <div class="equipment-meta">
+                                <div><strong>자산번호</strong> {{ item.asset_no or '-' }}</div>
+                                <div><strong>보관 위치</strong> {{ item.location or '-' }}</div>
+                                <div><strong>수량</strong> {{ item.quantity_total }} / {{ item.quantity_available }}</div>
+                                <div><strong>비고</strong> {{ item.notes or '-' }}</div>
+                            </div>
+                            <details>
+                                <summary>수정</summary>
+                                <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form">
+                                    <div class="form-grid">
+                                        <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
+                                        <input type="text" name="category" value="{{ item.category }}" placeholder="분류">
+                                        <input type="text" name="asset_no" value="{{ item.asset_no }}" placeholder="자산번호">
+                                        <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
+                                        <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
+                                        <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
+                                    </div>
+                                    <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
+                                    <div class="inline-actions">
+                                        <button class="btn btn-primary" type="submit">저장</button>
+                                        <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
+                                    </div>
+                                </form>
+                            </details>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty">조건에 맞는 기자재가 없습니다.</div>
+                    {% endif %}
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">대여 이력</div>
+                            <div class="subtle">최근 기록부터 최대 12건 표시합니다.</div>
+                        </div>
+                    </div>
+                    {% if history %}
+                    <div class="history-list">
+                        {% for loan in history[:12] %}
+                        <div class="history-item">
+                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
+                            <div class="history-meta">
+                                <div><strong>수량</strong> {{ loan.quantity }}</div>
+                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
+                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
+                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
+                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
+                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
+                                <div><strong>반납일</strong> {{ loan.returned_at or '-' }}</div>
+                                <div><strong>상태</strong> {{ '대여중' if loan.status == 'borrowed' else '반납완료' }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty">아직 기록이 없습니다.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="panel-stack">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">기자재 등록</div>
+                            <div class="subtle">새 기자재를 추가합니다.</div>
+                        </div>
+                    </div>
+                    <form method="post" action="{{ url_for('create_item') }}" class="compact-form">
+                        <div class="form-grid">
+                            <input type="text" name="name" placeholder="기자재명" required>
+                            <input type="text" name="category" placeholder="분류">
+                            <input type="text" name="asset_no" placeholder="자산번호">
+                            <input type="text" name="location" placeholder="보관 위치">
+                            <input type="number" name="quantity_total" placeholder="총 수량" min="0" value="1">
+                            <input type="number" name="quantity_available" placeholder="가능 수량" min="0" value="1">
+                        </div>
+                        <textarea name="notes" placeholder="비고"></textarea>
+                        <button class="btn btn-primary" type="submit">등록</button>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">대여 처리</div>
+                            <div class="subtle">현재 재고가 있는 기자재만 대여할 수 있습니다.</div>
+                        </div>
+                    </div>
+                    <form method="post" action="{{ url_for('create_loan') }}" class="compact-form">
+                        <select name="item_id" required>
+                            <option value="">기자재 선택</option>
+                            {% for item in all_items %}
+                            <option value="{{ item.id }}">{{ item.name }} / 가능 {{ item.quantity_available }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-grid">
+                            <input type="text" name="borrower" placeholder="대여자" required>
+                            <input type="text" name="phone" placeholder="휴대폰 번호">
+                            <select name="class_name">
+                                <option value="">수업명 선택</option>
+                                <option value="주제탐구">주제탐구</option>
+                                <option value="융합탐구">융합탐구</option>
+                            </select>
+                            <input type="text" name="team_name" placeholder="팀명">
+                            <input type="text" name="department" placeholder="소속">
+                            <input type="number" name="quantity" min="1" value="1" placeholder="수량">
+                            <input type="text" name="purpose" placeholder="사용 목적">
+                            <input type="date" name="borrowed_at" value="{{ '' }}">
+                            <input type="date" name="due_at" value="{{ '' }}">
+                        </div>
+                        <textarea name="notes" placeholder="메모"></textarea>
+                        <button class="btn btn-primary" type="submit">대여 등록</button>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-title">반납 처리</div>
+                            <div class="subtle">현재 대여 중인 항목만 표시됩니다.</div>
+                        </div>
+                    </div>
+                    {% if active_loans %}
+                    <div class="loan-list">
+                        {% for loan in active_loans %}
+                        <div class="loan-item">
+                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
+                            <div class="loan-meta">
+                                <div><strong>수량</strong> {{ loan.quantity }}</div>
+                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
+                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
+                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
+                                <div><strong>소속</strong> {{ loan.department or '-' }}</div>
+                                <div><strong>사용 목적</strong> {{ loan.purpose or '-' }}</div>
+                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
+                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
+                            </div>
+                            <form method="post" action="{{ url_for('return_loan', loan_id=loan.id) }}" class="inline-actions">
+                                <input type="date" name="returned_at">
+                                <button class="btn btn-warning" type="submit">반납 처리</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기자재 관리 로그인</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+            color: #0f172a;
+        }
+        .login-shell {
+            width: min(420px, calc(100vw - 32px));
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+        }
+        .brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .brand-logo {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            object-fit: contain;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+            margin-bottom: 12px;
+        }
+        .brand-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: #334155;
+            letter-spacing: 0.08em;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+        p {
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .error {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 16px;
+            background: #1d4ed8;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:hover { background: #1e40af; }
+        .hint {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-shell">
+        <div class="brand">
+            <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="brand-logo">
+            <div class="brand-name">KMLA</div>
+        </div>
+        <h1>기자재 사용 반납 관리</h1>
+        <p>프로젝트 기자재의 등록, 대여, 반납, 이력을 관리하는 관리자 화면입니다.</p>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            <label for="username">아이디</label>
+            <input id="username" name="username" type="text" required>
+
+            <label for="password">비밀번호</label>
+            <input id="password" name="password" type="password" required>
+
+            <button type="submit">로그인</button>
+        </form>
+        <div class="hint">초기 계정: admin / admin1234</div>
+    </div>
+</body>
+</html>
+
