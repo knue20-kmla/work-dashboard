@@ -38,9 +38,9 @@
         }
         .hero-brand {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 14px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         .hero-logo {
             width: 64px;
@@ -53,30 +53,20 @@
         }
         .hero-brand-text {
             display: grid;
-            gap: 4px;
+            gap: 8px;
+            flex: 1;
         }
         .hero-brand-text strong {
             font-size: 14px;
             letter-spacing: 0.08em;
         }
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 11px;
-            font-weight: 800;
-            margin-bottom: 14px;
-        }
-        .hero-main h1 {
+        .hero-copy h1 {
             font-size: 31px;
             margin-bottom: 10px;
             line-height: 1.2;
         }
-        .hero-main p {
-            max-width: 640px;
+        .hero-copy p {
+            max-width: 720px;
             color: rgba(255,255,255,0.86);
             line-height: 1.6;
             font-size: 14px;
@@ -85,7 +75,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 18px;
+            margin-top: 0;
         }
         .meta-chip {
             display: inline-flex;
@@ -369,15 +359,16 @@
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="hero-logo">
                     <div class="hero-brand-text">
                         <strong>KMLA</strong>
+                        <div class="hero-copy">
+                            <h1>프로젝트 기자재 사용 반납 관리</h1>
+                            <p>기자재 등록, 대여 처리, 반납 처리, 이용 이력을 한 화면에서 관리할 수 있는 관리자용 프로그램입니다.</p>
+                        </div>
+                        <div class="hero-meta">
+                            <a href="#register-panel" class="meta-chip">기자재 등록</a>
+                            <a href="#loan-panel" class="meta-chip">대여 / 반납</a>
+                            <a href="#history-panel" class="meta-chip">이력 조회</a>
+                        </div>
                     </div>
-                </div>
-                <span class="eyebrow">KMLA Project Equipment Desk</span>
-                <h1>프로젝트 기자재 사용 반납 관리</h1>
-                <p>기자재 등록, 대여 처리, 반납 처리, 이용 이력을 한 화면에서 관리할 수 있는 관리자용 프로그램입니다.</p>
-                <div class="hero-meta">
-                    <a href="#register-panel" class="meta-chip">기자재 등록</a>
-                    <a href="#loan-panel" class="meta-chip">대여 / 반납</a>
-                    <a href="#history-panel" class="meta-chip">이력 조회</a>
                 </div>
             </div>
             <div class="hero-side">
