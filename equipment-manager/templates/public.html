@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f3f6fb;
+            background: #f4f7fb;
             color: #0f172a;
         }
         .page {
@@ -29,6 +29,9 @@
             align-items: center;
             padding: 24px 28px;
             margin-bottom: 18px;
+            background:
+                linear-gradient(135deg, #fbfdff 0%, #f3f7fd 58%, #eef4fb 100%);
+            border-color: #d9e4f2;
         }
         .brand {
             display: flex;
@@ -41,24 +44,25 @@
             height: 70px;
             border-radius: 50%;
             background: #ffffff;
-            padding: 4px;
-            border: 1px solid #e2e8f0;
+            padding: 5px;
+            border: 1px solid #d8e3f1;
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
         }
         .brand-copy {
             display: grid;
-            gap: 4px;
+            gap: 6px;
         }
         .brand strong {
             display: block;
-            font-size: 13px;
-            letter-spacing: 0.14em;
-            color: #64748b;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            color: #6b7a90;
         }
         .brand span {
-            font-size: 28px;
+            font-size: 30px;
             line-height: 1.15;
             font-weight: 800;
-            color: #0f172a;
+            color: #152033;
         }
         .hero-side {
             display: grid;
@@ -68,8 +72,9 @@
         .hero-box {
             padding: 16px;
             border-radius: 14px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid #dbe6f3;
+            backdrop-filter: blur(8px);
         }
         .hero-box strong {
             display: block;
@@ -94,12 +99,12 @@
             font-weight: 700;
         }
         .hero-actions .primary {
-            background: #1d4ed8;
+            background: #2563eb;
             color: #ffffff;
         }
         .hero-actions .secondary {
-            background: #e2e8f0;
-            color: #0f172a;
+            background: #e9eff7;
+            color: #1e293b;
         }
         .messages {
             display: grid;
@@ -122,6 +127,7 @@
         }
         .stat-card {
             padding: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
         }
         .stat-card span {
             display: block;
@@ -139,6 +145,7 @@
         }
         .panel {
             padding: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
         }
         .panel-stack {
             display: grid;
@@ -405,6 +412,7 @@
                             </select>
                             <input type="number" name="quantity" min="1" value="1" placeholder="수량">
                             <input type="text" name="purpose" placeholder="사용 목적">
+                            <input type="date" name="borrowed_at">
                             <input type="date" name="due_at">
                         </div>
                         <textarea name="notes" placeholder="메모"></textarea>
