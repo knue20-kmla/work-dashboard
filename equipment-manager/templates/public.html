@@ -264,6 +264,35 @@
             display: grid;
             gap: 10px;
         }
+        .loan-table {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .loan-row {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) 72px 108px 108px;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #fbfcfe;
+            font-size: 13px;
+        }
+        .loan-row.header {
+            background: #eef4fb;
+            border-color: #d9e4f2;
+            color: #475569;
+            font-weight: 700;
+        }
+        .loan-row div {
+            min-width: 0;
+        }
+        .loan-item-name {
+            font-weight: 700;
+            color: #0f172a;
+        }
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -311,6 +340,12 @@
             .page { padding: 14px; }
             .hero { padding: 22px; }
             .stats, .form-grid { grid-template-columns: 1fr; }
+            .loan-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .loan-row.header {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -481,17 +516,19 @@
                     <div class="panel-title">내 대여 현황 및 반납</div>
                     <div class="subtle" style="margin-bottom:14px;">로그인한 본인 계정의 대여 건만 반납 처리할 수 있습니다.</div>
                     {% if member_user and member_loans %}
-                    <div class="loan-list" style="margin-bottom:14px;">
+                    <div class="loan-table">
+                        <div class="loan-row header">
+                            <div>품명</div>
+                            <div>수량</div>
+                            <div>대여일</div>
+                            <div>반납일</div>
+                        </div>
                         {% for loan in member_loans %}
-                        <div class="loan-item">
-                            <strong>{{ loan.item_name }}</strong>
-                            <div class="loan-meta">
-                                <div><strong>수량</strong> {{ loan.quantity }}</div>
-                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
-                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
-                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
-                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
-                            </div>
+                        <div class="loan-row">
+                            <div class="loan-item-name">{{ loan.item_name }}</div>
+                            <div>{{ loan.quantity }}</div>
+                            <div>{{ loan.borrowed_at or '-' }}</div>
+                            <div>{{ loan.due_at or '-' }}</div>
                         </div>
                         {% endfor %}
                     </div>
