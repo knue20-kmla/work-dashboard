@@ -190,7 +190,7 @@
         }
         .section-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
+            grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.7fr);
             gap: 16px;
             align-items: start;
         }
@@ -211,6 +211,8 @@
         }
         .panel {
             padding: 18px;
+            min-width: 0;
+            overflow: hidden;
         }
         .panel-stack {
             display: grid;
@@ -280,6 +282,13 @@
         .history-table {
             display: grid;
             gap: 8px;
+            min-width: 0;
+        }
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 2px;
         }
         .equipment-row,
         .loan-row,
@@ -336,8 +345,18 @@
         .queue-actions {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-start;
             gap: 8px;
+        }
+        .queue-actions form,
+        .queue-actions .btn,
+        .equipment-row details,
+        .equipment-row summary {
+            max-width: 100%;
+        }
+        .queue-actions .btn,
+        .equipment-row summary {
+            white-space: nowrap;
         }
         .queue-summary {
             display: grid;
@@ -723,6 +742,7 @@
                     </form>
 
                     {% if items %}
+                    <div class="table-scroll">
                     <div class="equipment-table">
                         <div class="equipment-row header">
                             <div>품명</div>
@@ -787,6 +807,7 @@
                         </div>
                         {% endfor %}
                     </div>
+                    </div>
                     {% else %}
                     <div class="empty">조건에 맞는 기자재가 없습니다.</div>
                     {% endif %}
@@ -830,6 +851,7 @@
                             <div class="panel-title" style="font-size:16px;">대여 신청 목록</div>
                             <div class="subtle" style="margin-bottom:10px;">대여 신청 상태인 항목만 표시됩니다.</div>
                             {% if pending_borrow_requests %}
+                            <div class="table-scroll">
                             <div class="loan-table">
                                 <div class="loan-row header">
                                     <div>신청자 / 품목</div>
@@ -856,6 +878,7 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                            </div>
                             {% else %}
                             <div class="empty">대기 중인 대여 신청이 없습니다.</div>
                             {% endif %}
@@ -865,6 +888,7 @@
                             <div class="panel-title" style="font-size:16px;">반납 신청 목록</div>
                             <div class="subtle" style="margin-bottom:10px;">반납 신청 상태인 항목만 표시됩니다.</div>
                             {% if pending_return_requests %}
+                            <div class="table-scroll">
                             <div class="loan-table">
                                 <div class="loan-row header">
                                     <div>신청자 / 품목</div>
@@ -891,6 +915,7 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                            </div>
                             {% else %}
                             <div class="empty">대기 중인 반납 신청이 없습니다.</div>
                             {% endif %}
@@ -900,6 +925,7 @@
                             <div class="panel-title" style="font-size:16px;">현재 대여 중</div>
                             <div class="subtle" style="margin-bottom:10px;">승인 완료 후 아직 반납 완료되지 않은 항목입니다.</div>
                             {% if active_loans %}
+                            <div class="table-scroll">
                             <div class="loan-table">
                                 <div class="loan-row header">
                                     <div>대여자 / 품목</div>
@@ -922,6 +948,7 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                            </div>
                             {% else %}
                             <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
                             {% endif %}
@@ -943,6 +970,7 @@
                     </div>
                     {% set ongoing_history = history | rejectattr('status', 'equalto', 'returned') | list %}
                     {% if ongoing_history %}
+                    <div class="table-scroll">
                     <div class="history-table">
                         <div class="history-row header">
                             <div>품목 / 대여자</div>
@@ -974,6 +1002,7 @@
                         </div>
                         {% endfor %}
                     </div>
+                    </div>
                     {% else %}
                     <div class="empty">진행 중인 이력이 없습니다.</div>
                     {% endif %}
@@ -988,6 +1017,7 @@
                     </div>
                     {% set returned_history = history | selectattr('status', 'equalto', 'returned') | list %}
                     {% if returned_history %}
+                    <div class="table-scroll">
                     <div class="history-table">
                         <div class="history-row header">
                             <div>품목 / 대여자</div>
@@ -1012,6 +1042,7 @@
                             <div><span class="badge badge-off">{{ loan_status_label(loan.status) }}</span></div>
                         </div>
                         {% endfor %}
+                    </div>
                     </div>
                     {% else %}
                     <div class="empty">반납 완료 이력이 없습니다.</div>
