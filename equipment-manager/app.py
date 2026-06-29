@@ -343,6 +343,54 @@ def create_admin_user(username, password, role="subadmin"):
     return True
 
 
+def delete_admin_user(username):
+    target_username = username.strip()
+    users = load_admin_users()
+    target = next((user for user in users if user["username"] == target_username), None)
+    if not target or target.get("role") == "superadmin":
+        return False
+
+    remaining = [user for user in users if user["username"] != target_username]
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("admin_users").delete().eq("username", target_username).execute()
+            sync_admin_users_to_local(remaining)
+            return True
+        except Exception:
+            sync_admin_users_to_local(remaining)
+            flash("admin_users 테이블이 없어 로컬 관리자 목록에서만 삭제했습니다.", "warning")
+            return True
+
+    sync_admin_users_to_local(remaining)
+    return True
+
+
+def reset_admin_user_password(username, new_password):
+    target_username = username.strip()
+    users = load_admin_users()
+    target = next((user for user in users if user["username"] == target_username), None)
+    if not target or target.get("role") == "superadmin":
+        return False
+
+    target["password_hash"] = generate_password_hash(new_password)
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("admin_users").update(
+                {"password_hash": target["password_hash"]}
+            ).eq("username", target_username).execute()
+            sync_admin_users_to_local(users)
+            return True
+        except Exception:
+            sync_admin_users_to_local(users)
+            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            return True
+
+    sync_admin_users_to_local(users)
+    return True
+
+
 def load_items():
     client = get_supabase_client()
     if not client:
@@ -477,6 +525,18 @@ def find_member_by_id(member_id):
         return None
 
 
+def load_members():
+    client = get_supabase_client()
+    if not client:
+        return []
+
+    try:
+        result = client.table("profiles").select("*").order("created_at", desc=True).execute()
+        return result.data or []
+    except Exception:
+        return []
+
+
 def create_member_account(full_name, email, phone, password):
     client = get_supabase_client()
     if not client:
@@ -502,6 +562,32 @@ def create_member_account(full_name, email, phone, password):
         return True, result.data[0]
     except Exception:
         return False, "회원 정보를 저장하지 못했습니다. Supabase 테이블 설정을 확인해 주세요."
+
+
+def update_member_password(member_id, new_password):
+    client = get_supabase_client()
+    if not client:
+        return False
+
+    try:
+        client.table("profiles").update(
+            {"password_hash": generate_password_hash(new_password)}
+        ).eq("id", member_id).execute()
+        return True
+    except Exception:
+        return False
+
+
+def delete_member_account(member_id):
+    client = get_supabase_client()
+    if not client:
+        return False
+
+    try:
+        client.table("profiles").delete().eq("id", member_id).execute()
+        return True
+    except Exception:
+        return False
 
 
 def get_member_session():
@@ -925,6 +1011,7 @@ def dashboard():
         username=session["username"],
         admin_role=session.get("admin_role", "subadmin"),
         admin_users=load_admin_users(),
+        members=load_members(),
         **build_dashboard_data(),
     )
 
@@ -978,6 +1065,68 @@ def create_subadmin():
         flash("서브관리자를 추가했습니다.", "success")
     else:
         flash("이미 존재하는 관리자 아이디이거나 생성에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/subadmins/reset-password", methods=["POST"])
+@superadmin_required
+def reset_subadmin_password():
+    username = request.form.get("subadmin_username", "").strip()
+    new_password = request.form.get("new_password", "")
+    new_password_confirm = request.form.get("new_password_confirm", "")
+
+    if not username or not new_password or new_password != new_password_confirm:
+        flash("서브관리자 비밀번호 확인이 일치하지 않습니다.", "error")
+        return redirect(url_for("dashboard"))
+
+    if reset_admin_user_password(username, new_password):
+        flash("서브관리자 비밀번호를 재설정했습니다.", "success")
+    else:
+        flash("서브관리자 비밀번호 재설정에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/subadmins/delete", methods=["POST"])
+@superadmin_required
+def delete_subadmin():
+    username = request.form.get("subadmin_username", "").strip()
+    if delete_admin_user(username):
+        flash("서브관리자를 삭제했습니다.", "success")
+    else:
+        flash("서브관리자 삭제에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/members/reset-password", methods=["POST"])
+@superadmin_required
+def reset_member_password():
+    member_id = parse_positive_int(request.form.get("member_id"))
+    new_password = request.form.get("new_password", "")
+    new_password_confirm = request.form.get("new_password_confirm", "")
+
+    if not member_id or not new_password or new_password != new_password_confirm:
+        flash("회원 비밀번호 확인이 일치하지 않습니다.", "error")
+        return redirect(url_for("dashboard"))
+
+    if update_member_password(member_id, new_password):
+        flash("회원 비밀번호를 재설정했습니다.", "success")
+    else:
+        flash("회원 비밀번호 재설정에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/admin/members/delete", methods=["POST"])
+@superadmin_required
+def delete_member():
+    member_id = parse_positive_int(request.form.get("member_id"))
+    if not member_id:
+        flash("삭제할 회원을 확인해 주세요.", "error")
+        return redirect(url_for("dashboard"))
+
+    if delete_member_account(member_id):
+        flash("회원을 삭제했습니다.", "success")
+    else:
+        flash("회원 삭제에 실패했습니다.", "error")
     return redirect(url_for("dashboard"))
 
 

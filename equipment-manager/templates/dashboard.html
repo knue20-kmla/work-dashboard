@@ -600,6 +600,14 @@
                         {% for admin_user in admin_users %}
                         <div class="category-item">
                             <span>{{ admin_user.username }}{% if admin_user.role == 'superadmin' %} / 메인 관리자{% else %} / 서브관리자{% endif %}</span>
+                            {% if admin_user.role == 'subadmin' %}
+                            <div class="inline-actions">
+                                <form method="post" action="{{ url_for('delete_subadmin') }}">
+                                    <input type="hidden" name="subadmin_username" value="{{ admin_user.username }}">
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('이 서브관리자를 삭제할까요?')">삭제</button>
+                                </form>
+                            </div>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     </div>
@@ -619,6 +627,51 @@
                             <input type="password" name="subadmin_password" placeholder="비밀번호" required>
                             <input type="password" name="subadmin_password_confirm" placeholder="비밀번호 확인" required>
                             <button class="btn btn-primary" type="submit">서브관리자 추가</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>서브관리자 비밀번호 재설정</summary>
+                        <form method="post" action="{{ url_for('reset_subadmin_password') }}" class="compact-form">
+                            <select name="subadmin_username" required>
+                                <option value="">서브관리자 선택</option>
+                                {% for admin_user in admin_users if admin_user.role == 'subadmin' %}
+                                <option value="{{ admin_user.username }}">{{ admin_user.username }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">비밀번호 재설정</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>회원 관리</summary>
+                        {% if members %}
+                        <div class="category-list" style="margin:14px 0;">
+                            {% for member in members %}
+                            <div class="category-item">
+                                <span>{{ member.full_name }} / {{ member.email }}{% if member.phone %} / {{ member.phone }}{% endif %}</span>
+                                <div class="inline-actions">
+                                    <form method="post" action="{{ url_for('delete_member') }}">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('이 회원을 삭제할까요?')">삭제</button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty" style="margin-top:14px;">등록된 일반 회원이 없습니다.</div>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('reset_member_password') }}" class="compact-form" style="margin-top:14px;">
+                            <select name="member_id" required>
+                                <option value="">회원 선택</option>
+                                {% for member in members %}
+                                <option value="{{ member.id }}">{{ member.full_name }} / {{ member.email }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">회원 비밀번호 재설정</button>
                         </form>
                     </details>
                 </div>
