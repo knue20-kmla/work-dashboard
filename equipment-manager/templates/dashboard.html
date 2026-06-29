@@ -121,23 +121,30 @@
             line-height: 1.5;
         }
         .hero-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
         }
-        .hero-actions a {
+        .hero-actions a,
+        .hero-actions button {
             text-align: center;
             padding: 12px 14px;
             border-radius: 10px;
             text-decoration: none;
             font-size: 13px;
             font-weight: 700;
+            border: none;
+            cursor: pointer;
         }
         .hero-actions a.primary {
             background: #1d4ed8;
             color: white;
         }
         .hero-actions a.secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .hero-actions button.secondary {
             background: #e2e8f0;
             color: #0f172a;
         }
@@ -380,6 +387,59 @@
             font-size: 14px;
             background: #f8fafc;
         }
+        .admin-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.58);
+            z-index: 60;
+        }
+        .admin-modal.active {
+            display: flex;
+        }
+        .admin-modal-card {
+            width: min(880px, 100%);
+            max-height: 85vh;
+            overflow: auto;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #dbe4f0;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+        }
+        .admin-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            z-index: 1;
+        }
+        .admin-modal-head strong {
+            font-size: 18px;
+        }
+        .admin-modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            border: none;
+            background: #eef4fb;
+            color: #334155;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .admin-modal-body {
+            padding: 20px;
+            display: grid;
+            gap: 14px;
+            background: #f8fafc;
+        }
         details {
             border: 1px solid #e2e8f0;
             border-radius: 14px;
@@ -402,7 +462,7 @@
             .page { padding: 14px; }
             .hero-main { padding: 22px; }
             .stats { grid-template-columns: 1fr; }
-            .toolbar, .form-grid, .hero-actions { grid-template-columns: 1fr; }
+            .toolbar, .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -447,6 +507,9 @@
                     현재 재고와 대여 상태를 기준으로 수량이 자동 계산됩니다. 대여 중인 기자재는 삭제할 수 없습니다.
                 </div>
                 <div class="hero-actions">
+                    {% if admin_role == 'superadmin' %}
+                    <button type="button" class="secondary" id="admin-manage-open">관리자 권한 관리</button>
+                    {% endif %}
                     <a href="{{ url_for('index') }}" class="secondary">사용자 화면</a>
                     <a href="{{ url_for('dashboard') }}" class="secondary">새로고침</a>
                     <a href="{{ url_for('logout') }}" class="primary">로그아웃</a>
@@ -475,7 +538,7 @@
 
         <section class="content-grid">
             <div class="panel-stack">
-                <div class="panel" id="history-panel">
+                <div class="panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">기자재 목록</div>
@@ -556,7 +619,7 @@
                     {% endif %}
                 </div>
 
-                <div class="panel" id="register-panel">
+                <div class="panel" id="history-panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">대여 이력</div>
@@ -588,96 +651,7 @@
             </div>
 
             <div class="panel-stack">
-                {% if admin_role == 'superadmin' %}
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">관리자 권한 관리</div>
-                            <div class="subtle">메인 관리자 비밀번호 변경과 서브관리자 계정 추가를 관리합니다.</div>
-                        </div>
-                    </div>
-                    <div class="category-list" style="margin-bottom:14px;">
-                        {% for admin_user in admin_users %}
-                        <div class="category-item">
-                            <span>{{ admin_user.username }}{% if admin_user.role == 'superadmin' %} / 메인 관리자{% else %} / 서브관리자{% endif %}</span>
-                            {% if admin_user.role == 'subadmin' %}
-                            <div class="inline-actions">
-                                <form method="post" action="{{ url_for('delete_subadmin') }}">
-                                    <input type="hidden" name="subadmin_username" value="{{ admin_user.username }}">
-                                    <button class="btn btn-danger" type="submit" onclick="return confirm('이 서브관리자를 삭제할까요?')">삭제</button>
-                                </form>
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <details>
-                        <summary>메인 관리자 비밀번호 변경</summary>
-                        <form method="post" action="{{ url_for('change_admin_password') }}" class="compact-form">
-                            <input type="password" name="current_password" placeholder="현재 비밀번호" required>
-                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
-                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
-                            <button class="btn btn-primary" type="submit">비밀번호 변경</button>
-                        </form>
-                    </details>
-                    <details style="margin-top:12px;">
-                        <summary>서브관리자 추가</summary>
-                        <form method="post" action="{{ url_for('create_subadmin') }}" class="compact-form">
-                            <input type="text" name="subadmin_username" placeholder="서브관리자 아이디" required>
-                            <input type="password" name="subadmin_password" placeholder="비밀번호" required>
-                            <input type="password" name="subadmin_password_confirm" placeholder="비밀번호 확인" required>
-                            <button class="btn btn-primary" type="submit">서브관리자 추가</button>
-                        </form>
-                    </details>
-                    <details style="margin-top:12px;">
-                        <summary>서브관리자 비밀번호 재설정</summary>
-                        <form method="post" action="{{ url_for('reset_subadmin_password') }}" class="compact-form">
-                            <select name="subadmin_username" required>
-                                <option value="">서브관리자 선택</option>
-                                {% for admin_user in admin_users if admin_user.role == 'subadmin' %}
-                                <option value="{{ admin_user.username }}">{{ admin_user.username }}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
-                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
-                            <button class="btn btn-primary" type="submit">비밀번호 재설정</button>
-                        </form>
-                    </details>
-                    <details style="margin-top:12px;">
-                        <summary>회원 관리</summary>
-                        {% if members %}
-                        <div class="category-list" style="margin:14px 0;">
-                            {% for member in members %}
-                            <div class="category-item">
-                                <span>{{ member.full_name }} / {{ member.email }}{% if member.phone %} / {{ member.phone }}{% endif %}</span>
-                                <div class="inline-actions">
-                                    <form method="post" action="{{ url_for('delete_member') }}">
-                                        <input type="hidden" name="member_id" value="{{ member.id }}">
-                                        <button class="btn btn-danger" type="submit" onclick="return confirm('이 회원을 삭제할까요?')">삭제</button>
-                                    </form>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        <div class="empty" style="margin-top:14px;">등록된 일반 회원이 없습니다.</div>
-                        {% endif %}
-                        <form method="post" action="{{ url_for('reset_member_password') }}" class="compact-form" style="margin-top:14px;">
-                            <select name="member_id" required>
-                                <option value="">회원 선택</option>
-                                {% for member in members %}
-                                <option value="{{ member.id }}">{{ member.full_name }} / {{ member.email }}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
-                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
-                            <button class="btn btn-primary" type="submit">회원 비밀번호 재설정</button>
-                        </form>
-                    </details>
-                </div>
-                {% endif %}
-
-                <div class="panel">
+                <div class="panel" id="register-panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">기자재 등록</div>
@@ -806,6 +780,122 @@
             </div>
         </section>
     </div>
+    {% if admin_role == 'superadmin' %}
+    <div class="admin-modal" id="admin-manage-modal" aria-hidden="true">
+        <div class="admin-modal-card">
+            <div class="admin-modal-head">
+                <strong>관리자 권한 관리</strong>
+                <button type="button" class="admin-modal-close" id="admin-manage-close" aria-label="닫기">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <div class="panel" style="padding:0; background:none; box-shadow:none; border:none;">
+                    <div class="subtle" style="margin-bottom:14px;">메인 관리자 비밀번호 변경, 서브관리자 추가, 회원 관리를 수행합니다.</div>
+                    <div class="category-list" style="margin-bottom:14px;">
+                        {% for admin_user in admin_users %}
+                        <div class="category-item">
+                            <span>{{ admin_user.username }}{% if admin_user.role == 'superadmin' %} / 메인 관리자{% else %} / 서브관리자{% endif %}</span>
+                            {% if admin_user.role == 'subadmin' %}
+                            <div class="inline-actions">
+                                <form method="post" action="{{ url_for('delete_subadmin') }}">
+                                    <input type="hidden" name="subadmin_username" value="{{ admin_user.username }}">
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('이 서브관리자를 삭제할까요?')">삭제</button>
+                                </form>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <details>
+                        <summary>메인 관리자 비밀번호 변경</summary>
+                        <form method="post" action="{{ url_for('change_admin_password') }}" class="compact-form">
+                            <input type="password" name="current_password" placeholder="현재 비밀번호" required>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">비밀번호 변경</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>서브관리자 추가</summary>
+                        <form method="post" action="{{ url_for('create_subadmin') }}" class="compact-form">
+                            <input type="text" name="subadmin_username" placeholder="서브관리자 아이디" required>
+                            <input type="password" name="subadmin_password" placeholder="비밀번호" required>
+                            <input type="password" name="subadmin_password_confirm" placeholder="비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">서브관리자 추가</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>서브관리자 비밀번호 재설정</summary>
+                        <form method="post" action="{{ url_for('reset_subadmin_password') }}" class="compact-form">
+                            <select name="subadmin_username" required>
+                                <option value="">서브관리자 선택</option>
+                                {% for admin_user in admin_users if admin_user.role == 'subadmin' %}
+                                <option value="{{ admin_user.username }}">{{ admin_user.username }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">비밀번호 재설정</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>회원 관리</summary>
+                        {% if members %}
+                        <div class="category-list" style="margin:14px 0;">
+                            {% for member in members %}
+                            <div class="category-item">
+                                <span>{{ member.full_name }} / {{ member.email }}{% if member.phone %} / {{ member.phone }}{% endif %}</span>
+                                <div class="inline-actions">
+                                    <form method="post" action="{{ url_for('delete_member') }}">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('이 회원을 삭제할까요?')">삭제</button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty" style="margin-top:14px;">등록된 일반 회원이 없습니다.</div>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('reset_member_password') }}" class="compact-form" style="margin-top:14px;">
+                            <select name="member_id" required>
+                                <option value="">회원 선택</option>
+                                {% for member in members %}
+                                <option value="{{ member.id }}">{{ member.full_name }} / {{ member.email }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+                            <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
+                            <button class="btn btn-primary" type="submit">회원 비밀번호 재설정</button>
+                        </form>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const adminManageOpen = document.getElementById('admin-manage-open');
+        const adminManageModal = document.getElementById('admin-manage-modal');
+        const adminManageClose = document.getElementById('admin-manage-close');
+
+        function closeAdminManageModal() {
+            adminManageModal.classList.remove('active');
+            adminManageModal.setAttribute('aria-hidden', 'true');
+        }
+
+        if (adminManageOpen && adminManageModal && adminManageClose) {
+            adminManageOpen.addEventListener('click', () => {
+                adminManageModal.classList.add('active');
+                adminManageModal.setAttribute('aria-hidden', 'false');
+            });
+            adminManageClose.addEventListener('click', closeAdminManageModal);
+            adminManageModal.addEventListener('click', (event) => {
+                if (event.target === adminManageModal) {
+                    closeAdminManageModal();
+                }
+            });
+        }
+    </script>
+    {% endif %}
     <datalist id="category-options">
         {% for option in category_options %}
         <option value="{{ option }}"></option>
