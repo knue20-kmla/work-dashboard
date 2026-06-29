@@ -618,11 +618,15 @@ def create_loan_record(actor, member=None):
 
     client = get_supabase_client()
     if client:
-        client.table("equipment_items").update(
-            {"quantity_available": item["quantity_available"] - quantity}
-        ).eq("id", item_id).execute()
-        client.table("equipment_loans").insert(loan).execute()
-        return True
+        try:
+            client.table("equipment_items").update(
+                {"quantity_available": item["quantity_available"] - quantity}
+            ).eq("id", item_id).execute()
+            client.table("equipment_loans").insert(loan).execute()
+            return True
+        except Exception:
+            flash("대여 등록 중 오류가 발생했습니다. 입력값이나 Supabase 테이블 구조를 확인해 주세요.", "error")
+            return False
 
     loan["id"] = next_id(loans)
     item["quantity_available"] -= quantity
@@ -652,13 +656,17 @@ def complete_return(loan_id=None, member_id=None):
 
     client = get_supabase_client()
     if client:
-        client.table("equipment_items").update(
-            {"quantity_available": min(item["quantity_total"], item["quantity_available"] + loan["quantity"])}
-        ).eq("id", item["id"]).execute()
-        client.table("equipment_loans").update(
-            {"status": "returned", "returned_at": returned_at}
-        ).eq("id", target_loan_id).execute()
-        return True
+        try:
+            client.table("equipment_items").update(
+                {"quantity_available": min(item["quantity_total"], item["quantity_available"] + loan["quantity"])}
+            ).eq("id", item["id"]).execute()
+            client.table("equipment_loans").update(
+                {"status": "returned", "returned_at": returned_at}
+            ).eq("id", target_loan_id).execute()
+            return True
+        except Exception:
+            flash("반납 처리 중 오류가 발생했습니다. Supabase 테이블 구조를 확인해 주세요.", "error")
+            return False
 
     item["quantity_available"] = min(
         item["quantity_total"], item["quantity_available"] + loan["quantity"]
@@ -824,14 +832,16 @@ def delete_item(item_id):
 @app.route("/loans", methods=["POST"])
 @login_required
 def create_loan():
-    create_loan_record(session["username"])
+    if not create_loan_record(session["username"]):
+        flash("대여 등록에 실패했습니다.", "error")
     return redirect(url_for("dashboard"))
 
 
 @app.route("/loans/<int:loan_id>/return", methods=["POST"])
 @login_required
 def return_loan(loan_id):
-    complete_return(loan_id=loan_id)
+    if not complete_return(loan_id=loan_id):
+        flash("반납 처리에 실패했습니다.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -844,16 +854,16 @@ def public_borrow():
         flash("회원 정보를 다시 확인해 주세요. 다시 로그인해 주세요.", "error")
         return redirect(url_for("member_login"))
 
-    create_loan_record("member", member=member)
-    flash("대여 신청이 등록되었습니다.", "success")
+    if create_loan_record("member", member=member):
+        flash("대여 신청이 등록되었습니다.", "success")
     return redirect(url_for("index"))
 
 
 @app.route("/return", methods=["POST"])
 @member_required
 def public_return():
-    complete_return(member_id=get_member_session()["id"])
-    flash("반납 처리가 완료되었습니다.", "success")
+    if complete_return(member_id=get_member_session()["id"]):
+        flash("반납 처리가 완료되었습니다.", "success")
     return redirect(url_for("index"))
 
 
