@@ -177,8 +177,77 @@ def build_dashboard_data():
     }
 
 
+def create_loan_record(actor):
+    items = load_items()
+    loans = load_loans()
+
+    item_id = parse_positive_int(request.form.get("item_id"))
+    quantity = max(parse_positive_int(request.form.get("quantity"), 1), 1)
+    item = next((entry for entry in items if entry["id"] == item_id), None)
+
+    if not item or quantity > item["quantity_available"]:
+        return False
+
+    borrower = request.form.get("borrower", "").strip()
+    if not borrower:
+        return False
+
+    loan = {
+        "id": next_id(loans),
+        "item_id": item_id,
+        "item_name": item["name"],
+        "borrower": borrower,
+        "phone": request.form.get("phone", "").strip(),
+        "class_name": request.form.get("class_name", "").strip(),
+        "team_name": request.form.get("team_name", "").strip(),
+        "department": request.form.get("department", "").strip(),
+        "purpose": request.form.get("purpose", "").strip(),
+        "quantity": quantity,
+        "borrowed_at": request.form.get("borrowed_at") or today_str(),
+        "due_at": request.form.get("due_at", "").strip(),
+        "returned_at": "",
+        "status": "borrowed",
+        "notes": request.form.get("notes", "").strip(),
+        "created_by": actor,
+    }
+
+    item["quantity_available"] -= quantity
+    loans.append(loan)
+    save_items(items)
+    save_loans(loans)
+    return True
+
+
+def complete_return(loan_id=None):
+    items = load_items()
+    loans = load_loans()
+
+    target_loan_id = loan_id if loan_id is not None else parse_positive_int(request.form.get("loan_id"))
+    loan = next((entry for entry in loans if entry["id"] == target_loan_id), None)
+    if not loan or loan["status"] != "borrowed":
+        return False
+
+    item = next((entry for entry in items if entry["id"] == loan["item_id"]), None)
+    if item:
+        item["quantity_available"] = min(
+            item["quantity_total"], item["quantity_available"] + loan["quantity"]
+        )
+
+    loan["status"] = "returned"
+    loan["returned_at"] = request.form.get("returned_at") or today_str()
+
+    save_items(items)
+    save_loans(loans)
+    return True
+
+
 @app.route("/")
 def index():
+    return render_template("public.html", **build_dashboard_data())
+
+
+@app.route("/admin")
+def admin():
     if "username" in session:
         return redirect(url_for("dashboard"))
     return redirect(url_for("login"))
@@ -306,68 +375,27 @@ def delete_item(item_id):
 @app.route("/loans", methods=["POST"])
 @login_required
 def create_loan():
-    items = load_items()
-    loans = load_loans()
-
-    item_id = parse_positive_int(request.form.get("item_id"))
-    quantity = max(parse_positive_int(request.form.get("quantity"), 1), 1)
-    item = next((entry for entry in items if entry["id"] == item_id), None)
-
-    if not item or quantity > item["quantity_available"]:
-        return redirect(url_for("dashboard"))
-
-    borrower = request.form.get("borrower", "").strip()
-    if not borrower:
-        return redirect(url_for("dashboard"))
-
-    loan = {
-        "id": next_id(loans),
-        "item_id": item_id,
-        "item_name": item["name"],
-        "borrower": borrower,
-        "phone": request.form.get("phone", "").strip(),
-        "class_name": request.form.get("class_name", "").strip(),
-        "team_name": request.form.get("team_name", "").strip(),
-        "department": request.form.get("department", "").strip(),
-        "purpose": request.form.get("purpose", "").strip(),
-        "quantity": quantity,
-        "borrowed_at": request.form.get("borrowed_at") or today_str(),
-        "due_at": request.form.get("due_at", "").strip(),
-        "returned_at": "",
-        "status": "borrowed",
-        "notes": request.form.get("notes", "").strip(),
-        "created_by": session["username"],
-    }
-
-    item["quantity_available"] -= quantity
-    loans.append(loan)
-    save_items(items)
-    save_loans(loans)
+    create_loan_record(session["username"])
     return redirect(url_for("dashboard"))
 
 
 @app.route("/loans/<int:loan_id>/return", methods=["POST"])
 @login_required
 def return_loan(loan_id):
-    items = load_items()
-    loans = load_loans()
-
-    loan = next((entry for entry in loans if entry["id"] == loan_id), None)
-    if not loan or loan["status"] != "borrowed":
-        return redirect(url_for("dashboard"))
-
-    item = next((entry for entry in items if entry["id"] == loan["item_id"]), None)
-    if item:
-        item["quantity_available"] = min(
-            item["quantity_total"], item["quantity_available"] + loan["quantity"]
-        )
-
-    loan["status"] = "returned"
-    loan["returned_at"] = request.form.get("returned_at") or today_str()
-
-    save_items(items)
-    save_loans(loans)
+    complete_return(loan_id=loan_id)
     return redirect(url_for("dashboard"))
+
+
+@app.route("/borrow", methods=["POST"])
+def public_borrow():
+    create_loan_record("public")
+    return redirect(url_for("index"))
+
+
+@app.route("/return", methods=["POST"])
+def public_return():
+    complete_return()
+    return redirect(url_for("index"))
 
 
 @app.route("/api/items")

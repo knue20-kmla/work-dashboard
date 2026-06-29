@@ -391,6 +391,7 @@
                     현재 재고와 대여 상태를 기준으로 수량이 자동 계산됩니다. 대여 중인 기자재는 삭제할 수 없습니다.
                 </div>
                 <div class="hero-actions">
+                    <a href="{{ url_for('index') }}" class="secondary">사용자 화면</a>
                     <a href="{{ url_for('dashboard') }}" class="secondary">새로고침</a>
                     <a href="{{ url_for('logout') }}" class="primary">로그아웃</a>
                 </div>
@@ -477,7 +478,7 @@
                                     <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
                                     <div class="inline-actions">
                                         <button class="btn btn-primary" type="submit">저장</button>
-                                        <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
+                                        <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" formnovalidate onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
                                     </div>
                                 </form>
                             </details>

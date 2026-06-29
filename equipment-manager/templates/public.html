@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기자재 대여 및 반납</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f3f6fb;
+            color: #0f172a;
+        }
+        .page {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .hero,
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+            gap: 20px;
+            padding: 28px;
+            margin-bottom: 18px;
+        }
+        .hero-main h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .hero-main p {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 14px;
+            max-width: 720px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .brand img {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .brand strong {
+            display: block;
+            font-size: 14px;
+            letter-spacing: 0.08em;
+        }
+        .brand span {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .hero-actions {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+        }
+        .hero-actions a {
+            text-decoration: none;
+            text-align: center;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .hero-actions .primary {
+            background: #1d4ed8;
+            color: #ffffff;
+        }
+        .hero-actions .secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+        }
+        .stat-card span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .stat-card strong {
+            font-size: 28px;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+            gap: 16px;
+        }
+        .panel {
+            padding: 18px;
+        }
+        .panel-stack {
+            display: grid;
+            gap: 16px;
+        }
+        .panel-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .subtle {
+            color: #64748b;
+            font-size: 13px;
+        }
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .equipment-card,
+        .loan-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: #fcfdff;
+        }
+        .equipment-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .equipment-name {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .badge-ok { background: #dcfce7; color: #166534; }
+        .badge-off { background: #e2e8f0; color: #475569; }
+        .equipment-meta,
+        .loan-meta {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            color: #475569;
+        }
+        .equipment-meta strong,
+        .loan-meta strong {
+            color: #0f172a;
+        }
+        .compact-form,
+        .loan-list {
+            display: grid;
+            gap: 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        input, select, textarea, button {
+            font: inherit;
+        }
+        input, select, textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 11px 12px;
+            background: #ffffff;
+            color: #0f172a;
+        }
+        textarea {
+            min-height: 84px;
+            resize: vertical;
+        }
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-primary { background: #1d4ed8; color: #ffffff; }
+        .btn-warning { background: #fef3c7; color: #92400e; }
+        .empty {
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            background: #f8fafc;
+        }
+        @media (max-width: 1100px) {
+            .hero, .content-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 720px) {
+            .page { padding: 14px; }
+            .hero { padding: 22px; }
+            .stats, .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="hero">
+            <div class="hero-main">
+                <div class="brand">
+                    <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo">
+                    <div>
+                        <strong>KMLA</strong>
+                        <span>Project Equipment Desk</span>
+                    </div>
+                </div>
+                <h1>기자재 대여 및 반납</h1>
+                <p>일반 사용자는 이 화면에서 대여와 반납을 진행하고, 관리자는 별도 관리자 화면에서 기자재 등록과 수정, 전체 이력을 관리합니다.</p>
+            </div>
+            <div class="hero-actions">
+                <a href="{{ url_for('index') }}" class="secondary">새로고침</a>
+                <a href="{{ url_for('admin') }}" class="primary">관리자 로그인</a>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <span>등록 기자재 종류</span>
+                <strong>{{ stats.total_items }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>전체 수량</span>
+                <strong>{{ stats.total_stock }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>대여 가능 수량</span>
+                <strong>{{ stats.available_stock }}</strong>
+            </div>
+            <div class="stat-card">
+                <span>현재 대여 중</span>
+                <strong>{{ stats.borrowed_count }}</strong>
+            </div>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel">
+                <div class="panel-title">대여 가능한 기자재</div>
+                <div class="subtle" style="margin-bottom:14px;">현재 수량 기준으로 바로 확인할 수 있습니다.</div>
+                {% if items %}
+                <div class="equipment-grid">
+                    {% for item in items %}
+                    <div class="equipment-card">
+                        <div class="equipment-top">
+                            <div>
+                                <div class="equipment-name">{{ item.name }}</div>
+                                <div class="subtle">{{ item.category }}</div>
+                            </div>
+                            {% if item.quantity_available > 0 %}
+                            <span class="badge badge-ok">대여 가능</span>
+                            {% else %}
+                            <span class="badge badge-off">재고 없음</span>
+                            {% endif %}
+                        </div>
+                        <div class="equipment-meta">
+                            <div><strong>자산번호</strong> {{ item.asset_no or '-' }}</div>
+                            <div><strong>보관 위치</strong> {{ item.location or '-' }}</div>
+                            <div><strong>가능 수량</strong> {{ item.quantity_available }} / {{ item.quantity_total }}</div>
+                            <div><strong>비고</strong> {{ item.notes or '-' }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty">등록된 기자재가 없습니다.</div>
+                {% endif %}
+            </div>
+
+            <div class="panel-stack">
+                <div class="panel">
+                    <div class="panel-title">대여 신청</div>
+                    <div class="subtle" style="margin-bottom:14px;">사용자 정보와 기자재를 입력해 대여를 등록합니다.</div>
+                    <form method="post" action="{{ url_for('public_borrow') }}" class="compact-form">
+                        <select name="item_id" required>
+                            <option value="">기자재 선택</option>
+                            {% for item in all_items if item.quantity_available > 0 %}
+                            <option value="{{ item.id }}">{{ item.name }} / 가능 {{ item.quantity_available }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-grid">
+                            <input type="text" name="borrower" placeholder="대여자 이름" required>
+                            <input type="text" name="phone" placeholder="휴대폰 번호">
+                            <select name="class_name">
+                                <option value="">수업명 선택</option>
+                                <option value="주제탐구">주제탐구</option>
+                                <option value="융합탐구">융합탐구</option>
+                            </select>
+                            <input type="text" name="team_name" placeholder="팀명">
+                            <input type="text" name="department" placeholder="소속">
+                            <input type="number" name="quantity" min="1" value="1" placeholder="수량">
+                            <input type="text" name="purpose" placeholder="사용 목적">
+                            <input type="date" name="due_at">
+                        </div>
+                        <textarea name="notes" placeholder="메모"></textarea>
+                        <button class="btn btn-primary" type="submit">대여 등록</button>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">반납 신청</div>
+                    <div class="subtle" style="margin-bottom:14px;">현재 대여 중인 건을 선택해 반납 처리합니다.</div>
+                    {% if active_loans %}
+                    <div class="loan-list" style="margin-bottom:14px;">
+                        {% for loan in active_loans %}
+                        <div class="loan-item">
+                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
+                            <div class="loan-meta">
+                                <div><strong>수량</strong> {{ loan.quantity }}</div>
+                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
+                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
+                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <form method="post" action="{{ url_for('public_return') }}" class="compact-form">
+                        <select name="loan_id" required>
+                            <option value="">반납할 대여 건 선택</option>
+                            {% for loan in active_loans %}
+                            <option value="{{ loan.id }}">{{ loan.item_name }} / {{ loan.borrower }} / {{ loan.quantity }}개</option>
+                            {% endfor %}
+                        </select>
+                        <input type="date" name="returned_at">
+                        <button class="btn btn-warning" type="submit">반납 처리</button>
+                    </form>
+                    {% else %}
+                    <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
