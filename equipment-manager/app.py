@@ -353,10 +353,6 @@ def create_item_record():
     items = load_items()
 
     quantity_total = max(parse_positive_int(request.form.get("quantity_total"), 1), 1)
-    quantity_available = min(
-        parse_positive_int(request.form.get("quantity_available"), quantity_total),
-        quantity_total,
-    )
 
     item = {
         "name": request.form.get("name", "").strip(),
@@ -364,7 +360,7 @@ def create_item_record():
         "asset_no": generate_asset_no(items),
         "location": request.form.get("location", "").strip(),
         "quantity_total": quantity_total,
-        "quantity_available": quantity_available,
+        "quantity_available": quantity_total,
         "notes": request.form.get("notes", "").strip(),
     }
 

@@ -10,6 +10,7 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #f3f6fb;
             color: #0f172a;
+            scroll-behavior: smooth;
         }
         .page {
             max-width: 1440px;
@@ -58,10 +59,6 @@
             font-size: 14px;
             letter-spacing: 0.08em;
         }
-        .hero-brand-text span {
-            font-size: 12px;
-            color: rgba(255,255,255,0.76);
-        }
         .eyebrow {
             display: inline-flex;
             align-items: center;
@@ -91,6 +88,10 @@
             margin-top: 18px;
         }
         .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
             padding: 8px 12px;
             border-radius: 999px;
             background: rgba(255,255,255,0.12);
@@ -368,16 +369,15 @@
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="hero-logo">
                     <div class="hero-brand-text">
                         <strong>KMLA</strong>
-                        <span>Project Equipment Desk</span>
                     </div>
                 </div>
                 <span class="eyebrow">KMLA Project Equipment Desk</span>
                 <h1>프로젝트 기자재 사용 반납 관리</h1>
                 <p>기자재 등록, 대여 처리, 반납 처리, 이용 이력을 한 화면에서 관리할 수 있는 관리자용 프로그램입니다.</p>
                 <div class="hero-meta">
-                    <span class="meta-chip">기자재 등록</span>
-                    <span class="meta-chip">대여 / 반납</span>
-                    <span class="meta-chip">이력 조회</span>
+                    <a href="#register-panel" class="meta-chip">기자재 등록</a>
+                    <a href="#loan-panel" class="meta-chip">대여 / 반납</a>
+                    <a href="#history-panel" class="meta-chip">이력 조회</a>
                 </div>
             </div>
             <div class="hero-side">
@@ -419,7 +419,7 @@
 
         <section class="content-grid">
             <div class="panel-stack">
-                <div class="panel">
+                <div class="panel" id="history-panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">기자재 목록</div>
@@ -491,7 +491,7 @@
                     {% endif %}
                 </div>
 
-                <div class="panel">
+                <div class="panel" id="register-panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">대여 이력</div>
@@ -537,15 +537,14 @@
                             <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
                             <input type="text" value="저장 시 자동 생성" readonly>
                             <input type="text" name="location" placeholder="보관 위치">
-                            <input type="number" name="quantity_total" placeholder="총 수량" min="0" value="1">
-                            <input type="number" name="quantity_available" placeholder="가능 수량" min="0" value="1">
+                            <input type="number" name="quantity_total" placeholder="수량" min="1" value="1">
                         </div>
                         <textarea name="notes" placeholder="비고"></textarea>
                         <button class="btn btn-primary" type="submit">등록</button>
                     </form>
                 </div>
 
-                <div class="panel">
+                <div class="panel" id="loan-panel">
                     <div class="panel-header">
                         <div>
                             <div class="panel-title">대여 처리</div>
