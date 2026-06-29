@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>湲곗옄?????諛?諛섎궔</title>
+    <title>기자재 대여 및 반납</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -29,15 +29,13 @@
             align-items: center;
             padding: 24px 28px;
             margin-bottom: 18px;
-            background:
-                linear-gradient(135deg, #17304f 0%, #22456f 52%, #2d5d95 100%);
+            background: linear-gradient(135deg, #17304f 0%, #22456f 52%, #2d5d95 100%);
             border-color: #284a73;
         }
         .brand {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 0;
         }
         .brand img {
             width: 70px;
@@ -206,7 +204,8 @@
             color: #475569;
             font-weight: 700;
         }
-        .equipment-row div {
+        .equipment-row div,
+        .loan-row div {
             min-width: 0;
         }
         .equipment-name-button {
@@ -232,17 +231,12 @@
             display: inline-flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 10px;
         }
-        .equipment-pick input[type="checkbox"] {
+        .equipment-pick input[type="checkbox"],
+        .return-check {
             width: 16px;
             height: 16px;
             accent-color: #1d4ed8;
-        }
-        .equipment-name {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 4px;
         }
         .badge {
             display: inline-flex;
@@ -256,22 +250,7 @@
         }
         .badge-ok { background: #dcfce7; color: #166534; }
         .badge-off { background: #e2e8f0; color: #475569; }
-        .loan-item {
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 14px;
-            background: #fcfdff;
-        }
-        .equipment-meta, .loan-meta {
-            display: grid;
-            gap: 6px;
-            font-size: 13px;
-            color: #475569;
-        }
-        .equipment-meta strong, .loan-meta strong {
-            color: #0f172a;
-        }
-        .compact-form, .loan-list {
+        .compact-form {
             display: grid;
             gap: 10px;
         }
@@ -296,14 +275,6 @@
             border-color: #d9e4f2;
             color: #475569;
             font-weight: 700;
-        }
-        .return-check {
-            width: 16px;
-            height: 16px;
-            accent-color: #2563eb;
-        }
-        .loan-row div {
-            min-width: 0;
         }
         .loan-item-name {
             font-weight: 700;
@@ -410,15 +381,11 @@
             .page { padding: 14px; }
             .hero { padding: 22px; }
             .stats, .form-grid { grid-template-columns: 1fr; }
-            .equipment-row {
-                grid-template-columns: 1fr 1fr;
-            }
-            .equipment-row.header {
-                display: none;
-            }
+            .equipment-row,
             .loan-row {
                 grid-template-columns: 1fr 1fr;
             }
+            .equipment-row.header,
             .loan-row.header {
                 display: none;
             }
@@ -447,30 +414,30 @@
                             <span>Project Equipment Desk</span>
                         </div>
                     </div>
-                    <a href="{{ url_for('admin') }}" class="admin-entry" aria-label="愿由ъ옄 濡쒓렇?? title="愿由ъ옄 濡쒓렇??>&#9881;</a>
+                    <a href="{{ url_for('admin') }}" class="admin-entry" aria-label="관리자 로그인" title="관리자 로그인">&#9881;</a>
                 </div>
             </div>
             <div class="hero-side">
                 {% if member_user %}
                 <div class="hero-box">
                     <strong>{{ member_user.full_name }}</strong>
-                    <span>{{ member_user.email }}<br>?쇰컲 ?ъ슜??濡쒓렇???곹깭?낅땲??</span>
+                    <span>{{ member_user.email }}<br>일반 사용자 로그인 상태입니다.</span>
                 </div>
                 <div class="hero-actions">
-                    <a href="{{ url_for('member_logout') }}" class="secondary">?쇰컲 ?ъ슜??濡쒓렇?꾩썐</a>
+                    <a href="{{ url_for('member_logout') }}" class="secondary">일반 사용자 로그아웃</a>
                 </div>
                 {% else %}
                 <div class="hero-box">
-                    <strong>?쇰컲 ?ъ슜???뚯썝 湲곕뒫</strong>
+                    <strong>일반 사용자 회원 기능</strong>
                     {% if supabase_ready %}
-                    <span>?뚯썝媛????蹂몄씤 怨꾩젙?쇰줈 ??ъ? 諛섎궔??泥섎━?????덉뒿?덈떎.</span>
+                    <span>회원가입 후 본인 계정으로 대여 신청과 반납 신청을 처리할 수 있습니다.</span>
                     {% else %}
-                    <span>Supabase ?곌껐 ?꾩엯?덈떎. ?뚯썝 湲곕뒫? ?ㅼ젙 ???쒖꽦?붾맗?덈떎.</span>
+                    <span>Supabase 연결 전입니다. 회원 기능은 설정 후 사용할 수 있습니다.</span>
                     {% endif %}
                 </div>
                 <div class="hero-actions">
-                    <a href="{{ url_for('member_login') }}" class="primary">?쇰컲 ?ъ슜??濡쒓렇??/a>
-                    <a href="{{ url_for('member_signup') }}" class="secondary">?뚯썝媛??/a>
+                    <a href="{{ url_for('member_login') }}" class="primary">일반 사용자 로그인</a>
+                    <a href="{{ url_for('member_signup') }}" class="secondary">회원가입</a>
                 </div>
                 {% endif %}
             </div>
@@ -478,36 +445,36 @@
 
         <section class="stats">
             <div class="stat-card">
-                <span>?깅줉 湲곗옄??醫낅쪟</span>
+                <span>등록 기자재 종류</span>
                 <strong>{{ stats.total_items }}</strong>
             </div>
             <div class="stat-card">
-                <span>?꾩껜 ?섎웾</span>
+                <span>전체 수량</span>
                 <strong>{{ stats.total_stock }}</strong>
             </div>
             <div class="stat-card">
-                <span>???媛???섎웾</span>
+                <span>대여 가능 수량</span>
                 <strong>{{ stats.available_stock }}</strong>
             </div>
             <div class="stat-card">
-                <span>?꾩옱 ???以?/span>
+                <span>현재 대여 중</span>
                 <strong>{{ stats.borrowed_count }}</strong>
             </div>
         </section>
 
         <section class="content-grid">
             <div class="panel">
-                <div class="panel-title">???媛?ν븳 湲곗옄??/div>
-                <div class="subtle" style="margin-bottom:14px;">?꾩옱 ?깅줉??湲곗옄?ъ? ???媛???섎웾???뺤씤?????덉뒿?덈떎.</div>
+                <div class="panel-title">대여 가능한 기자재</div>
+                <div class="subtle" style="margin-bottom:14px;">현재 등록된 기자재와 대여 가능 수량을 확인할 수 있습니다.</div>
                 {% if items %}
                 <div class="equipment-table">
                     <div class="equipment-row header">
-                        <div>?덈챸</div>
-                        <div>踰덊샇</div>
-                        <div>?꾩튂</div>
-                        <div>?섎웾</div>
-                        <div>???媛??/div>
-                        <div>鍮꾧퀬</div>
+                        <div>품명</div>
+                        <div>번호</div>
+                        <div>위치</div>
+                        <div>수량</div>
+                        <div>대여 가능</div>
+                        <div>비고</div>
                         <div></div>
                     </div>
                     {% for item in items %}
@@ -530,9 +497,9 @@
                         <div>{{ item.quantity_available }} / {{ item.quantity_total }}</div>
                         <div>
                             {% if item.quantity_available > 0 %}
-                            <span class="badge badge-ok">???媛??/span>
+                            <span class="badge badge-ok">대여 가능</span>
                             {% else %}
-                            <span class="badge badge-off">?ш퀬 ?놁쓬</span>
+                            <span class="badge badge-off">재고 없음</span>
                             {% endif %}
                         </div>
                         <div>{{ item.notes or '-' }}</div>
@@ -553,59 +520,59 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <div class="empty">?깅줉??湲곗옄?ш? ?놁뒿?덈떎.</div>
+                <div class="empty">등록된 기자재가 없습니다.</div>
                 {% endif %}
             </div>
 
             <div class="panel-stack">
                 <div class="panel">
-                    <div class="panel-title">????좎껌</div>
-                    <div class="subtle" style="margin-bottom:14px;">?쇰컲 ?ъ슜??濡쒓렇????蹂몄씤 怨꾩젙?쇰줈 ??щ? ?깅줉?⑸땲??</div>
+                    <div class="panel-title">대여 신청</div>
+                    <div class="subtle" style="margin-bottom:14px;">일반 사용자 로그인 후 본인 계정으로 대여 신청을 등록합니다.</div>
                     {% if member_user %}
                     <form method="post" action="{{ url_for('public_borrow') }}" class="compact-form">
                         <select name="item_id" id="borrow-item-select" required>
-                            <option value="">湲곗옄?щ? 癒쇱? 泥댄겕??二쇱꽭??/option>
+                            <option value="">기자재를 먼저 체크해 주세요</option>
                             {% for item in all_items if item.quantity_available > 0 %}
-                            <option value="{{ item.id }}">{{ item.name }} / 媛??{{ item.quantity_available }}</option>
+                            <option value="{{ item.id }}">{{ item.name }} / 가능 {{ item.quantity_available }}</option>
                             {% endfor %}
                         </select>
                         <div class="form-grid">
                             <input type="text" value="{{ member_user.full_name }}" readonly>
                             <input type="text" value="{{ member_user.phone or '' }}" readonly>
                             <select name="class_name">
-                                <option value="">?섏뾽紐??좏깮</option>
-                                <option value="二쇱젣?먭뎄">二쇱젣?먭뎄</option>
-                                <option value="?듯빀?먭뎄">?듯빀?먭뎄</option>
+                                <option value="">수업명 선택</option>
+                                <option value="주제탐구">주제탐구</option>
+                                <option value="융합탐구">융합탐구</option>
                             </select>
-                            <input type="text" name="team_name" placeholder="?紐?>
+                            <input type="text" name="team_name" placeholder="팀명">
                             <select name="grade">
-                                <option value="">?숇뀈 ?좏깮</option>
-                                <option value="1">1?숇뀈</option>
-                                <option value="2">2?숇뀈</option>
-                                <option value="3">3?숇뀈</option>
+                                <option value="">학년 선택</option>
+                                <option value="1">1학년</option>
+                                <option value="2">2학년</option>
+                                <option value="3">3학년</option>
                             </select>
                             <select name="classroom">
-                                <option value="">諛??좏깮</option>
+                                <option value="">반 선택</option>
                                 {% for class_no in range(1, 11) %}
-                                <option value="{{ class_no }}">{{ class_no }}諛?/option>
+                                <option value="{{ class_no }}">{{ class_no }}반</option>
                                 {% endfor %}
                             </select>
-                            <input type="number" name="quantity" min="1" value="1" placeholder="?섎웾">
-                            <input type="text" name="purpose" placeholder="?ъ슜 紐⑹쟻">
+                            <input type="number" name="quantity" min="1" value="1" placeholder="수량">
+                            <input type="text" name="purpose" placeholder="사용 목적">
                             <input type="date" name="borrowed_at">
                             <input type="date" name="due_at">
                         </div>
-                        <textarea name="notes" placeholder="硫붾え"></textarea>
-                        <button class="btn btn-primary" type="submit">????깅줉</button>
+                        <textarea name="notes" placeholder="메모"></textarea>
+                        <button class="btn btn-primary" type="submit">대여 신청 등록</button>
                     </form>
                     {% else %}
-                    <div class="empty">????좎껌? ?쇰컲 ?ъ슜??濡쒓렇?????댁슜?????덉뒿?덈떎.</div>
+                    <div class="empty">대여 신청은 일반 사용자 로그인 후 이용할 수 있습니다.</div>
                     {% endif %}
                 </div>
 
                 <div class="panel">
-                    <div class="panel-title">??????꾪솴 諛?諛섎궔</div>
-                    <div class="subtle" style="margin-bottom:14px;">濡쒓렇?명븳 蹂몄씤 怨꾩젙?????嫄대쭔 諛섎궔 泥섎━?????덉뒿?덈떎.</div>
+                    <div class="panel-title">내 대여 현황 및 반납</div>
+                    <div class="subtle" style="margin-bottom:14px;">로그인한 본인 계정의 대여 항목만 확인하고 반납 신청할 수 있습니다.</div>
                     {% if member_user and member_loans %}
                     <div class="loan-table">
                         <div class="loan-row header">
@@ -632,32 +599,32 @@
                         <button class="btn btn-warning" type="submit">반납 신청</button>
                     </form>
                     {% elif member_user %}
-                    <div class="empty">?꾩옱 濡쒓렇?명븳 怨꾩젙?????以?湲곗옄?ш? ?놁뒿?덈떎.</div>
+                    <div class="empty">현재 로그인한 계정의 대여 항목이 없습니다.</div>
                     {% else %}
-                    <div class="empty">諛섎궔 湲곕뒫? ?쇰컲 ?ъ슜??濡쒓렇?????댁슜?????덉뒿?덈떎.</div>
+                    <div class="empty">반납 기능은 일반 사용자 로그인 후 이용할 수 있습니다.</div>
                     {% endif %}
                 </div>
             </div>
         </section>
     </div>
+
     <div class="image-modal" id="image-modal" aria-hidden="true">
         <div class="image-modal-card">
             <div class="image-modal-head">
-                <strong id="image-modal-title">湲곗옄???ъ쭊</strong>
-                <button type="button" class="image-modal-close" id="image-modal-close" aria-label="?リ린">&times;</button>
+                <strong id="image-modal-title">기자재 사진</strong>
+                <button type="button" class="image-modal-close" id="image-modal-close" aria-label="닫기">&times;</button>
             </div>
             <div class="image-modal-body">
                 <img src="" alt="" id="image-modal-image">
             </div>
         </div>
     </div>
+
     <script>
         const itemCheckboxes = Array.from(document.querySelectorAll('.item-picker'));
         const borrowSelect = document.getElementById('borrow-item-select');
         const returnChecks = Array.from(document.querySelectorAll('.return-check'));
-        const returnDateInputs = Array.from(document.querySelectorAll('.return-date-input'));
         const selectedReturnLoanId = document.getElementById('selected-return-loan-id');
-        const selectedReturnDate = document.getElementById('selected-return-date');
         const imageModal = document.getElementById('image-modal');
         const imageModalTitle = document.getElementById('image-modal-title');
         const imageModalImage = document.getElementById('image-modal-image');
@@ -675,7 +642,7 @@
             if (selectedItems.length === 0) {
                 const placeholder = document.createElement('option');
                 placeholder.value = '';
-                placeholder.textContent = '湲곗옄?щ? 癒쇱? 泥댄겕??二쇱꽭??;
+                placeholder.textContent = '기자재를 먼저 체크해 주세요';
                 borrowSelect.appendChild(placeholder);
                 borrowSelect.value = '';
                 return;
@@ -683,13 +650,13 @@
 
             const placeholder = document.createElement('option');
             placeholder.value = '';
-            placeholder.textContent = '泥댄겕??湲곗옄??以??좏깮';
+            placeholder.textContent = '체크한 기자재 중 선택';
             borrowSelect.appendChild(placeholder);
 
             selectedItems.forEach((checkbox) => {
                 const option = document.createElement('option');
                 option.value = checkbox.value;
-                option.textContent = `${checkbox.dataset.name} / 媛??${checkbox.dataset.available}`;
+                option.textContent = `${checkbox.dataset.name} / 가능 ${checkbox.dataset.available}`;
                 borrowSelect.appendChild(option);
             });
 
@@ -708,18 +675,14 @@
                 }
             });
 
-            if (activeCheckbox && activeCheckbox.checked) {
-                selectedReturnLoanId.value = activeCheckbox.dataset.loanId;
-            } else {
-                selectedReturnLoanId.value = '';
+            if (selectedReturnLoanId) {
+                selectedReturnLoanId.value = activeCheckbox && activeCheckbox.checked ? activeCheckbox.dataset.loanId : '';
             }
         }
 
         returnChecks.forEach((checkbox) => {
             checkbox.addEventListener('change', () => syncReturnSelection(checkbox));
         });
-
-
 
         function closeImageModal() {
             imageModal.classList.remove('active');
@@ -730,9 +693,9 @@
 
         imageButtons.forEach((button) => {
             button.addEventListener('click', () => {
-                imageModalTitle.textContent = button.dataset.imageTitle || '湲곗옄???ъ쭊';
+                imageModalTitle.textContent = button.dataset.imageTitle || '기자재 사진';
                 imageModalImage.src = button.dataset.imageSrc || '';
-                imageModalImage.alt = button.dataset.imageTitle || '湲곗옄???ъ쭊';
+                imageModalImage.alt = button.dataset.imageTitle || '기자재 사진';
                 imageModal.classList.add('active');
                 imageModal.setAttribute('aria-hidden', 'false');
             });
@@ -749,4 +712,3 @@
     </script>
 </body>
 </html>
-
