@@ -30,8 +30,8 @@
             padding: 24px 28px;
             margin-bottom: 18px;
             background:
-                linear-gradient(135deg, #fbfdff 0%, #f3f7fd 58%, #eef4fb 100%);
-            border-color: #d9e4f2;
+                linear-gradient(135deg, #17304f 0%, #22456f 52%, #2d5d95 100%);
+            border-color: #284a73;
         }
         .brand {
             display: flex;
@@ -45,8 +45,8 @@
             border-radius: 50%;
             background: #ffffff;
             padding: 5px;
-            border: 1px solid #d8e3f1;
-            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: 0 12px 28px rgba(7, 19, 34, 0.22);
         }
         .brand-copy {
             display: grid;
@@ -56,13 +56,13 @@
             display: block;
             font-size: 12px;
             letter-spacing: 0.18em;
-            color: #6b7a90;
+            color: rgba(226, 232, 240, 0.86);
         }
         .brand span {
             font-size: 30px;
             line-height: 1.15;
             font-weight: 800;
-            color: #152033;
+            color: #ffffff;
         }
         .hero-side {
             display: grid;
@@ -72,17 +72,18 @@
         .hero-box {
             padding: 16px;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.76);
-            border: 1px solid #dbe6f3;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(8px);
         }
         .hero-box strong {
             display: block;
             margin-bottom: 4px;
             font-size: 16px;
+            color: #ffffff;
         }
         .hero-box span {
-            color: #64748b;
+            color: rgba(226, 232, 240, 0.82);
             font-size: 13px;
             line-height: 1.5;
         }
@@ -99,12 +100,36 @@
             font-weight: 700;
         }
         .hero-actions .primary {
-            background: #2563eb;
-            color: #ffffff;
+            background: #ffffff;
+            color: #17304f;
         }
         .hero-actions .secondary {
-            background: #e9eff7;
-            color: #1e293b;
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .hero-topline {
+            display: flex;
+            align-items: start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .admin-entry {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            box-shadow: 0 8px 18px rgba(7, 19, 34, 0.16);
+        }
+        .admin-entry:hover {
+            background: rgba(255, 255, 255, 0.18);
         }
         .messages {
             display: grid;
@@ -303,12 +328,15 @@
 
         <section class="hero">
             <div>
-                <div class="brand">
-                    <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo">
-                    <div class="brand-copy">
-                        <strong>KMLA</strong>
-                        <span>Project Equipment Desk</span>
+                <div class="hero-topline">
+                    <div class="brand">
+                        <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo">
+                        <div class="brand-copy">
+                            <strong>KMLA</strong>
+                            <span>Project Equipment Desk</span>
+                        </div>
                     </div>
+                    <a href="{{ url_for('admin') }}" class="admin-entry" aria-label="관리자 로그인" title="관리자 로그인">&#9881;</a>
                 </div>
             </div>
             <div class="hero-side">
