@@ -469,8 +469,9 @@
                                 <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form">
                                     <div class="form-grid">
                                         <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
-                                        <input type="text" name="category" value="{{ item.category }}" placeholder="분류">
-                                        <input type="text" name="asset_no" value="{{ item.asset_no }}" placeholder="자산번호">
+                                        <input type="text" name="category" value="{{ item.category }}" list="category-options" placeholder="분류">
+                                        <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
+                                        <input type="text" value="{{ item.asset_no }}" placeholder="자산번호" readonly>
                                         <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
                                         <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
                                         <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
@@ -532,8 +533,9 @@
                     <form method="post" action="{{ url_for('create_item') }}" class="compact-form">
                         <div class="form-grid">
                             <input type="text" name="name" placeholder="기자재명" required>
-                            <input type="text" name="category" placeholder="분류">
-                            <input type="text" name="asset_no" placeholder="자산번호">
+                            <input type="text" name="category" list="category-options" placeholder="분류">
+                            <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
+                            <input type="text" value="저장 시 자동 생성" readonly>
                             <input type="text" name="location" placeholder="보관 위치">
                             <input type="number" name="quantity_total" placeholder="총 수량" min="0" value="1">
                             <input type="number" name="quantity_available" placeholder="가능 수량" min="0" value="1">
@@ -613,6 +615,11 @@
             </div>
         </section>
     </div>
+    <datalist id="category-options">
+        {% for option in category_options %}
+        <option value="{{ option }}"></option>
+        {% endfor %}
+    </datalist>
 </body>
 </html>
 

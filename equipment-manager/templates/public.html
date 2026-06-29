@@ -16,8 +16,7 @@
             margin: 0 auto;
             padding: 24px;
         }
-        .hero,
-        .panel {
+        .hero, .panel, .stat-card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 18px;
@@ -25,20 +24,10 @@
         }
         .hero {
             display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
             gap: 20px;
             padding: 28px;
             margin-bottom: 18px;
-        }
-        .hero-main h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .hero-main p {
-            color: #475569;
-            line-height: 1.6;
-            font-size: 14px;
-            max-width: 720px;
         }
         .brand {
             display: flex;
@@ -63,10 +52,40 @@
             font-size: 12px;
             color: #64748b;
         }
+        .hero h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 14px;
+            max-width: 720px;
+        }
+        .hero-side {
+            display: grid;
+            gap: 12px;
+            align-content: start;
+        }
+        .hero-box {
+            padding: 16px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+        .hero-box strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+        .hero-box span {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
         .hero-actions {
             display: grid;
             gap: 10px;
-            align-content: start;
         }
         .hero-actions a {
             text-decoration: none;
@@ -84,6 +103,19 @@
             background: #e2e8f0;
             color: #0f172a;
         }
+        .messages {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .message {
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .message.success { background: #dcfce7; color: #166534; }
+        .message.warning { background: #fef3c7; color: #92400e; }
+        .message.error { background: #fee2e2; color: #991b1b; }
         .stats {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -91,9 +123,6 @@
             margin-bottom: 18px;
         }
         .stat-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
             padding: 18px;
         }
         .stat-card span {
@@ -107,7 +136,7 @@
         }
         .content-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+            grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
             gap: 16px;
         }
         .panel {
@@ -131,8 +160,7 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 12px;
         }
-        .equipment-card,
-        .loan-item {
+        .equipment-card, .loan-item {
             border: 1px solid #e2e8f0;
             border-radius: 14px;
             padding: 14px;
@@ -161,19 +189,16 @@
         }
         .badge-ok { background: #dcfce7; color: #166534; }
         .badge-off { background: #e2e8f0; color: #475569; }
-        .equipment-meta,
-        .loan-meta {
+        .equipment-meta, .loan-meta {
             display: grid;
             gap: 6px;
             font-size: 13px;
             color: #475569;
         }
-        .equipment-meta strong,
-        .loan-meta strong {
+        .equipment-meta strong, .loan-meta strong {
             color: #0f172a;
         }
-        .compact-form,
-        .loan-list {
+        .compact-form, .loan-list {
             display: grid;
             gap: 10px;
         }
@@ -229,8 +254,18 @@
 </head>
 <body>
     <div class="page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="messages">
+            {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
         <section class="hero">
-            <div class="hero-main">
+            <div>
                 <div class="brand">
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo">
                     <div>
@@ -239,11 +274,33 @@
                     </div>
                 </div>
                 <h1>기자재 대여 및 반납</h1>
-                <p>일반 사용자는 이 화면에서 대여와 반납을 진행하고, 관리자는 별도 관리자 화면에서 기자재 등록과 수정, 전체 이력을 관리합니다.</p>
+                <p>일반 사용자는 회원 로그인 후 대여와 반납을 진행하고, 관리자는 별도 관리자 화면에서 기자재 목록과 전체 이력을 관리합니다.</p>
             </div>
-            <div class="hero-actions">
-                <a href="{{ url_for('index') }}" class="secondary">새로고침</a>
-                <a href="{{ url_for('admin') }}" class="primary">관리자 로그인</a>
+            <div class="hero-side">
+                {% if member_user %}
+                <div class="hero-box">
+                    <strong>{{ member_user.full_name }}</strong>
+                    <span>{{ member_user.email }}<br>일반 사용자 로그인 상태입니다.</span>
+                </div>
+                <div class="hero-actions">
+                    <a href="{{ url_for('member_logout') }}" class="secondary">일반 사용자 로그아웃</a>
+                    <a href="{{ url_for('admin') }}" class="primary">관리자 로그인</a>
+                </div>
+                {% else %}
+                <div class="hero-box">
+                    <strong>일반 사용자 회원 기능</strong>
+                    {% if supabase_ready %}
+                    <span>회원가입 후 본인 계정으로 대여와 반납을 처리할 수 있습니다.</span>
+                    {% else %}
+                    <span>Supabase 연결 전입니다. 회원 기능은 설정 후 활성화됩니다.</span>
+                    {% endif %}
+                </div>
+                <div class="hero-actions">
+                    <a href="{{ url_for('member_login') }}" class="primary">일반 사용자 로그인</a>
+                    <a href="{{ url_for('member_signup') }}" class="secondary">회원가입</a>
+                    <a href="{{ url_for('admin') }}" class="secondary">관리자 로그인</a>
+                </div>
+                {% endif %}
             </div>
         </section>
 
@@ -269,7 +326,7 @@
         <section class="content-grid">
             <div class="panel">
                 <div class="panel-title">대여 가능한 기자재</div>
-                <div class="subtle" style="margin-bottom:14px;">현재 수량 기준으로 바로 확인할 수 있습니다.</div>
+                <div class="subtle" style="margin-bottom:14px;">현재 등록된 기자재와 대여 가능 수량을 확인할 수 있습니다.</div>
                 {% if items %}
                 <div class="equipment-grid">
                     {% for item in items %}
@@ -302,7 +359,8 @@
             <div class="panel-stack">
                 <div class="panel">
                     <div class="panel-title">대여 신청</div>
-                    <div class="subtle" style="margin-bottom:14px;">사용자 정보와 기자재를 입력해 대여를 등록합니다.</div>
+                    <div class="subtle" style="margin-bottom:14px;">일반 사용자 로그인 후 본인 계정으로 대여를 등록합니다.</div>
+                    {% if member_user %}
                     <form method="post" action="{{ url_for('public_borrow') }}" class="compact-form">
                         <select name="item_id" required>
                             <option value="">기자재 선택</option>
@@ -311,8 +369,8 @@
                             {% endfor %}
                         </select>
                         <div class="form-grid">
-                            <input type="text" name="borrower" placeholder="대여자 이름" required>
-                            <input type="text" name="phone" placeholder="휴대폰 번호">
+                            <input type="text" value="{{ member_user.full_name }}" readonly>
+                            <input type="text" value="{{ member_user.phone or '' }}" readonly>
                             <select name="class_name">
                                 <option value="">수업명 선택</option>
                                 <option value="주제탐구">주제탐구</option>
@@ -327,21 +385,25 @@
                         <textarea name="notes" placeholder="메모"></textarea>
                         <button class="btn btn-primary" type="submit">대여 등록</button>
                     </form>
+                    {% else %}
+                    <div class="empty">대여 신청은 일반 사용자 로그인 후 이용할 수 있습니다.</div>
+                    {% endif %}
                 </div>
 
                 <div class="panel">
-                    <div class="panel-title">반납 신청</div>
-                    <div class="subtle" style="margin-bottom:14px;">현재 대여 중인 건을 선택해 반납 처리합니다.</div>
-                    {% if active_loans %}
+                    <div class="panel-title">내 대여 현황 및 반납</div>
+                    <div class="subtle" style="margin-bottom:14px;">로그인한 본인 계정의 대여 건만 반납 처리할 수 있습니다.</div>
+                    {% if member_user and member_loans %}
                     <div class="loan-list" style="margin-bottom:14px;">
-                        {% for loan in active_loans %}
+                        {% for loan in member_loans %}
                         <div class="loan-item">
-                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
+                            <strong>{{ loan.item_name }}</strong>
                             <div class="loan-meta">
                                 <div><strong>수량</strong> {{ loan.quantity }}</div>
-                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
                                 <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
                                 <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
+                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
+                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
                             </div>
                         </div>
                         {% endfor %}
@@ -349,15 +411,17 @@
                     <form method="post" action="{{ url_for('public_return') }}" class="compact-form">
                         <select name="loan_id" required>
                             <option value="">반납할 대여 건 선택</option>
-                            {% for loan in active_loans %}
-                            <option value="{{ loan.id }}">{{ loan.item_name }} / {{ loan.borrower }} / {{ loan.quantity }}개</option>
+                            {% for loan in member_loans %}
+                            <option value="{{ loan.id }}">{{ loan.item_name }} / {{ loan.quantity }}개 / {{ loan.borrowed_at }}</option>
                             {% endfor %}
                         </select>
                         <input type="date" name="returned_at">
                         <button class="btn btn-warning" type="submit">반납 처리</button>
                     </form>
+                    {% elif member_user %}
+                    <div class="empty">현재 로그인한 계정의 대여 중 기자재가 없습니다.</div>
                     {% else %}
-                    <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
+                    <div class="empty">반납 기능은 일반 사용자 로그인 후 이용할 수 있습니다.</div>
                     {% endif %}
                 </div>
             </div>
