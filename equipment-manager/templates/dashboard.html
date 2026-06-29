@@ -290,6 +290,10 @@
             overflow-y: hidden;
             padding-bottom: 2px;
         }
+        .table-scroll.compact-y {
+            max-height: 620px;
+            overflow-y: auto;
+        }
         .equipment-row,
         .loan-row,
         .history-row {
@@ -297,11 +301,14 @@
             grid-template-columns: minmax(180px, 1.4fr) 110px 110px 90px 110px minmax(120px, 1fr) 180px;
             gap: 10px;
             align-items: center;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             background: #ffffff;
             font-size: 13px;
+        }
+        .equipment-row {
+            grid-template-columns: minmax(180px, 1.45fr) 110px 90px 110px minmax(120px, 1fr) 140px;
         }
         .loan-row {
             grid-template-columns: minmax(150px, 1.2fr) 72px 96px 120px 120px minmax(130px, 1fr) 120px;
@@ -492,6 +499,11 @@
         }
         .history-name .subtle {
             margin-top: 3px;
+        }
+        .equipment-row .btn,
+        .equipment-row summary {
+            padding-top: 8px;
+            padding-bottom: 8px;
         }
         .empty {
             border: 1px dashed #cbd5e1;
@@ -742,11 +754,10 @@
                     </form>
 
                     {% if items %}
-                    <div class="table-scroll">
+                    <div class="table-scroll compact-y">
                     <div class="equipment-table">
                         <div class="equipment-row header">
                             <div>품명</div>
-                            <div>번호</div>
                             <div>위치</div>
                             <div>수량</div>
                             <div>대여 가능</div>
@@ -766,9 +777,7 @@
                                     disabled
                                     {% endif %}
                                 >{{ item.name }}</button>
-                                <div class="subtle">{{ item.category }}</div>
                             </div>
-                            <div>{{ item.asset_no or '-' }}</div>
                             <div>{{ item.location or '-' }}</div>
                             <div>{{ item.quantity_available }} / {{ item.quantity_total }}</div>
                             <div>
