@@ -673,37 +673,11 @@
                     </form>
                 </div>
 
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title">분류 관리</div>
-                            <div class="subtle">기자재 분류 목록을 추가하고 관리합니다.</div>
-                        </div>
-                    </div>
-                    {% if categories %}
-                    <div class="category-list">
-                        {% for category in categories %}
-                        <div class="category-item">
-                            <span>{{ category }}</span>
-                            <form method="post" action="{{ url_for('delete_category') }}">
-                                <input type="hidden" name="category_name" value="{{ category }}">
-                                <button class="btn btn-danger" type="submit" onclick="return confirm('이 분류를 삭제할까요?')">삭제</button>
-                            </form>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    <form method="post" action="{{ url_for('create_category') }}" class="compact-form">
-                        <input type="text" name="category_name" placeholder="새 분류명" required>
-                        <button class="btn btn-primary" type="submit">분류 추가</button>
-                    </form>
-                </div>
-
                 <div class="panel" id="loan-panel">
                     <div class="panel-header">
                         <div>
-                            <div class="panel-title">대여 처리</div>
-                            <div class="subtle">현재 재고가 있는 기자재만 대여할 수 있습니다.</div>
+                            <div class="panel-title">대여 및 반납 처리</div>
+                            <div class="subtle">현재 재고가 있는 기자재를 대여하고, 대여 중인 항목을 바로 반납 처리합니다.</div>
                         </div>
                     </div>
                     <form method="post" action="{{ url_for('create_loan') }}" class="compact-form">
@@ -742,10 +716,7 @@
                         <textarea name="notes" placeholder="메모"></textarea>
                         <button class="btn btn-primary" type="submit">대여 등록</button>
                     </form>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
+                    <div class="panel-header" style="margin-top:22px;">
                         <div>
                             <div class="panel-title">반납 처리</div>
                             <div class="subtle">현재 대여 중인 항목만 표시됩니다.</div>
@@ -835,6 +806,26 @@
                             <input type="password" name="new_password" placeholder="새 비밀번호" required>
                             <input type="password" name="new_password_confirm" placeholder="새 비밀번호 확인" required>
                             <button class="btn btn-primary" type="submit">비밀번호 재설정</button>
+                        </form>
+                    </details>
+                    <details style="margin-top:12px;">
+                        <summary>분류 관리</summary>
+                        {% if categories %}
+                        <div class="category-list" style="margin:14px 0;">
+                            {% for category in categories %}
+                            <div class="category-item">
+                                <span>{{ category }}</span>
+                                <form method="post" action="{{ url_for('delete_category') }}">
+                                    <input type="hidden" name="category_name" value="{{ category }}">
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('이 분류를 삭제할까요?')">삭제</button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('create_category') }}" class="compact-form">
+                            <input type="text" name="category_name" placeholder="새 분류명" required>
+                            <button class="btn btn-primary" type="submit">분류 추가</button>
                         </form>
                     </details>
                     <details style="margin-top:12px;">
