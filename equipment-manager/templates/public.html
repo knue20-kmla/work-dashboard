@@ -623,10 +623,11 @@
                         {% for loan in member_loans %}
                         <div class="loan-row">
                             <div>
-                                <input type="checkbox" class="return-check" data-loan-id="{{ loan.id }}">
+                                <input type="checkbox" class="return-check" data-loan-id="{{ loan.id }}" {% if loan.status != 'borrowed' %}disabled{% endif %}>
                             </div>
                             <div class="loan-item-name">{{ loan.item_name }}</div>
                             <div>{{ loan.quantity }}</div>
+                            <div>{{ loan_status_label(loan.status) }}</div>
                             <div>{{ loan.borrowed_at or '-' }}</div>
                             <div>{{ loan.due_at or '-' }}</div>
                             <div>

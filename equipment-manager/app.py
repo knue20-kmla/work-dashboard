@@ -63,6 +63,14 @@ def today_str():
     return datetime.now().strftime("%Y-%m-%d")
 
 
+LOAN_STATUS_LABELS = {
+    "requested": "대여 신청",
+    "borrowed": "대여 중",
+    "return_requested": "반납 신청",
+    "returned": "반납 완료",
+}
+
+
 def ensure_data_dir():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -93,6 +101,10 @@ def parse_positive_int(value, fallback=0):
 
 def parse_date_or_today(value):
     return value.strip() if value and value.strip() else today_str()
+
+
+def loan_status_label(status):
+    return LOAN_STATUS_LABELS.get(status, status)
 
 
 def generate_asset_no(items, year=None):
@@ -598,7 +610,7 @@ def get_member_loans(member_id, active_only=False):
     loans = load_loans()
     filtered = [loan for loan in loans if loan.get("member_id") == member_id]
     if active_only:
-        filtered = [loan for loan in filtered if loan["status"] == "borrowed"]
+        filtered = [loan for loan in filtered if loan["status"] in {"requested", "borrowed", "return_requested"}]
     return sorted(filtered, key=lambda loan: loan["id"], reverse=True)
 
 
@@ -657,7 +669,9 @@ def build_dashboard_data():
         if matches_query and matches_category and matches_status:
             filtered_items.append(item)
 
-    active_loans = [loan for loan in loans if loan["status"] == "borrowed"]
+    pending_borrow_requests = [loan for loan in loans if loan["status"] == "requested"]
+    pending_return_requests = [loan for loan in loans if loan["status"] == "return_requested"]
+    active_loans = [loan for loan in loans if loan["status"] in {"borrowed", "return_requested"}]
     history = sorted(loans, key=lambda loan: loan["id"], reverse=True)
     categories = normalize_categories(load_categories() + [item["category"] for item in items if item["category"]])
 
@@ -671,6 +685,8 @@ def build_dashboard_data():
     return {
         "items": filtered_items,
         "all_items": items,
+        "pending_borrow_requests": sorted(pending_borrow_requests, key=lambda loan: loan["id"], reverse=True),
+        "pending_return_requests": sorted(pending_return_requests, key=lambda loan: loan["id"], reverse=True),
         "active_loans": active_loans,
         "history": history,
         "categories": categories,
@@ -726,7 +742,7 @@ def update_item_record(item_id):
     borrowed_quantity = sum(
         loan["quantity"]
         for loan in loans
-        if loan["status"] == "borrowed" and loan["item_id"] == item_id
+        if loan["status"] in {"borrowed", "return_requested"} and loan["item_id"] == item_id
     )
     quantity_total = max(
         parse_positive_int(request.form.get("quantity_total"), item["quantity_total"]),
@@ -773,7 +789,9 @@ def delete_item_record(item_id):
     loans = load_loans()
 
     has_active_loan = any(
-        loan for loan in loans if loan["item_id"] == item_id and loan["status"] == "borrowed"
+        loan
+        for loan in loans
+        if loan["item_id"] == item_id and loan["status"] in {"requested", "borrowed", "return_requested"}
     )
     if has_active_loan:
         return False
@@ -795,7 +813,7 @@ def create_loan_record(actor, member=None):
     item_id = parse_positive_int(request.form.get("item_id"))
     quantity = max(parse_positive_int(request.form.get("quantity"), 1), 1)
     item = next((entry for entry in items if entry["id"] == item_id), None)
-    if not item or quantity > item["quantity_available"]:
+    if not item:
         return False
 
     if member:
@@ -823,7 +841,7 @@ def create_loan_record(actor, member=None):
         "borrowed_at": parse_date_or_today(request.form.get("borrowed_at", "")),
         "due_at": request.form.get("due_at", "").strip(),
         "returned_at": "",
-        "status": "borrowed",
+        "status": "requested" if member else "borrowed",
         "notes": request.form.get("notes", "").strip(),
         "created_by": actor,
         "member_id": member_id,
@@ -832,9 +850,12 @@ def create_loan_record(actor, member=None):
     client = get_supabase_client()
     if client:
         try:
-            client.table("equipment_items").update(
-                {"quantity_available": item["quantity_available"] - quantity}
-            ).eq("id", item_id).execute()
+            if not member:
+                if quantity > item["quantity_available"]:
+                    return False
+                client.table("equipment_items").update(
+                    {"quantity_available": item["quantity_available"] - quantity}
+                ).eq("id", item_id).execute()
             client.table("equipment_loans").insert(loan).execute()
             return True
         except Exception:
@@ -842,7 +863,10 @@ def create_loan_record(actor, member=None):
             return False
 
     loan["id"] = next_id(loans)
-    item["quantity_available"] -= quantity
+    if not member:
+        if quantity > item["quantity_available"]:
+            return False
+        item["quantity_available"] -= quantity
     loans.append(loan)
     save_items(items)
     save_loans(loans)
@@ -861,11 +885,67 @@ def complete_return(loan_id=None, member_id=None):
     if member_id is not None and loan.get("member_id") != member_id:
         return False
 
+    returned_at = parse_date_or_today(request.form.get("returned_at", ""))
+
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("equipment_loans").update(
+                {"status": "return_requested", "returned_at": returned_at}
+            ).eq("id", target_loan_id).execute()
+            return True
+        except Exception:
+            flash("반납 처리 중 오류가 발생했습니다. Supabase 테이블 구조를 확인해 주세요.", "error")
+            return False
+
+    loan["status"] = "return_requested"
+    loan["returned_at"] = returned_at
+    save_loans(loans)
+    return True
+
+
+def approve_loan_request(loan_id):
+    items = load_items()
+    loans = load_loans()
+
+    loan = next((entry for entry in loans if entry["id"] == loan_id), None)
+    if not loan or loan["status"] != "requested":
+        return False
+
+    item = next((entry for entry in items if entry["id"] == loan["item_id"]), None)
+    if not item or loan["quantity"] > item["quantity_available"]:
+        return False
+
+    client = get_supabase_client()
+    if client:
+        try:
+            client.table("equipment_items").update(
+                {"quantity_available": item["quantity_available"] - loan["quantity"]}
+            ).eq("id", item["id"]).execute()
+            client.table("equipment_loans").update({"status": "borrowed"}).eq("id", loan_id).execute()
+            return True
+        except Exception:
+            flash("대여 승인 처리 중 오류가 발생했습니다.", "error")
+            return False
+
+    item["quantity_available"] -= loan["quantity"]
+    loan["status"] = "borrowed"
+    save_items(items)
+    save_loans(loans)
+    return True
+
+
+def approve_return_request(loan_id):
+    items = load_items()
+    loans = load_loans()
+
+    loan = next((entry for entry in loans if entry["id"] == loan_id), None)
+    if not loan or loan["status"] != "return_requested":
+        return False
+
     item = next((entry for entry in items if entry["id"] == loan["item_id"]), None)
     if not item:
         return False
-
-    returned_at = parse_date_or_today(request.form.get("returned_at", ""))
 
     client = get_supabase_client()
     if client:
@@ -873,19 +953,16 @@ def complete_return(loan_id=None, member_id=None):
             client.table("equipment_items").update(
                 {"quantity_available": min(item["quantity_total"], item["quantity_available"] + loan["quantity"])}
             ).eq("id", item["id"]).execute()
-            client.table("equipment_loans").update(
-                {"status": "returned", "returned_at": returned_at}
-            ).eq("id", target_loan_id).execute()
+            client.table("equipment_loans").update({"status": "returned"}).eq("id", loan_id).execute()
             return True
         except Exception:
-            flash("반납 처리 중 오류가 발생했습니다. Supabase 테이블 구조를 확인해 주세요.", "error")
+            flash("반납 승인 처리 중 오류가 발생했습니다.", "error")
             return False
 
     item["quantity_available"] = min(
         item["quantity_total"], item["quantity_available"] + loan["quantity"]
     )
     loan["status"] = "returned"
-    loan["returned_at"] = returned_at
     save_items(items)
     save_loans(loans)
     return True
@@ -897,6 +974,7 @@ def inject_globals():
         "member_user": get_member_session(),
         "supabase_ready": supabase_enabled(),
         "category_options": load_categories(),
+        "loan_status_label": loan_status_label,
     }
 
 
@@ -1171,6 +1249,26 @@ def create_loan():
 def return_loan(loan_id):
     if not complete_return(loan_id=loan_id):
         flash("반납 처리에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/loans/<int:loan_id>/approve", methods=["POST"])
+@login_required
+def approve_loan(loan_id):
+    if approve_loan_request(loan_id):
+        flash("대여 신청을 승인했습니다.", "success")
+    else:
+        flash("대여 신청 승인에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/loans/<int:loan_id>/approve-return", methods=["POST"])
+@login_required
+def approve_return(loan_id):
+    if approve_return_request(loan_id):
+        flash("반납 신청을 승인했습니다.", "success")
+    else:
+        flash("반납 신청 승인에 실패했습니다.", "error")
     return redirect(url_for("dashboard"))
 
 

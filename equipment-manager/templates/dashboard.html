@@ -255,6 +255,74 @@
         .btn-secondary { background: #e2e8f0; color: #0f172a; }
         .btn-danger { background: #fee2e2; color: #991b1b; }
         .btn-warning { background: #fef3c7; color: #92400e; }
+        .equipment-table,
+        .loan-table,
+        .history-table {
+            display: grid;
+            gap: 8px;
+        }
+        .equipment-row,
+        .loan-row,
+        .history-row {
+            display: grid;
+            grid-template-columns: minmax(180px, 1.4fr) 110px 110px 90px 110px minmax(120px, 1fr) 180px;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #ffffff;
+            font-size: 13px;
+        }
+        .loan-row {
+            grid-template-columns: minmax(150px, 1.2fr) 72px 96px 120px 120px minmax(130px, 1fr) 120px;
+        }
+        .history-row {
+            grid-template-columns: minmax(150px, 1.3fr) 68px 108px 98px 112px 112px 96px;
+        }
+        .equipment-row.header,
+        .loan-row.header,
+        .history-row.header {
+            background: #eff6ff;
+            border-color: #dbeafe;
+            color: #475569;
+            font-weight: 800;
+        }
+        .equipment-name-button,
+        .thumb-button {
+            border: none;
+            background: none;
+            padding: 0;
+            text-align: left;
+            font: inherit;
+        }
+        .equipment-name-button.has-image,
+        .thumb-button.has-image {
+            color: #1d4ed8;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .thumb-button img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #dbe4f0;
+            display: block;
+        }
+        .thumb-button.no-image {
+            color: #94a3b8;
+        }
+        .queue-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .queue-summary {
+            display: grid;
+            gap: 10px;
+        }
         .equipment-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -311,6 +379,7 @@
         }
         .badge-ok { background: #dcfce7; color: #166534; }
         .badge-off { background: #e2e8f0; color: #475569; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
         .equipment-meta {
             display: grid;
             gap: 6px;
@@ -378,6 +447,13 @@
             color: #475569;
             margin-bottom: 10px;
         }
+        .history-name {
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .history-name .subtle {
+            margin-top: 3px;
+        }
         .empty {
             border: 1px dashed #cbd5e1;
             border-radius: 14px;
@@ -386,6 +462,57 @@
             color: #64748b;
             font-size: 14px;
             background: #f8fafc;
+        }
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.58);
+            z-index: 55;
+        }
+        .image-modal.active {
+            display: flex;
+        }
+        .image-modal-card {
+            width: min(760px, 100%);
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #dbe4f0;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+            overflow: hidden;
+        }
+        .image-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .image-modal-close {
+            border: none;
+            background: #eef4fb;
+            color: #334155;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .image-modal-body {
+            padding: 18px;
+            background: #f8fafc;
+        }
+        .image-modal-body img {
+            width: 100%;
+            max-height: 72vh;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
         }
         .admin-modal {
             position: fixed;
@@ -463,6 +590,16 @@
             .hero-main { padding: 22px; }
             .stats { grid-template-columns: 1fr; }
             .toolbar, .form-grid { grid-template-columns: 1fr; }
+            .equipment-row,
+            .loan-row,
+            .history-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .equipment-row.header,
+            .loan-row.header,
+            .history-row.header {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -563,54 +700,67 @@
                     </form>
 
                     {% if items %}
-                    <div class="equipment-grid">
+                    <div class="equipment-table">
+                        <div class="equipment-row header">
+                            <div>품명</div>
+                            <div>번호</div>
+                            <div>위치</div>
+                            <div>수량</div>
+                            <div>대여 가능</div>
+                            <div>비고</div>
+                            <div>관리</div>
+                        </div>
                         {% for item in items %}
-                        <div class="equipment-card">
-                            {% if item.image_data %}
-                            <img src="{{ item.image_data }}" alt="{{ item.name }}" class="equipment-image">
-                            {% else %}
-                            <div class="equipment-image-placeholder">사진 없음</div>
-                            {% endif %}
-                            <div class="equipment-top">
-                                <div>
-                                    <div class="equipment-name">{{ item.name }}</div>
-                                    <div class="subtle">{{ item.category }}</div>
-                                </div>
+                        <div class="equipment-row">
+                            <div>
+                                <button
+                                    type="button"
+                                    class="equipment-name-button {% if item.image_data %}has-image{% endif %}"
+                                    {% if item.image_data %}
+                                    data-image-src="{{ item.image_data }}"
+                                    data-image-title="{{ item.name }}"
+                                    {% else %}
+                                    disabled
+                                    {% endif %}
+                                >{{ item.name }}</button>
+                                <div class="subtle">{{ item.category }}</div>
+                            </div>
+                            <div>{{ item.asset_no or '-' }}</div>
+                            <div>{{ item.location or '-' }}</div>
+                            <div>{{ item.quantity_available }} / {{ item.quantity_total }}</div>
+                            <div>
                                 {% if item.quantity_available > 0 %}
                                 <span class="badge badge-ok">대여 가능</span>
                                 {% else %}
                                 <span class="badge badge-off">재고 없음</span>
                                 {% endif %}
                             </div>
-                            <div class="equipment-meta">
-                                <div><strong>자산번호</strong> {{ item.asset_no or '-' }}</div>
-                                <div><strong>보관 위치</strong> {{ item.location or '-' }}</div>
-                                <div><strong>수량</strong> {{ item.quantity_total }} / {{ item.quantity_available }}</div>
-                                <div><strong>비고</strong> {{ item.notes or '-' }}</div>
+                            <div>{{ item.notes or '-' }}</div>
+                            <div>
+                                <details>
+                                    <summary>수정</summary>
+                                    <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form" enctype="multipart/form-data" style="margin-top:10px;">
+                                        <div class="form-grid">
+                                            <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
+                                            <input type="text" name="category" value="{{ item.category }}" list="category-options" placeholder="분류">
+                                            <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
+                                            <input type="text" value="{{ item.asset_no }}" placeholder="자산번호" readonly>
+                                            <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
+                                            <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
+                                            <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
+                                        </div>
+                                        <input type="file" name="image_file" accept="image/*">
+                                        {% if item.image_data %}
+                                        <label class="subtle"><input type="checkbox" name="remove_image" value="1"> 사진 삭제</label>
+                                        {% endif %}
+                                        <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
+                                        <div class="inline-actions">
+                                            <button class="btn btn-primary" type="submit">저장</button>
+                                            <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" formnovalidate onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
+                                        </div>
+                                    </form>
+                                </details>
                             </div>
-                            <details>
-                                <summary>수정</summary>
-                                <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form" enctype="multipart/form-data">
-                                    <div class="form-grid">
-                                        <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
-                                        <input type="text" name="category" value="{{ item.category }}" list="category-options" placeholder="분류">
-                                        <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
-                                        <input type="text" value="{{ item.asset_no }}" placeholder="자산번호" readonly>
-                                        <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
-                                        <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
-                                        <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
-                                    </div>
-                                    <input type="file" name="image_file" accept="image/*">
-                                    {% if item.image_data %}
-                                    <label class="subtle"><input type="checkbox" name="remove_image" value="1"> 사진 삭제</label>
-                                    {% endif %}
-                                    <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
-                                    <div class="inline-actions">
-                                        <button class="btn btn-primary" type="submit">저장</button>
-                                        <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" formnovalidate onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
-                                    </div>
-                                </form>
-                            </details>
                         </div>
                         {% endfor %}
                     </div>
@@ -627,19 +777,35 @@
                         </div>
                     </div>
                     {% if history %}
-                    <div class="history-list">
+                    <div class="history-table">
+                        <div class="history-row header">
+                            <div>품목 / 대여자</div>
+                            <div>수량</div>
+                            <div>수업명</div>
+                            <div>팀명</div>
+                            <div>대여일</div>
+                            <div>반납일</div>
+                            <div>상태</div>
+                        </div>
                         {% for loan in history[:12] %}
-                        <div class="history-item">
-                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
-                            <div class="history-meta">
-                                <div><strong>수량</strong> {{ loan.quantity }}</div>
-                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
-                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
-                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
-                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
-                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
-                                <div><strong>반납일</strong> {{ loan.returned_at or '-' }}</div>
-                                <div><strong>상태</strong> {{ '대여중' if loan.status == 'borrowed' else '반납완료' }}</div>
+                        <div class="history-row">
+                            <div class="history-name">
+                                {{ loan.item_name }}
+                                <div class="subtle">{{ loan.borrower }}</div>
+                            </div>
+                            <div>{{ loan.quantity }}</div>
+                            <div>{{ loan.class_name or '-' }}</div>
+                            <div>{{ loan.team_name or '-' }}</div>
+                            <div>{{ loan.borrowed_at or '-' }}</div>
+                            <div>{{ loan.returned_at or loan.due_at or '-' }}</div>
+                            <div>
+                                {% if loan.status == 'borrowed' %}
+                                <span class="badge badge-ok">{{ loan_status_label(loan.status) }}</span>
+                                {% elif loan.status == 'returned' %}
+                                <span class="badge badge-off">{{ loan_status_label(loan.status) }}</span>
+                                {% else %}
+                                <span class="badge badge-pending">{{ loan_status_label(loan.status) }}</span>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
@@ -676,80 +842,126 @@
                 <div class="panel" id="loan-panel">
                     <div class="panel-header">
                         <div>
-                            <div class="panel-title">대여 및 반납 처리</div>
-                            <div class="subtle">현재 재고가 있는 기자재를 대여하고, 대여 중인 항목을 바로 반납 처리합니다.</div>
+                            <div class="panel-title">대여 및 반납 승인</div>
+                            <div class="subtle">사용자 신청 목록을 확인하고 승인합니다.</div>
                         </div>
                     </div>
-                    <form method="post" action="{{ url_for('create_loan') }}" class="compact-form">
-                        <select name="item_id" required>
-                            <option value="">기자재 선택</option>
-                            {% for item in all_items %}
-                            <option value="{{ item.id }}">{{ item.name }} / 가능 {{ item.quantity_available }}</option>
-                            {% endfor %}
-                        </select>
-                        <div class="form-grid">
-                            <input type="text" name="borrower" placeholder="대여자" required>
-                            <input type="text" name="phone" placeholder="휴대폰 번호">
-                            <select name="class_name">
-                                <option value="">수업명 선택</option>
-                                <option value="주제탐구">주제탐구</option>
-                                <option value="융합탐구">융합탐구</option>
-                            </select>
-                            <input type="text" name="team_name" placeholder="팀명">
-                            <select name="grade">
-                                <option value="">학년 선택</option>
-                                <option value="1">1학년</option>
-                                <option value="2">2학년</option>
-                                <option value="3">3학년</option>
-                            </select>
-                            <select name="classroom">
-                                <option value="">반 선택</option>
-                                {% for class_no in range(1, 11) %}
-                                <option value="{{ class_no }}">{{ class_no }}반</option>
-                                {% endfor %}
-                            </select>
-                            <input type="number" name="quantity" min="1" value="1" placeholder="수량">
-                            <input type="text" name="purpose" placeholder="사용 목적">
-                            <input type="date" name="borrowed_at" value="{{ '' }}">
-                            <input type="date" name="due_at" value="{{ '' }}">
-                        </div>
-                        <textarea name="notes" placeholder="메모"></textarea>
-                        <button class="btn btn-primary" type="submit">대여 등록</button>
-                    </form>
-                    <div class="panel-header" style="margin-top:22px;">
+                    <div class="queue-summary">
                         <div>
-                            <div class="panel-title">반납 처리</div>
-                            <div class="subtle">현재 대여 중인 항목만 표시됩니다.</div>
-                        </div>
-                    </div>
-                    {% if active_loans %}
-                    <div class="loan-list">
-                        {% for loan in active_loans %}
-                        <div class="loan-item">
-                            <strong>{{ loan.item_name }} / {{ loan.borrower }}</strong>
-                            <div class="loan-meta">
-                                <div><strong>수량</strong> {{ loan.quantity }}</div>
-                                <div><strong>휴대폰</strong> {{ loan.phone or '-' }}</div>
-                                <div><strong>수업명</strong> {{ loan.class_name or '-' }}</div>
-                                <div><strong>팀명</strong> {{ loan.team_name or '-' }}</div>
-                                <div><strong>소속</strong> {{ loan.department or '-' }}</div>
-                                <div><strong>사용 목적</strong> {{ loan.purpose or '-' }}</div>
-                                <div><strong>대여일</strong> {{ loan.borrowed_at or '-' }}</div>
-                                <div><strong>반납 예정일</strong> {{ loan.due_at or '-' }}</div>
+                            <div class="panel-title" style="font-size:16px;">대여 신청 목록</div>
+                            <div class="subtle" style="margin-bottom:10px;">대여 신청 상태인 항목만 표시됩니다.</div>
+                            {% if pending_borrow_requests %}
+                            <div class="loan-table">
+                                <div class="loan-row header">
+                                    <div>신청자 / 품목</div>
+                                    <div>수량</div>
+                                    <div>수업명</div>
+                                    <div>대여일</div>
+                                    <div>반납일</div>
+                                    <div>소속 / 팀</div>
+                                    <div>승인</div>
+                                </div>
+                                {% for loan in pending_borrow_requests %}
+                                <div class="loan-row">
+                                    <div><strong>{{ loan.borrower }}</strong><div class="subtle">{{ loan.item_name }}</div></div>
+                                    <div>{{ loan.quantity }}</div>
+                                    <div>{{ loan.class_name or '-' }}</div>
+                                    <div>{{ loan.borrowed_at or '-' }}</div>
+                                    <div>{{ loan.due_at or '-' }}</div>
+                                    <div>{{ loan.department or '-' }}{% if loan.team_name %}<br>{{ loan.team_name }}{% endif %}</div>
+                                    <div class="queue-actions">
+                                        <form method="post" action="{{ url_for('approve_loan', loan_id=loan.id) }}">
+                                            <button class="btn btn-primary" type="submit">승인</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
                             </div>
-                            <form method="post" action="{{ url_for('return_loan', loan_id=loan.id) }}" class="inline-actions">
-                                <input type="date" name="returned_at">
-                                <button class="btn btn-warning" type="submit">반납 처리</button>
-                            </form>
+                            {% else %}
+                            <div class="empty">대기 중인 대여 신청이 없습니다.</div>
+                            {% endif %}
                         </div>
-                        {% endfor %}
+
+                        <div>
+                            <div class="panel-title" style="font-size:16px;">반납 신청 목록</div>
+                            <div class="subtle" style="margin-bottom:10px;">반납 신청 상태인 항목만 표시됩니다.</div>
+                            {% if pending_return_requests %}
+                            <div class="loan-table">
+                                <div class="loan-row header">
+                                    <div>신청자 / 품목</div>
+                                    <div>수량</div>
+                                    <div>수업명</div>
+                                    <div>대여일</div>
+                                    <div>반납일</div>
+                                    <div>소속 / 팀</div>
+                                    <div>승인</div>
+                                </div>
+                                {% for loan in pending_return_requests %}
+                                <div class="loan-row">
+                                    <div><strong>{{ loan.borrower }}</strong><div class="subtle">{{ loan.item_name }}</div></div>
+                                    <div>{{ loan.quantity }}</div>
+                                    <div>{{ loan.class_name or '-' }}</div>
+                                    <div>{{ loan.borrowed_at or '-' }}</div>
+                                    <div>{{ loan.returned_at or '-' }}</div>
+                                    <div>{{ loan.department or '-' }}{% if loan.team_name %}<br>{{ loan.team_name }}{% endif %}</div>
+                                    <div class="queue-actions">
+                                        <form method="post" action="{{ url_for('approve_return', loan_id=loan.id) }}">
+                                            <button class="btn btn-warning" type="submit">승인</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="empty">대기 중인 반납 신청이 없습니다.</div>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <div class="panel-title" style="font-size:16px;">현재 대여 중</div>
+                            <div class="subtle" style="margin-bottom:10px;">승인 완료 후 아직 반납 완료되지 않은 항목입니다.</div>
+                            {% if active_loans %}
+                            <div class="loan-table">
+                                <div class="loan-row header">
+                                    <div>대여자 / 품목</div>
+                                    <div>수량</div>
+                                    <div>상태</div>
+                                    <div>대여일</div>
+                                    <div>반납 예정일</div>
+                                    <div>소속 / 팀</div>
+                                    <div>비고</div>
+                                </div>
+                                {% for loan in active_loans %}
+                                <div class="loan-row">
+                                    <div><strong>{{ loan.borrower }}</strong><div class="subtle">{{ loan.item_name }}</div></div>
+                                    <div>{{ loan.quantity }}</div>
+                                    <div>{{ loan_status_label(loan.status) }}</div>
+                                    <div>{{ loan.borrowed_at or '-' }}</div>
+                                    <div>{{ loan.due_at or '-' }}</div>
+                                    <div>{{ loan.department or '-' }}{% if loan.team_name %}<br>{{ loan.team_name }}{% endif %}</div>
+                                    <div>{{ loan.notes or '-' }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
+                            {% endif %}
+                        </div>
                     </div>
-                    {% else %}
-                    <div class="empty">현재 대여 중인 기자재가 없습니다.</div>
-                    {% endif %}
                 </div>
             </div>
         </section>
+    </div>
+    <div class="image-modal" id="image-modal" aria-hidden="true">
+        <div class="image-modal-card">
+            <div class="image-modal-head">
+                <strong id="image-modal-title">기자재 사진</strong>
+                <button type="button" class="image-modal-close" id="image-modal-close" aria-label="닫기">&times;</button>
+            </div>
+            <div class="image-modal-body">
+                <img src="" alt="" id="image-modal-image">
+            </div>
+        </div>
     </div>
     {% if admin_role == 'superadmin' %}
     <div class="admin-modal" id="admin-manage-modal" aria-hidden="true">
@@ -863,7 +1075,43 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <script>
+        const imageModal = document.getElementById('image-modal');
+        const imageModalTitle = document.getElementById('image-modal-title');
+        const imageModalImage = document.getElementById('image-modal-image');
+        const imageModalClose = document.getElementById('image-modal-close');
+        const imageButtons = Array.from(document.querySelectorAll('.equipment-name-button.has-image, .thumb-button.has-image'));
+
+        function closeImageModal() {
+            if (!imageModal) return;
+            imageModal.classList.remove('active');
+            imageModal.setAttribute('aria-hidden', 'true');
+            imageModalImage.src = '';
+            imageModalImage.alt = '';
+        }
+
+        imageButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                imageModalTitle.textContent = button.dataset.imageTitle || '기자재 사진';
+                imageModalImage.src = button.dataset.imageSrc || '';
+                imageModalImage.alt = button.dataset.imageTitle || '기자재 사진';
+                imageModal.classList.add('active');
+                imageModal.setAttribute('aria-hidden', 'false');
+            });
+        });
+
+        if (imageModalClose) {
+            imageModalClose.addEventListener('click', closeImageModal);
+        }
+        if (imageModal) {
+            imageModal.addEventListener('click', (event) => {
+                if (event.target === imageModal) {
+                    closeImageModal();
+                }
+            });
+        }
+
         const adminManageOpen = document.getElementById('admin-manage-open');
         const adminManageModal = document.getElementById('admin-manage-modal');
         const adminManageClose = document.getElementById('admin-manage-close');
@@ -886,7 +1134,6 @@
             });
         }
     </script>
-    {% endif %}
     <datalist id="category-options">
         {% for option in category_options %}
         <option value="{{ option }}"></option>
