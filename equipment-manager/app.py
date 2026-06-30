@@ -1,4 +1,4 @@
-import base64
+﻿import base64
 import json
 import os
 from datetime import datetime
@@ -21,29 +21,29 @@ USERS_FILE = DATA_DIR / "users.json"
 ITEMS_FILE = DATA_DIR / "items.json"
 LOANS_FILE = DATA_DIR / "loans.json"
 CATEGORY_FILE = DATA_DIR / "categories.json"
-CATEGORY_OPTIONS = ["컴퓨터 부품", "카메라", "아두이노", "실험 장비", "기타"]
+CATEGORY_OPTIONS = ["而댄벂??遺??, "移대찓??, "?꾨몢?대끂", "?ㅽ뿕 ?λ퉬", "湲고?"]
 MAX_IMAGE_SIZE = 2 * 1024 * 1024
 SAMPLE_ITEMS = [
     {
-        "name": "프로젝터",
-        "category": "기타",
-        "location": "창고 A",
+        "name": "?꾨줈?앺꽣",
+        "category": "湲고?",
+        "location": "李쎄퀬 A",
         "quantity_total": 2,
         "quantity_available": 2,
-        "notes": "HDMI 케이블 포함",
+        "notes": "HDMI 耳?대툝 ?ы븿",
     },
     {
-        "name": "카메라",
-        "category": "카메라",
-        "location": "미디어실",
+        "name": "移대찓??,
+        "category": "移대찓??,
+        "location": "誘몃뵒?댁떎",
         "quantity_total": 3,
         "quantity_available": 3,
-        "notes": "배터리 2개 포함",
+        "notes": "諛고꽣由?2媛??ы븿",
     },
     {
-        "name": "삼각대",
-        "category": "기타",
-        "location": "창고 B",
+        "name": "?쇨컖?",
+        "category": "湲고?",
+        "location": "李쎄퀬 B",
         "quantity_total": 4,
         "quantity_available": 4,
         "notes": "",
@@ -64,10 +64,10 @@ def today_str():
 
 
 LOAN_STATUS_LABELS = {
-    "requested": "대여 신청",
-    "borrowed": "대여 중",
-    "return_requested": "반납 신청",
-    "returned": "반납 완료",
+    "requested": "????좎껌",
+    "borrowed": "???以?,
+    "return_requested": "諛섎궔 ?좎껌",
+    "returned": "諛섎궔 ?꾨즺",
 }
 
 
@@ -134,7 +134,7 @@ def resolve_department(form):
     grade = form.get("grade", "").strip()
     classroom = form.get("classroom", "").strip()
     if grade and classroom:
-        return f"{grade}학년 {classroom}반"
+        return f"{grade}?숇뀈 {classroom}諛?
     return form.get("department", "").strip()
 
 
@@ -159,7 +159,7 @@ def read_image_data(file_storage, current_image=None):
         return current_image
 
     if len(raw) > MAX_IMAGE_SIZE:
-        flash("사진 파일은 2MB 이하로 등록해 주세요.", "warning")
+        flash("?ъ쭊 ?뚯씪? 2MB ?댄븯濡??깅줉??二쇱꽭??", "warning")
         return current_image
 
     mime_type = file_storage.mimetype or "image/jpeg"
@@ -316,7 +316,7 @@ def update_admin_password(username, new_password):
             return True
         except Exception:
             sync_admin_users_to_local(users)
-            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            flash("admin_users ?뚯씠釉붿씠 ?놁뼱 濡쒖뺄 愿由ъ옄 紐⑸줉?먮쭔 諛섏쁺?덉뒿?덈떎.", "warning")
             return True
 
     sync_admin_users_to_local(users)
@@ -348,7 +348,7 @@ def create_admin_user(username, password, role="subadmin"):
             return True
         except Exception:
             sync_admin_users_to_local(users)
-            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            flash("admin_users ?뚯씠釉붿씠 ?놁뼱 濡쒖뺄 愿由ъ옄 紐⑸줉?먮쭔 諛섏쁺?덉뒿?덈떎.", "warning")
             return True
 
     sync_admin_users_to_local(users)
@@ -371,7 +371,7 @@ def delete_admin_user(username):
             return True
         except Exception:
             sync_admin_users_to_local(remaining)
-            flash("admin_users 테이블이 없어 로컬 관리자 목록에서만 삭제했습니다.", "warning")
+            flash("admin_users ?뚯씠釉붿씠 ?놁뼱 濡쒖뺄 愿由ъ옄 紐⑸줉?먯꽌留???젣?덉뒿?덈떎.", "warning")
             return True
 
     sync_admin_users_to_local(remaining)
@@ -396,7 +396,7 @@ def reset_admin_user_password(username, new_password):
             return True
         except Exception:
             sync_admin_users_to_local(users)
-            flash("admin_users 테이블이 없어 로컬 관리자 목록에만 반영했습니다.", "warning")
+            flash("admin_users ?뚯씠釉붿씠 ?놁뼱 濡쒖뺄 愿由ъ옄 紐⑸줉?먮쭔 諛섏쁺?덉뒿?덈떎.", "warning")
             return True
 
     sync_admin_users_to_local(users)
@@ -473,7 +473,7 @@ def create_category_record(name):
             return True
         except Exception:
             save_categories(existing + [category_name])
-            flash("분류 테이블이 아직 없어 임시 목록으로만 저장했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            flash("遺꾨쪟 ?뚯씠釉붿씠 ?꾩쭅 ?놁뼱 ?꾩떆 紐⑸줉?쇰줈留???ν뻽?듬땲?? ?꾨옒 SQL ?덈궡瑜??곸슜??二쇱꽭??", "warning")
             return True
 
     save_categories(existing + [category_name])
@@ -487,7 +487,7 @@ def delete_category_record(name):
 
     items = load_items()
     if any(item.get("category") == category_name for item in items):
-        flash("사용 중인 분류는 삭제할 수 없습니다.", "warning")
+        flash("?ъ슜 以묒씤 遺꾨쪟????젣?????놁뒿?덈떎.", "warning")
         return False
 
     client = get_supabase_client()
@@ -500,7 +500,7 @@ def delete_category_record(name):
             return True
         except Exception:
             save_categories(categories)
-            flash("분류 테이블이 아직 없어 임시 목록에서만 삭제했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            flash("遺꾨쪟 ?뚯씠釉붿씠 ?꾩쭅 ?놁뼱 ?꾩떆 紐⑸줉?먯꽌留???젣?덉뒿?덈떎. ?꾨옒 SQL ?덈궡瑜??곸슜??二쇱꽭??", "warning")
             return True
 
     save_categories(categories)
@@ -552,10 +552,10 @@ def load_members():
 def create_member_account(full_name, email, phone, password):
     client = get_supabase_client()
     if not client:
-        return False, "회원 기능을 사용하려면 Supabase 설정이 필요합니다."
+        return False, "?뚯썝 湲곕뒫???ъ슜?섎젮硫?Supabase ?ㅼ젙???꾩슂?⑸땲??"
 
     if find_member_by_email(email):
-        return False, "이미 사용 중인 이메일입니다."
+        return False, "?대? ?ъ슜 以묒씤 ?대찓?쇱엯?덈떎."
 
     try:
         result = (
@@ -573,7 +573,7 @@ def create_member_account(full_name, email, phone, password):
         )
         return True, result.data[0]
     except Exception:
-        return False, "회원 정보를 저장하지 못했습니다. Supabase 테이블 설정을 확인해 주세요."
+        return False, "?뚯썝 ?뺣낫瑜???ν븯吏 紐삵뻽?듬땲?? Supabase ?뚯씠釉??ㅼ젙???뺤씤??二쇱꽭??"
 
 
 def update_member_password(member_id, new_password):
@@ -630,7 +630,7 @@ def superadmin_required(view_func):
         if "username" not in session:
             return redirect(url_for("login"))
         if session.get("admin_role") != "superadmin":
-            flash("메인 관리자만 접근할 수 있습니다.", "warning")
+            flash("硫붿씤 愿由ъ옄留??묎렐?????덉뒿?덈떎.", "warning")
             return redirect(url_for("dashboard"))
         return view_func(*args, **kwargs)
 
@@ -641,7 +641,7 @@ def member_required(view_func):
     @wraps(view_func)
     def wrapped(*args, **kwargs):
         if not get_member_session():
-            flash("대여와 반납은 일반 사용자 로그인 후 이용할 수 있습니다.", "warning")
+            flash("??ъ? 諛섎궔? ?쇰컲 ?ъ슜??濡쒓렇?????댁슜?????덉뒿?덈떎.", "warning")
             return redirect(url_for("member_login"))
         return view_func(*args, **kwargs)
 
@@ -722,7 +722,7 @@ def create_item_record():
         except Exception:
             fallback_item = {key: value for key, value in item.items() if key != "image_data"}
             client.table("equipment_items").insert({**fallback_item, "created_at": now_iso()}).execute()
-            flash("사진 저장용 컬럼이 아직 없어 사진 없이 등록했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            flash("?ъ쭊 ??μ슜 而щ읆???꾩쭅 ?놁뼱 ?ъ쭊 ?놁씠 ?깅줉?덉뒿?덈떎. ?꾨옒 SQL ?덈궡瑜??곸슜??二쇱꽭??", "warning")
             return True
 
     item["id"] = next_id(items)
@@ -776,7 +776,7 @@ def update_item_record(item_id):
         except Exception:
             fallback_payload = {key: value for key, value in payload.items() if key != "image_data"}
             client.table("equipment_items").update(fallback_payload).eq("id", item_id).execute()
-            flash("사진 저장용 컬럼이 아직 없어 사진 변경 없이 저장했습니다. 아래 SQL 안내를 적용해 주세요.", "warning")
+            flash("?ъ쭊 ??μ슜 而щ읆???꾩쭅 ?놁뼱 ?ъ쭊 蹂寃??놁씠 ??ν뻽?듬땲?? ?꾨옒 SQL ?덈궡瑜??곸슜??二쇱꽭??", "warning")
             return True
 
     item.update(payload)
@@ -859,7 +859,7 @@ def create_loan_record(actor, member=None):
             client.table("equipment_loans").insert(loan).execute()
             return True
         except Exception:
-            flash("대여 등록 중 오류가 발생했습니다. 입력값이나 Supabase 테이블 구조를 확인해 주세요.", "error")
+            flash("????깅줉 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎. ?낅젰媛믪씠??Supabase ?뚯씠釉?援ъ“瑜??뺤씤??二쇱꽭??", "error")
             return False
 
     loan["id"] = next_id(loans)
@@ -895,7 +895,7 @@ def complete_return(loan_id=None, member_id=None):
             ).eq("id", target_loan_id).execute()
             return True
         except Exception:
-            flash("반납 처리 중 오류가 발생했습니다. Supabase 테이블 구조를 확인해 주세요.", "error")
+            flash("諛섎궔 泥섎━ 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎. Supabase ?뚯씠釉?援ъ“瑜??뺤씤??二쇱꽭??", "error")
             return False
 
     loan["status"] = "return_requested"
@@ -925,7 +925,7 @@ def approve_loan_request(loan_id):
             client.table("equipment_loans").update({"status": "borrowed"}).eq("id", loan_id).execute()
             return True
         except Exception:
-            flash("대여 승인 처리 중 오류가 발생했습니다.", "error")
+            flash("????뱀씤 泥섎━ 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.", "error")
             return False
 
     item["quantity_available"] -= loan["quantity"]
@@ -956,7 +956,7 @@ def approve_return_request(loan_id):
             client.table("equipment_loans").update({"status": "returned"}).eq("id", loan_id).execute()
             return True
         except Exception:
-            flash("반납 승인 처리 중 오류가 발생했습니다.", "error")
+            flash("諛섎궔 ?뱀씤 泥섎━ 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.", "error")
             return False
 
     item["quantity_available"] = min(
@@ -1005,7 +1005,7 @@ def login():
             session["username"] = admin_user["username"]
             session["admin_role"] = admin_user.get("role", "subadmin")
             return redirect(url_for("dashboard"))
-        error = "아이디 또는 비밀번호가 올바르지 않습니다."
+        error = "?꾩씠???먮뒗 鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎."
 
     return render_template("login.html", error=error)
 
@@ -1018,7 +1018,7 @@ def member_login():
 
         member = find_member_by_email(email)
         if not member or not check_password_hash(member["password_hash"], password):
-            flash("이메일 또는 비밀번호가 올바르지 않습니다.", "error")
+            flash("?대찓???먮뒗 鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.", "error")
             return render_template("member_auth.html", mode="login")
 
         session["member_user"] = {
@@ -1027,7 +1027,7 @@ def member_login():
             "full_name": member["full_name"],
             "phone": member.get("phone", ""),
         }
-        flash("일반 사용자 로그인이 완료되었습니다.", "success")
+        flash("?쇰컲 ?ъ슜??濡쒓렇?몄씠 ?꾨즺?섏뿀?듬땲??", "success")
         return redirect(url_for("index"))
 
     return render_template("member_auth.html", mode="login")
@@ -1043,11 +1043,11 @@ def member_signup():
         password_confirm = request.form.get("password_confirm", "")
 
         if not full_name or not email or not password:
-            flash("이름, 이메일, 비밀번호는 필수입니다.", "error")
+            flash("?대쫫, ?대찓?? 鍮꾨?踰덊샇???꾩닔?낅땲??", "error")
             return render_template("member_auth.html", mode="signup")
 
         if password != password_confirm:
-            flash("비밀번호 확인이 일치하지 않습니다.", "error")
+            flash("鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
             return render_template("member_auth.html", mode="signup")
 
         ok, payload = create_member_account(full_name, email, phone, password)
@@ -1061,7 +1061,7 @@ def member_signup():
             "full_name": payload["full_name"],
             "phone": payload.get("phone", ""),
         }
-        flash("회원가입이 완료되었습니다.", "success")
+        flash("?뚯썝媛?낆씠 ?꾨즺?섏뿀?듬땲??", "success")
         return redirect(url_for("index"))
 
     return render_template("member_auth.html", mode="signup")
@@ -1070,7 +1070,7 @@ def member_signup():
 @app.route("/member/logout")
 def member_logout():
     session.pop("member_user", None)
-    flash("일반 사용자 로그아웃이 완료되었습니다.", "success")
+    flash("?쇰컲 ?ъ슜??濡쒓렇?꾩썐???꾨즺?섏뿀?듬땲??", "success")
     return redirect(url_for("index"))
 
 
@@ -1110,17 +1110,17 @@ def change_admin_password():
 
     current_admin = find_admin_user(session["username"])
     if not current_admin or not check_password_hash(current_admin["password_hash"], current_password):
-        flash("현재 비밀번호가 올바르지 않습니다.", "error")
+        flash("?꾩옱 鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.", "error")
         return redirect(url_for("dashboard"))
 
     if not new_password or new_password != new_password_confirm:
-        flash("새 비밀번호 확인이 일치하지 않습니다.", "error")
+        flash("??鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
         return redirect(url_for("dashboard"))
 
     if update_admin_password(session["username"], new_password):
-        flash("메인 관리자 비밀번호를 변경했습니다.", "success")
+        flash("硫붿씤 愿由ъ옄 鍮꾨?踰덊샇瑜?蹂寃쏀뻽?듬땲??", "success")
     else:
-        flash("비밀번호 변경에 실패했습니다.", "error")
+        flash("鍮꾨?踰덊샇 蹂寃쎌뿉 ?ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1132,17 +1132,17 @@ def create_subadmin():
     password_confirm = request.form.get("subadmin_password_confirm", "")
 
     if not username or not password:
-        flash("아이디와 비밀번호를 입력해 주세요.", "error")
+        flash("?꾩씠?붿? 鍮꾨?踰덊샇瑜??낅젰??二쇱꽭??", "error")
         return redirect(url_for("dashboard"))
 
     if password != password_confirm:
-        flash("서브관리자 비밀번호 확인이 일치하지 않습니다.", "error")
+        flash("?쒕툕愿由ъ옄 鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
         return redirect(url_for("dashboard"))
 
     if create_admin_user(username, password, role="subadmin"):
-        flash("서브관리자를 추가했습니다.", "success")
+        flash("?쒕툕愿由ъ옄瑜?異붽??덉뒿?덈떎.", "success")
     else:
-        flash("이미 존재하는 관리자 아이디이거나 생성에 실패했습니다.", "error")
+        flash("?대? 議댁옱?섎뒗 愿由ъ옄 ?꾩씠?붿씠嫄곕굹 ?앹꽦???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1154,13 +1154,13 @@ def reset_subadmin_password():
     new_password_confirm = request.form.get("new_password_confirm", "")
 
     if not username or not new_password or new_password != new_password_confirm:
-        flash("서브관리자 비밀번호 확인이 일치하지 않습니다.", "error")
+        flash("?쒕툕愿由ъ옄 鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
         return redirect(url_for("dashboard"))
 
     if reset_admin_user_password(username, new_password):
-        flash("서브관리자 비밀번호를 재설정했습니다.", "success")
+        flash("?쒕툕愿由ъ옄 鍮꾨?踰덊샇瑜??ъ꽕?뺥뻽?듬땲??", "success")
     else:
-        flash("서브관리자 비밀번호 재설정에 실패했습니다.", "error")
+        flash("?쒕툕愿由ъ옄 鍮꾨?踰덊샇 ?ъ꽕?뺤뿉 ?ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1169,9 +1169,9 @@ def reset_subadmin_password():
 def delete_subadmin():
     username = request.form.get("subadmin_username", "").strip()
     if delete_admin_user(username):
-        flash("서브관리자를 삭제했습니다.", "success")
+        flash("?쒕툕愿由ъ옄瑜???젣?덉뒿?덈떎.", "success")
     else:
-        flash("서브관리자 삭제에 실패했습니다.", "error")
+        flash("?쒕툕愿由ъ옄 ??젣???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1183,13 +1183,13 @@ def reset_member_password():
     new_password_confirm = request.form.get("new_password_confirm", "")
 
     if not member_id or not new_password or new_password != new_password_confirm:
-        flash("회원 비밀번호 확인이 일치하지 않습니다.", "error")
+        flash("?뚯썝 鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
         return redirect(url_for("dashboard"))
 
     if update_member_password(member_id, new_password):
-        flash("회원 비밀번호를 재설정했습니다.", "success")
+        flash("?뚯썝 鍮꾨?踰덊샇瑜??ъ꽕?뺥뻽?듬땲??", "success")
     else:
-        flash("회원 비밀번호 재설정에 실패했습니다.", "error")
+        flash("?뚯썝 鍮꾨?踰덊샇 ?ъ꽕?뺤뿉 ?ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1198,13 +1198,13 @@ def reset_member_password():
 def delete_member():
     member_id = parse_positive_int(request.form.get("member_id"))
     if not member_id:
-        flash("삭제할 회원을 확인해 주세요.", "error")
+        flash("??젣???뚯썝???뺤씤??二쇱꽭??", "error")
         return redirect(url_for("dashboard"))
 
     if delete_member_account(member_id):
-        flash("회원을 삭제했습니다.", "success")
+        flash("?뚯썝????젣?덉뒿?덈떎.", "success")
     else:
-        flash("회원 삭제에 실패했습니다.", "error")
+        flash("?뚯썝 ??젣???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1240,7 +1240,7 @@ def delete_item(item_id):
 @login_required
 def create_loan():
     if not create_loan_record(session["username"]):
-        flash("대여 등록에 실패했습니다.", "error")
+        flash("????깅줉???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1248,7 +1248,7 @@ def create_loan():
 @login_required
 def return_loan(loan_id):
     if not complete_return(loan_id=loan_id):
-        flash("반납 처리에 실패했습니다.", "error")
+        flash("諛섎궔 泥섎━???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1256,9 +1256,9 @@ def return_loan(loan_id):
 @login_required
 def approve_loan(loan_id):
     if approve_loan_request(loan_id):
-        flash("대여 신청을 승인했습니다.", "success")
+        flash("????좎껌???뱀씤?덉뒿?덈떎.", "success")
     else:
-        flash("대여 신청 승인에 실패했습니다.", "error")
+        flash("????좎껌 ?뱀씤???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1266,9 +1266,9 @@ def approve_loan(loan_id):
 @login_required
 def approve_return(loan_id):
     if approve_return_request(loan_id):
-        flash("반납 신청을 승인했습니다.", "success")
+        flash("諛섎궔 ?좎껌???뱀씤?덉뒿?덈떎.", "success")
     else:
-        flash("반납 신청 승인에 실패했습니다.", "error")
+        flash("諛섎궔 ?좎껌 ?뱀씤???ㅽ뙣?덉뒿?덈떎.", "error")
     return redirect(url_for("dashboard"))
 
 
@@ -1278,19 +1278,39 @@ def public_borrow():
     member = find_member_by_id(get_member_session()["id"])
     if not member:
         session.pop("member_user", None)
-        flash("회원 정보를 다시 확인해 주세요. 다시 로그인해 주세요.", "error")
+        flash("?뚯썝 ?뺣낫瑜??ㅼ떆 ?뺤씤??二쇱꽭?? ?ㅼ떆 濡쒓렇?명빐 二쇱꽭??", "error")
         return redirect(url_for("member_login"))
 
     if create_loan_record("member", member=member):
-        flash("대여 신청이 등록되었습니다.", "success")
+        flash("????좎껌???깅줉?섏뿀?듬땲??", "success")
     return redirect(url_for("index"))
 
 
 @app.route("/return", methods=["POST"])
 @member_required
 def public_return():
-    if complete_return(member_id=get_member_session()["id"]):
-        flash("반납 처리가 완료되었습니다.", "success")
+    member_id = get_member_session()["id"]
+    loan_ids = [parse_positive_int(value) for value in request.form.getlist("loan_ids")]
+    loan_ids = [loan_id for loan_id in loan_ids if loan_id]
+
+    if not loan_ids:
+        single_loan_id = parse_positive_int(request.form.get("loan_id"))
+        if single_loan_id:
+            loan_ids = [single_loan_id]
+
+    if not loan_ids:
+        flash("반납 신청할 항목을 선택해 주세요.", "warning")
+        return redirect(url_for("index"))
+
+    success_count = 0
+    for loan_id in loan_ids:
+        if complete_return(loan_id=loan_id, member_id=member_id):
+            success_count += 1
+
+    if success_count:
+        flash(f"{success_count}건의 반납 신청이 접수되었습니다.", "success")
+    else:
+        flash("반납 신청 처리에 실패했습니다.", "error")
     return redirect(url_for("index"))
 
 
