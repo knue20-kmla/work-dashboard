@@ -19,10 +19,10 @@
         }
         .hero {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 300px;
-            gap: 18px;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 22px;
             margin-bottom: 18px;
-            padding: 28px 30px;
+            padding: 26px 28px;
             background: linear-gradient(135deg, #162133 0%, #243247 58%, #31455f 100%);
             border: 1px solid #d7e0ea;
             border-radius: 22px;
@@ -41,31 +41,34 @@
             border: none;
             box-shadow: none;
             color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 220px;
         }
         .hero-brand {
             display: grid;
-            grid-template-columns: 92px minmax(0, 1fr);
+            grid-template-columns: 108px minmax(0, 1fr);
             align-items: start;
-            gap: 18px;
+            gap: 20px;
             margin-bottom: 0;
         }
         .hero-logo {
-            width: 92px;
-            height: 92px;
-            border-radius: 18px;
+            width: 108px;
+            height: 108px;
+            border-radius: 20px;
             background: #ffffff;
-            padding: 10px;
+            padding: 6px;
             object-fit: contain;
             box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22);
         }
         .hero-brand-text {
             display: grid;
-            gap: 10px;
+            gap: 6px;
             flex: 1;
         }
         .hero-brand-text strong {
-            font-size: 15px;
-            letter-spacing: 0.06em;
+            font-size: 14px;
+            letter-spacing: 0.04em;
             color: rgba(255,255,255,0.88);
         }
         .hero-copy h1 {
@@ -73,12 +76,18 @@
             margin-bottom: 0;
             line-height: 1.2;
         }
+        .hero-copy {
+            align-self: end;
+            padding-top: 22px;
+        }
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            justify-content: flex-end;
-            align-self: end;
+            justify-content: flex-start;
+            align-self: flex-start;
+            margin-top: auto;
+            padding-left: 128px;
         }
         .meta-chip {
             display: inline-flex;
@@ -86,51 +95,54 @@
             text-decoration: none;
             color: white;
             padding: 9px 14px;
-            border-radius: 999px;
+            border-radius: 12px;
             background: rgba(255,255,255,0.10);
             border: 1px solid rgba(255,255,255,0.18);
             font-size: 12px;
             font-weight: 700;
         }
         .hero-side {
-            padding: 0;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            justify-content: space-between;
+            gap: 14px;
+            justify-content: flex-start;
             min-width: 0;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
         }
         .user-line {
             display: flex;
             align-items: flex-start;
-            justify-content: flex-end;
+            justify-content: flex-start;
             gap: 12px;
         }
         .user-box strong {
             display: block;
-            font-size: 18px;
+            font-size: 30px;
             margin-bottom: 4px;
             color: #ffffff;
+            line-height: 1;
         }
         .user-box span {
             color: rgba(226, 232, 240, 0.82);
             font-size: 13px;
-            text-align: right;
+            text-align: left;
         }
         .side-note {
             padding: 14px;
             border-radius: 14px;
             background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.12);
             color: rgba(226, 232, 240, 0.82);
             font-size: 13px;
             line-height: 1.5;
         }
         .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px;
-            justify-content: flex-end;
             margin-top: auto;
         }
         .hero-actions a,
@@ -710,29 +722,30 @@
         @media (max-width: 1100px) {
             .hero, .section-grid { grid-template-columns: 1fr; }
             .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .hero-meta,
-            .hero-actions,
-            .user-line {
-                justify-content: flex-start;
-            }
-            .user-box span {
-                text-align: left;
-            }
         }
         @media (max-width: 720px) {
             .page { padding: 14px; }
             .hero { padding: 22px; }
             .hero-brand {
-                grid-template-columns: 74px minmax(0, 1fr);
+                grid-template-columns: 82px minmax(0, 1fr);
                 gap: 14px;
             }
             .hero-logo {
-                width: 74px;
-                height: 74px;
+                width: 82px;
+                height: 82px;
                 border-radius: 16px;
             }
             .hero-copy h1 {
                 font-size: 26px;
+            }
+            .hero-copy {
+                padding-top: 10px;
+            }
+            .hero-meta {
+                padding-left: 0;
+            }
+            .hero-actions {
+                grid-template-columns: 1fr;
             }
             .stats { grid-template-columns: 1fr; }
             .toolbar, .form-grid { grid-template-columns: 1fr; }
@@ -766,7 +779,7 @@
                 <div class="hero-brand">
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="hero-logo">
                     <div class="hero-brand-text">
-                        <strong>KMLA</strong>
+                        <strong>Korean Minjok Leadership Academy</strong>
                         <div class="hero-copy">
                             <h1>프로젝트 기자재 사용 반납 관리</h1>
                         </div>
