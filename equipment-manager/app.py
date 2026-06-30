@@ -21,29 +21,29 @@ USERS_FILE = DATA_DIR / "users.json"
 ITEMS_FILE = DATA_DIR / "items.json"
 LOANS_FILE = DATA_DIR / "loans.json"
 CATEGORY_FILE = DATA_DIR / "categories.json"
-CATEGORY_OPTIONS = ["而댄벂??遺??, "移대찓??, "?꾨몢?대끂", "?ㅽ뿕 ?λ퉬", "湲고?"]
+CATEGORY_OPTIONS = ["컴퓨터 부품", "카메라", "아두이노", "실험 장비", "기타"]
 MAX_IMAGE_SIZE = 2 * 1024 * 1024
 SAMPLE_ITEMS = [
     {
-        "name": "?꾨줈?앺꽣",
-        "category": "湲고?",
-        "location": "李쎄퀬 A",
+        "name": "프로젝터",
+        "category": "기타",
+        "location": "창고 A",
         "quantity_total": 2,
         "quantity_available": 2,
-        "notes": "HDMI 耳?대툝 ?ы븿",
+        "notes": "HDMI 케이블 포함",
     },
     {
-        "name": "移대찓??,
-        "category": "移대찓??,
-        "location": "誘몃뵒?댁떎",
+        "name": "카메라",
+        "category": "카메라",
+        "location": "미디어실",
         "quantity_total": 3,
         "quantity_available": 3,
-        "notes": "諛고꽣由?2媛??ы븿",
+        "notes": "배터리 2개 포함",
     },
     {
-        "name": "?쇨컖?",
-        "category": "湲고?",
-        "location": "李쎄퀬 B",
+        "name": "삼각대",
+        "category": "기타",
+        "location": "창고 B",
         "quantity_total": 4,
         "quantity_available": 4,
         "notes": "",
@@ -64,10 +64,10 @@ def today_str():
 
 
 LOAN_STATUS_LABELS = {
-    "requested": "????좎껌",
-    "borrowed": "???以?,
-    "return_requested": "諛섎궔 ?좎껌",
-    "returned": "諛섎궔 ?꾨즺",
+    "requested": "대여 신청",
+    "borrowed": "대여 중",
+    "return_requested": "반납 신청",
+    "returned": "반납 완료",
 }
 
 
@@ -134,7 +134,7 @@ def resolve_department(form):
     grade = form.get("grade", "").strip()
     classroom = form.get("classroom", "").strip()
     if grade and classroom:
-        return f"{grade}?숇뀈 {classroom}諛?
+        return f"{grade}학년 {classroom}반"
     return form.get("department", "").strip()
 
 
