@@ -308,7 +308,7 @@
             font-size: 13px;
         }
         .equipment-row {
-            grid-template-columns: minmax(180px, 1.45fr) 110px 90px 110px minmax(120px, 1fr) 140px;
+            grid-template-columns: minmax(150px, 1.5fr) 92px 84px 96px minmax(90px, 1fr) 92px;
         }
         .loan-row {
             grid-template-columns: minmax(150px, 1.2fr) 72px 96px 120px 120px minmax(130px, 1fr) 120px;
@@ -372,6 +372,9 @@
         .queue-actions .btn,
         .equipment-row summary {
             white-space: nowrap;
+        }
+        .edit-item-button {
+            width: 100%;
         }
         .queue-check {
             width: 16px;
@@ -633,6 +636,53 @@
             gap: 14px;
             background: #f8fafc;
         }
+        .item-edit-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.58);
+            z-index: 58;
+        }
+        .item-edit-modal.active {
+            display: flex;
+        }
+        .item-edit-modal-card {
+            width: min(760px, 100%);
+            max-height: 86vh;
+            overflow: auto;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #dbe4f0;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+        }
+        .item-edit-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+        }
+        .item-edit-modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            border: none;
+            background: #eef4fb;
+            color: #334155;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .item-edit-modal-body {
+            padding: 20px;
+            background: #f8fafc;
+        }
         details {
             border: 1px solid #e2e8f0;
             border-radius: 14px;
@@ -804,29 +854,7 @@
                             </div>
                             <div>{{ item.notes or '-' }}</div>
                             <div>
-                                <details>
-                                    <summary>수정</summary>
-                                    <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form" enctype="multipart/form-data" style="margin-top:10px;">
-                                        <div class="form-grid">
-                                            <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
-                                            <input type="text" name="category" value="{{ item.category }}" list="category-options" placeholder="분류">
-                                            <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
-                                            <input type="text" value="{{ item.asset_no }}" placeholder="자산번호" readonly>
-                                            <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
-                                            <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
-                                            <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
-                                        </div>
-                                        <input type="file" name="image_file" accept="image/*">
-                                        {% if item.image_data %}
-                                        <label class="subtle"><input type="checkbox" name="remove_image" value="1"> 사진 삭제</label>
-                                        {% endif %}
-                                        <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
-                                        <div class="inline-actions">
-                                            <button class="btn btn-primary" type="submit">저장</button>
-                                            <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" formnovalidate onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
-                                        </div>
-                                    </form>
-                                </details>
+                                <button type="button" class="btn btn-secondary edit-item-button" data-edit-modal-open="item-edit-modal-{{ item.id }}">수정</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -1088,6 +1116,38 @@
             </div>
         </div>
     </div>
+    {% for item in items %}
+    <div class="item-edit-modal" id="item-edit-modal-{{ item.id }}" aria-hidden="true">
+        <div class="item-edit-modal-card">
+            <div class="item-edit-modal-head">
+                <strong>{{ item.name }} 수정</strong>
+                <button type="button" class="item-edit-modal-close" data-edit-modal-close aria-label="닫기">&times;</button>
+            </div>
+            <div class="item-edit-modal-body">
+                <form method="post" action="{{ url_for('update_item', item_id=item.id) }}" class="compact-form" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <input type="text" name="name" value="{{ item.name }}" placeholder="기자재명" required>
+                        <input type="text" name="category" value="{{ item.category }}" list="category-options" placeholder="분류">
+                        <input type="text" name="category_custom" placeholder="분류 직접 입력(선택)">
+                        <input type="text" value="{{ item.asset_no }}" placeholder="자산번호" readonly>
+                        <input type="text" name="location" value="{{ item.location }}" placeholder="보관 위치">
+                        <input type="number" name="quantity_total" value="{{ item.quantity_total }}" min="0" placeholder="총 수량">
+                        <input type="number" name="quantity_available" value="{{ item.quantity_available }}" min="0" placeholder="가능 수량">
+                    </div>
+                    <input type="file" name="image_file" accept="image/*">
+                    {% if item.image_data %}
+                    <label class="subtle"><input type="checkbox" name="remove_image" value="1"> 사진 삭제</label>
+                    {% endif %}
+                    <textarea name="notes" placeholder="비고">{{ item.notes }}</textarea>
+                    <div class="inline-actions">
+                        <button class="btn btn-primary" type="submit">저장</button>
+                        <button class="btn btn-danger" type="submit" formaction="{{ url_for('delete_item', item_id=item.id) }}" formnovalidate onclick="return confirm('이 기자재를 삭제할까요?')">삭제</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
     {% if admin_role == 'superadmin' %}
     <div class="admin-modal" id="admin-manage-modal" aria-hidden="true">
         <div class="admin-modal-card">
@@ -1207,6 +1267,8 @@
         const imageModalImage = document.getElementById('image-modal-image');
         const imageModalClose = document.getElementById('image-modal-close');
         const imageButtons = Array.from(document.querySelectorAll('.equipment-name-button.has-image, .thumb-button.has-image'));
+        const editModalOpenButtons = Array.from(document.querySelectorAll('[data-edit-modal-open]'));
+        const editModals = Array.from(document.querySelectorAll('.item-edit-modal'));
 
         function closeImageModal() {
             if (!imageModal) return;
@@ -1236,6 +1298,33 @@
                 }
             });
         }
+
+        function closeEditModal(modal) {
+            if (!modal) return;
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        editModalOpenButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const modal = document.getElementById(button.dataset.editModalOpen);
+                if (!modal) return;
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+            });
+        });
+
+        editModals.forEach((modal) => {
+            const closeButton = modal.querySelector('[data-edit-modal-close]');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => closeEditModal(modal));
+            }
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeEditModal(modal);
+                }
+            });
+        });
 
         const adminManageOpen = document.getElementById('admin-manage-open');
         const adminManageModal = document.getElementById('admin-manage-modal');
