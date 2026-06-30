@@ -19,12 +19,16 @@
         }
         .hero {
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
-            gap: 16px;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 18px;
             margin-bottom: 18px;
+            padding: 28px 30px;
+            background: linear-gradient(135deg, #162133 0%, #243247 58%, #31455f 100%);
+            border: 1px solid #d7e0ea;
+            border-radius: 22px;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.10);
         }
         .hero-main,
-        .hero-side,
         .panel {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -32,91 +36,93 @@
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
         }
         .hero-main {
-            padding: 30px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #334155 100%);
+            padding: 0;
+            background: none;
+            border: none;
+            box-shadow: none;
             color: white;
         }
         .hero-brand {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 14px;
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr);
+            align-items: start;
+            gap: 18px;
+            margin-bottom: 0;
         }
         .hero-logo {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
+            width: 92px;
+            height: 92px;
+            border-radius: 18px;
             background: #ffffff;
-            padding: 4px;
+            padding: 10px;
             object-fit: contain;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22);
         }
         .hero-brand-text {
             display: grid;
-            gap: 8px;
+            gap: 10px;
             flex: 1;
         }
         .hero-brand-text strong {
-            font-size: 14px;
-            letter-spacing: 0.08em;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.88);
         }
         .hero-copy h1 {
-            font-size: 31px;
-            margin-bottom: 10px;
+            font-size: 30px;
+            margin-bottom: 0;
             line-height: 1.2;
-        }
-        .hero-copy p {
-            max-width: 720px;
-            color: rgba(255,255,255,0.86);
-            line-height: 1.6;
-            font-size: 14px;
         }
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 0;
+            justify-content: flex-end;
+            align-self: end;
         }
         .meta-chip {
             display: inline-flex;
             align-items: center;
             text-decoration: none;
             color: white;
-            padding: 8px 12px;
+            padding: 9px 14px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.18);
             font-size: 12px;
             font-weight: 700;
         }
         .hero-side {
-            padding: 22px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             gap: 16px;
             justify-content: space-between;
+            min-width: 0;
         }
         .user-line {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            align-items: flex-start;
+            justify-content: flex-end;
             gap: 12px;
         }
         .user-box strong {
             display: block;
             font-size: 18px;
             margin-bottom: 4px;
+            color: #ffffff;
         }
         .user-box span {
-            color: #64748b;
+            color: rgba(226, 232, 240, 0.82);
             font-size: 13px;
+            text-align: right;
         }
         .side-note {
             padding: 14px;
             border-radius: 14px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #475569;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(226, 232, 240, 0.82);
             font-size: 13px;
             line-height: 1.5;
         }
@@ -124,6 +130,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            justify-content: flex-end;
+            margin-top: auto;
         }
         .hero-actions a,
         .hero-actions button {
@@ -137,16 +145,18 @@
             cursor: pointer;
         }
         .hero-actions a.primary {
-            background: #1d4ed8;
-            color: white;
+            background: #ffffff;
+            color: #162133;
         }
         .hero-actions a.secondary {
-            background: #e2e8f0;
-            color: #0f172a;
+            background: rgba(255,255,255,0.10);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.16);
         }
         .hero-actions button.secondary {
-            background: #e2e8f0;
-            color: #0f172a;
+            background: rgba(255,255,255,0.10);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.16);
         }
         .stats {
             display: grid;
@@ -700,10 +710,30 @@
         @media (max-width: 1100px) {
             .hero, .section-grid { grid-template-columns: 1fr; }
             .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .hero-meta,
+            .hero-actions,
+            .user-line {
+                justify-content: flex-start;
+            }
+            .user-box span {
+                text-align: left;
+            }
         }
         @media (max-width: 720px) {
             .page { padding: 14px; }
-            .hero-main { padding: 22px; }
+            .hero { padding: 22px; }
+            .hero-brand {
+                grid-template-columns: 74px minmax(0, 1fr);
+                gap: 14px;
+            }
+            .hero-logo {
+                width: 74px;
+                height: 74px;
+                border-radius: 16px;
+            }
+            .hero-copy h1 {
+                font-size: 26px;
+            }
             .stats { grid-template-columns: 1fr; }
             .toolbar, .form-grid { grid-template-columns: 1fr; }
             .equipment-row,
@@ -739,7 +769,6 @@
                         <strong>KMLA</strong>
                         <div class="hero-copy">
                             <h1>프로젝트 기자재 사용 반납 관리</h1>
-                            <p>기자재 등록, 대여 승인, 반납 승인, 이용 이력을 한 화면에서 관리하는 관리자용 프로그램입니다.</p>
                         </div>
                         <div class="hero-meta">
                             <a href="#register-panel" class="meta-chip">기자재 등록</a>
