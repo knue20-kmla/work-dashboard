@@ -313,6 +313,9 @@
         .loan-row {
             grid-template-columns: minmax(150px, 1.2fr) 72px 96px 120px 120px minmax(130px, 1fr) 120px;
         }
+        .queue-table .loan-row {
+            grid-template-columns: 28px minmax(150px, 1.2fr) 72px 96px 120px 120px minmax(130px, 1fr);
+        }
         .history-row {
             grid-template-columns: minmax(150px, 1.3fr) 68px 108px 98px 112px 112px 96px;
         }
@@ -374,6 +377,8 @@
             width: 16px;
             height: 16px;
             accent-color: #2563eb;
+            display: block;
+            margin: 0 auto;
         }
         .queue-summary {
             display: grid;
@@ -875,7 +880,7 @@
                                 <button class="btn btn-primary" type="submit">선택 항목 승인</button>
                             </div>
                             <div class="table-scroll">
-                            <div class="loan-table">
+                            <div class="loan-table queue-table">
                                 <div class="loan-row header">
                                     <div></div>
                                     <div>신청자 / 품목</div>
@@ -913,7 +918,7 @@
                                 <button class="btn btn-warning" type="submit">선택 항목 승인</button>
                             </div>
                             <div class="table-scroll">
-                            <div class="loan-table">
+                            <div class="loan-table queue-table">
                                 <div class="loan-row header">
                                     <div></div>
                                     <div>신청자 / 품목</div>
