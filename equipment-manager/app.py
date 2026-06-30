@@ -1,4 +1,5 @@
 ﻿import base64
+import io
 import json
 import os
 from datetime import datetime
@@ -14,6 +15,12 @@ except ImportError:  # pragma: no cover
     Client = None
     create_client = None
 
+try:
+    from PIL import Image
+except ImportError:  # pragma: no cover
+    Image = None
+
+
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -23,6 +30,8 @@ LOANS_FILE = DATA_DIR / "loans.json"
 CATEGORY_FILE = DATA_DIR / "categories.json"
 CATEGORY_OPTIONS = ["컴퓨터 부품", "카메라", "아두이노", "실험 장비", "기타"]
 MAX_IMAGE_SIZE = 2 * 1024 * 1024
+MAX_IMAGE_DIMENSION = 960
+IMAGE_JPEG_QUALITY = 75
 SAMPLE_ITEMS = [
     {
         "name": "프로젝터",
@@ -159,12 +168,31 @@ def read_image_data(file_storage, current_image=None):
         return current_image
 
     if len(raw) > MAX_IMAGE_SIZE:
-        flash("?ъ쭊 ?뚯씪? 2MB ?댄븯濡??깅줉??二쇱꽭??", "warning")
+        flash("사진 파일은 2MB 이하로 등록해 주세요.", "warning")
         return current_image
 
-    mime_type = file_storage.mimetype or "image/jpeg"
-    encoded = base64.b64encode(raw).decode("ascii")
-    return f"data:{mime_type};base64,{encoded}"
+    if not Image:
+        mime_type = file_storage.mimetype or "image/jpeg"
+        encoded = base64.b64encode(raw).decode("ascii")
+        return f"data:{mime_type};base64,{encoded}"
+
+    try:
+        image = Image.open(io.BytesIO(raw))
+        image = image.convert("RGBA")
+        image.thumbnail((MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION))
+
+        flattened = Image.new("RGB", image.size, (255, 255, 255))
+        flattened.paste(image, mask=image.getchannel("A"))
+
+        output = io.BytesIO()
+        flattened.save(output, format="JPEG", quality=IMAGE_JPEG_QUALITY, optimize=True)
+        encoded = base64.b64encode(output.getvalue()).decode("ascii")
+        return f"data:image/jpeg;base64,{encoded}"
+    except Exception:
+        flash("이미지 압축 처리 중 오류가 발생해 원본 형식으로 저장합니다.", "warning")
+        mime_type = file_storage.mimetype or "image/jpeg"
+        encoded = base64.b64encode(raw).decode("ascii")
+        return f"data:{mime_type};base64,{encoded}"
 
 
 def supabase_enabled():
