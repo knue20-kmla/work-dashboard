@@ -117,7 +117,7 @@
             <div class="brand-name">KMLA</div>
         </div>
         <h1>{% if mode == 'signup' %}일반 사용자 회원가입{% else %}일반 사용자 로그인{% endif %}</h1>
-        <p>{% if mode == 'signup' %}대여와 반납을 위해 일반 사용자 계정을 생성합니다.{% else %}일반 사용자 계정으로 로그인해 본인 대여 건을 관리합니다.{% endif %}</p>
+        <p>{% if mode == 'signup' %}기자재 대여와 반납 신청을 위해 일반 사용자 계정을 생성합니다.{% else %}일반 사용자 계정으로 로그인해 본인의 대여 현황을 관리합니다.{% endif %}</p>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

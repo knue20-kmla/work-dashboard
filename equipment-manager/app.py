@@ -580,10 +580,10 @@ def load_members():
 def create_member_account(full_name, email, phone, password):
     client = get_supabase_client()
     if not client:
-        return False, "?뚯썝 湲곕뒫???ъ슜?섎젮硫?Supabase ?ㅼ젙???꾩슂?⑸땲??"
+        return False, "회원 기능을 사용하려면 Supabase 설정이 필요합니다."
 
     if find_member_by_email(email):
-        return False, "?대? ?ъ슜 以묒씤 ?대찓?쇱엯?덈떎."
+        return False, "이미 사용 중인 이메일입니다."
 
     try:
         result = (
@@ -601,7 +601,7 @@ def create_member_account(full_name, email, phone, password):
         )
         return True, result.data[0]
     except Exception:
-        return False, "?뚯썝 ?뺣낫瑜???ν븯吏 紐삵뻽?듬땲?? Supabase ?뚯씠釉??ㅼ젙???뺤씤??二쇱꽭??"
+        return False, "회원 정보를 저장하지 못했습니다. Supabase 테이블 설정을 확인해 주세요."
 
 
 def update_member_password(member_id, new_password):
@@ -1033,7 +1033,7 @@ def login():
             session["username"] = admin_user["username"]
             session["admin_role"] = admin_user.get("role", "subadmin")
             return redirect(url_for("dashboard"))
-        error = "?꾩씠???먮뒗 鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎."
+        error = "아이디 또는 비밀번호가 올바르지 않습니다."
 
     return render_template("login.html", error=error)
 
@@ -1046,7 +1046,7 @@ def member_login():
 
         member = find_member_by_email(email)
         if not member or not check_password_hash(member["password_hash"], password):
-            flash("?대찓???먮뒗 鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.", "error")
+            flash("이메일 또는 비밀번호가 올바르지 않습니다.", "error")
             return render_template("member_auth.html", mode="login")
 
         session["member_user"] = {
@@ -1055,7 +1055,7 @@ def member_login():
             "full_name": member["full_name"],
             "phone": member.get("phone", ""),
         }
-        flash("?쇰컲 ?ъ슜??濡쒓렇?몄씠 ?꾨즺?섏뿀?듬땲??", "success")
+        flash("일반 사용자 로그인이 완료되었습니다.", "success")
         return redirect(url_for("index"))
 
     return render_template("member_auth.html", mode="login")
@@ -1071,11 +1071,11 @@ def member_signup():
         password_confirm = request.form.get("password_confirm", "")
 
         if not full_name or not email or not password:
-            flash("?대쫫, ?대찓?? 鍮꾨?踰덊샇???꾩닔?낅땲??", "error")
+            flash("이름, 이메일, 비밀번호는 필수입니다.", "error")
             return render_template("member_auth.html", mode="signup")
 
         if password != password_confirm:
-            flash("鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.", "error")
+            flash("비밀번호 확인이 일치하지 않습니다.", "error")
             return render_template("member_auth.html", mode="signup")
 
         ok, payload = create_member_account(full_name, email, phone, password)
@@ -1089,7 +1089,7 @@ def member_signup():
             "full_name": payload["full_name"],
             "phone": payload.get("phone", ""),
         }
-        flash("?뚯썝媛?낆씠 ?꾨즺?섏뿀?듬땲??", "success")
+        flash("회원가입이 완료되었습니다.", "success")
         return redirect(url_for("index"))
 
     return render_template("member_auth.html", mode="signup")
@@ -1098,7 +1098,7 @@ def member_signup():
 @app.route("/member/logout")
 def member_logout():
     session.pop("member_user", None)
-    flash("?쇰컲 ?ъ슜??濡쒓렇?꾩썐???꾨즺?섏뿀?듬땲??", "success")
+    flash("일반 사용자 로그아웃이 완료되었습니다.", "success")
     return redirect(url_for("index"))
 
 
@@ -1350,11 +1350,11 @@ def public_borrow():
     member = find_member_by_id(get_member_session()["id"])
     if not member:
         session.pop("member_user", None)
-        flash("?뚯썝 ?뺣낫瑜??ㅼ떆 ?뺤씤??二쇱꽭?? ?ㅼ떆 濡쒓렇?명빐 二쇱꽭??", "error")
+        flash("회원 정보를 다시 확인해 주세요. 다시 로그인해 주세요.", "error")
         return redirect(url_for("member_login"))
 
     if create_loan_record("member", member=member):
-        flash("????좎껌???깅줉?섏뿀?듬땲??", "success")
+        flash("대여 신청이 등록되었습니다.", "success")
     return redirect(url_for("index"))
 
 
