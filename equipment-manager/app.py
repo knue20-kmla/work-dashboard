@@ -1272,6 +1272,50 @@ def approve_return(loan_id):
     return redirect(url_for("dashboard"))
 
 
+@app.route("/loans/approve-batch", methods=["POST"])
+@login_required
+def approve_loans_batch():
+    loan_ids = [parse_positive_int(value) for value in request.form.getlist("loan_ids")]
+    loan_ids = [loan_id for loan_id in loan_ids if loan_id]
+
+    if not loan_ids:
+        flash("승인할 대여 신청을 선택해 주세요.", "warning")
+        return redirect(url_for("dashboard"))
+
+    success_count = 0
+    for loan_id in loan_ids:
+        if approve_loan_request(loan_id):
+            success_count += 1
+
+    if success_count:
+        flash(f"{success_count}건의 대여 신청을 승인했습니다.", "success")
+    else:
+        flash("대여 신청 승인에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/loans/approve-return-batch", methods=["POST"])
+@login_required
+def approve_returns_batch():
+    loan_ids = [parse_positive_int(value) for value in request.form.getlist("loan_ids")]
+    loan_ids = [loan_id for loan_id in loan_ids if loan_id]
+
+    if not loan_ids:
+        flash("승인할 반납 신청을 선택해 주세요.", "warning")
+        return redirect(url_for("dashboard"))
+
+    success_count = 0
+    for loan_id in loan_ids:
+        if approve_return_request(loan_id):
+            success_count += 1
+
+    if success_count:
+        flash(f"{success_count}건의 반납 신청을 승인했습니다.", "success")
+    else:
+        flash("반납 신청 승인에 실패했습니다.", "error")
+    return redirect(url_for("dashboard"))
+
+
 @app.route("/borrow", methods=["POST"])
 @member_required
 def public_borrow():

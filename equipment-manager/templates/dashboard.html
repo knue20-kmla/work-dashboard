@@ -355,6 +355,11 @@
             justify-content: flex-start;
             gap: 8px;
         }
+        .queue-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
         .queue-actions form,
         .queue-actions .btn,
         .equipment-row details,
@@ -364,6 +369,11 @@
         .queue-actions .btn,
         .equipment-row summary {
             white-space: nowrap;
+        }
+        .queue-check {
+            width: 16px;
+            height: 16px;
+            accent-color: #2563eb;
         }
         .queue-summary {
             display: grid;
@@ -860,34 +870,35 @@
                             <div class="panel-title" style="font-size:16px;">대여 신청 목록</div>
                             <div class="subtle" style="margin-bottom:10px;">대여 신청 상태인 항목만 표시됩니다.</div>
                             {% if pending_borrow_requests %}
+                            <form method="post" action="{{ url_for('approve_loans_batch') }}" class="compact-form">
+                            <div class="queue-toolbar">
+                                <button class="btn btn-primary" type="submit">선택 항목 승인</button>
+                            </div>
                             <div class="table-scroll">
                             <div class="loan-table">
                                 <div class="loan-row header">
+                                    <div></div>
                                     <div>신청자 / 품목</div>
                                     <div>수량</div>
                                     <div>수업명</div>
                                     <div>대여일</div>
                                     <div>반납일</div>
                                     <div>소속 / 팀</div>
-                                    <div>승인</div>
                                 </div>
                                 {% for loan in pending_borrow_requests %}
                                 <div class="loan-row">
+                                    <div><input type="checkbox" class="queue-check" name="loan_ids" value="{{ loan.id }}"></div>
                                     <div><strong>{{ loan.borrower }}</strong><div class="subtle">{{ loan.item_name }}</div></div>
                                     <div>{{ loan.quantity }}</div>
                                     <div>{{ loan.class_name or '-' }}</div>
                                     <div>{{ loan.borrowed_at or '-' }}</div>
                                     <div>{{ loan.due_at or '-' }}</div>
                                     <div>{{ loan.department or '-' }}{% if loan.team_name %}<br>{{ loan.team_name }}{% endif %}</div>
-                                    <div class="queue-actions">
-                                        <form method="post" action="{{ url_for('approve_loan', loan_id=loan.id) }}">
-                                            <button class="btn btn-primary" type="submit">승인</button>
-                                        </form>
-                                    </div>
                                 </div>
                                 {% endfor %}
                             </div>
                             </div>
+                            </form>
                             {% else %}
                             <div class="empty">대기 중인 대여 신청이 없습니다.</div>
                             {% endif %}
@@ -897,34 +908,35 @@
                             <div class="panel-title" style="font-size:16px;">반납 신청 목록</div>
                             <div class="subtle" style="margin-bottom:10px;">반납 신청 상태인 항목만 표시됩니다.</div>
                             {% if pending_return_requests %}
+                            <form method="post" action="{{ url_for('approve_returns_batch') }}" class="compact-form">
+                            <div class="queue-toolbar">
+                                <button class="btn btn-warning" type="submit">선택 항목 승인</button>
+                            </div>
                             <div class="table-scroll">
                             <div class="loan-table">
                                 <div class="loan-row header">
+                                    <div></div>
                                     <div>신청자 / 품목</div>
                                     <div>수량</div>
                                     <div>수업명</div>
                                     <div>대여일</div>
                                     <div>반납일</div>
                                     <div>소속 / 팀</div>
-                                    <div>승인</div>
                                 </div>
                                 {% for loan in pending_return_requests %}
                                 <div class="loan-row">
+                                    <div><input type="checkbox" class="queue-check" name="loan_ids" value="{{ loan.id }}"></div>
                                     <div><strong>{{ loan.borrower }}</strong><div class="subtle">{{ loan.item_name }}</div></div>
                                     <div>{{ loan.quantity }}</div>
                                     <div>{{ loan.class_name or '-' }}</div>
                                     <div>{{ loan.borrowed_at or '-' }}</div>
                                     <div>{{ loan.returned_at or '-' }}</div>
                                     <div>{{ loan.department or '-' }}{% if loan.team_name %}<br>{{ loan.team_name }}{% endif %}</div>
-                                    <div class="queue-actions">
-                                        <form method="post" action="{{ url_for('approve_return', loan_id=loan.id) }}">
-                                            <button class="btn btn-warning" type="submit">승인</button>
-                                        </form>
-                                    </div>
                                 </div>
                                 {% endfor %}
                             </div>
                             </div>
+                            </form>
                             {% else %}
                             <div class="empty">대기 중인 반납 신청이 없습니다.</div>
                             {% endif %}
