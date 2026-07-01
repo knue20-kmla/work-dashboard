@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국사 질문 및 수행 글쓰기 제출</title>
+    <title>한국사 질문 및 글쓰기 제출</title>
     <style>
         :root {
             --bg-top: #d9ebff;
@@ -87,27 +87,25 @@
             border: 1px solid rgba(93, 159, 232, 0.22);
             font-size: 14px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .hero {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            text-align: center;
             margin-bottom: 28px;
         }
 
-        .logo {
-            width: 82px;
-            height: 82px;
-            flex: none;
+        .logo-wrap {
+            width: 92px;
+            height: 92px;
+            margin: 0 auto 18px;
             background: #ffffff;
-            padding: 10px;
-            border-radius: 18px;
+            padding: 12px;
+            border-radius: 22px;
             box-shadow: 0 10px 24px rgba(54, 93, 139, 0.12);
         }
 
-        .logo img {
+        .logo-wrap img {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -124,6 +122,8 @@
             font-size: 15px;
             line-height: 1.6;
             color: var(--muted);
+            max-width: 520px;
+            margin: 0 auto;
         }
 
         .mode-selection { display: block; }
@@ -152,8 +152,21 @@
         }
 
         .mode-icon {
-            font-size: 30px;
+            width: 46px;
+            height: 46px;
             margin-bottom: 14px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-soft);
+            color: var(--primary-strong);
+        }
+
+        .mode-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
         }
 
         .mode-title {
@@ -325,11 +338,6 @@
                 border-radius: 24px;
             }
 
-            .hero {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
             .mode-buttons {
                 grid-template-columns: 1fr;
             }
@@ -347,35 +355,45 @@
             <div class="brand-chip">KMLA 한국사</div>
 
             <div class="hero">
-                <div class="logo">
+                <div class="logo-wrap">
                     <img src="https://i.imgur.com/Mo4ogKc.png" alt="민족사관고등학교 로고">
                 </div>
-                <div>
-                    <h1>한국사 질문 및 글쓰기 제출</h1>
-                    <p class="subtitle">수업 중 질문과 수행 글쓰기를 같은 화면에서 편하게 제출할 수 있습니다.</p>
-                </div>
+                <h1>한국사 질문 및 글쓰기 제출</h1>
+                <p class="subtitle">수업 중 질문과 역사 인물 글쓰기를 같은 화면에서 편하게 제출할 수 있습니다.</p>
             </div>
 
             <div id="modeSelection" class="mode-selection">
                 <div class="mode-buttons">
                     <div class="mode-btn" onclick="selectMode('question')">
-                        <div class="mode-icon">?</div>
-                        <div class="mode-title">질문 제출</div>
-                        <div class="mode-desc">수업 중 궁금한 점이나 토론하고 싶은 내용을 바로 남길 수 있습니다.</div>
+                        <div class="mode-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.1 9a3 3 0 1 1 5.8 1c-.4 1.2-1.6 1.8-2.4 2.5-.8.6-1.2 1.2-1.2 2"></path>
+                                <path d="M12 17h.01"></path>
+                                <circle cx="12" cy="12" r="9"></circle>
+                            </svg>
+                        </div>
+                        <div class="mode-title">질문</div>
+                        <div class="mode-desc">수업 중 궁금한 점이나 발표와 관련된 질문을 바로 남길 수 있습니다.</div>
                     </div>
 
                     <div class="mode-btn" onclick="selectMode('writing')">
-                        <div class="mode-icon">✍</div>
-                        <div class="mode-title">수행 글쓰기</div>
-                        <div class="mode-desc">수행 평가용 글이나 수업 관련 글쓰기를 제출합니다.</div>
-                        <div class="badge">학생 제출용</div>
+                        <div class="mode-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 4h6v6"></path>
+                                <path d="M10 14 20 4"></path>
+                                <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"></path>
+                            </svg>
+                        </div>
+                        <div class="mode-title">역사 인물 글쓰기</div>
+                        <div class="mode-desc">역사 인물을 주제로 한 수행 글쓰기나 수업 관련 글을 제출합니다.</div>
+                        <div class="badge">수행평가용</div>
                     </div>
                 </div>
             </div>
 
             <div id="questionForm" class="form-screen">
                 <div class="back-btn" onclick="backToMode()">← 모드 선택으로 돌아가기</div>
-                <div class="form-title">질문 제출</div>
+                <div class="form-title">질문</div>
                 <p class="form-subtitle">수업 중 궁금했던 내용이나 발표 관련 질문을 구체적으로 작성해 주세요.</p>
 
                 <div id="successMessageQ" class="success-message">질문이 정상적으로 제출되었습니다.</div>
@@ -414,10 +432,10 @@
 
             <div id="writingForm" class="form-screen">
                 <div class="back-btn" onclick="backToMode()">← 모드 선택으로 돌아가기</div>
-                <div class="form-title">수행 글쓰기</div>
-                <p class="form-subtitle">수행 평가용 글을 정리해서 제출해 주세요.</p>
+                <div class="form-title">역사 인물 글쓰기</div>
+                <p class="form-subtitle">역사 인물을 주제로 한 수행평가 글을 정리해서 제출해 주세요.</p>
 
-                <div id="successMessageW" class="success-message">수행 글쓰기가 정상적으로 제출되었습니다.</div>
+                <div id="successMessageW" class="success-message">역사 인물 글쓰기가 정상적으로 제출되었습니다.</div>
                 <div id="errorMessageW" class="error-message">오류가 발생했습니다. 다시 시도해 주세요.</div>
 
                 <form id="writingFormElement">
@@ -442,8 +460,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">수행 글쓰기<span class="required">*</span></label>
-                        <textarea id="writingInputW" class="form-textarea writing-textarea" placeholder="수행 글쓰기 내용을 작성해 주세요." required></textarea>
+                        <label class="form-label">역사 인물 글쓰기<span class="required">*</span></label>
+                        <textarea id="writingInputW" class="form-textarea writing-textarea" placeholder="역사 인물 글쓰기 내용을 작성해 주세요." required></textarea>
                         <p class="form-hint">문단을 나누어 작성하면 교사가 읽고 정리하기 쉽습니다.</p>
                     </div>
 
