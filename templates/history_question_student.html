@@ -155,18 +155,14 @@
             width: 46px;
             height: 46px;
             margin-bottom: 14px;
-            border-radius: 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--primary-soft);
-            color: var(--primary-strong);
         }
 
         .mode-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
+            width: 44px;
+            height: 44px;
         }
 
         .mode-title {
@@ -366,10 +362,12 @@
                 <div class="mode-buttons">
                     <div class="mode-btn" onclick="selectMode('question')">
                         <div class="mode-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 9.5A4.5 4.5 0 0 1 12.5 5h2A4.5 4.5 0 0 1 19 9.5v1A4.5 4.5 0 0 1 14.5 15H12l-4 4v-4.5A4.5 4.5 0 0 1 4 10V9.5A4.5 4.5 0 0 1 8.5 5"></path>
-                                <path d="M9 9h6"></path>
-                                <path d="M9 12h4"></path>
+                            <svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="14" y="16" width="36" height="24" rx="6" fill="#ffffff" stroke="#1f2937" stroke-width="4"></rect>
+                                <path d="M24 40 18 48v-8" fill="#ffffff" stroke="#1f2937" stroke-width="4"></path>
+                                <circle cx="25" cy="28" r="2.5" fill="#1f2937"></circle>
+                                <circle cx="32" cy="28" r="2.5" fill="#1f2937"></circle>
+                                <circle cx="39" cy="28" r="2.5" fill="#1f2937"></circle>
                             </svg>
                         </div>
                         <div class="mode-title">질문</div>
@@ -378,12 +376,12 @@
 
                     <div class="mode-btn" onclick="selectMode('writing')">
                         <div class="mode-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M7 4.5h8"></path>
-                                <path d="M9 2.5h4"></path>
-                                <path d="M8 8h8l1 11H7L8 8Z"></path>
-                                <path d="M10 11.5h4"></path>
-                                <path d="M10 14.5h4"></path>
+                            <svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 44h30l-2-16H22L14 44Z" fill="#ffd54f" stroke="#1f2937" stroke-width="4"></path>
+                                <path d="M18 28h20l6-6" stroke="#1f2937" stroke-width="4"></path>
+                                <path d="M38 18 48 28" stroke="#ef4444" stroke-width="6"></path>
+                                <path d="M34 22 44 32" stroke="#f59e0b" stroke-width="6"></path>
+                                <path d="M47 17l4 4" stroke="#1f2937" stroke-width="4"></path>
                             </svg>
                         </div>
                         <div class="mode-title">역사 인물 글쓰기</div>
