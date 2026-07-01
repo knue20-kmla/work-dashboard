@@ -142,7 +142,7 @@
             box-shadow: 0 12px 28px rgba(99, 136, 181, 0.1);
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            text-align: left;
+            text-align: center;
         }
 
         .mode-btn:hover {
@@ -367,9 +367,9 @@
                     <div class="mode-btn" onclick="selectMode('question')">
                         <div class="mode-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9.1 9a3 3 0 1 1 5.8 1c-.4 1.2-1.6 1.8-2.4 2.5-.8.6-1.2 1.2-1.2 2"></path>
-                                <path d="M12 17h.01"></path>
-                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M8 9.5A4.5 4.5 0 0 1 12.5 5h2A4.5 4.5 0 0 1 19 9.5v1A4.5 4.5 0 0 1 14.5 15H12l-4 4v-4.5A4.5 4.5 0 0 1 4 10V9.5A4.5 4.5 0 0 1 8.5 5"></path>
+                                <path d="M9 9h6"></path>
+                                <path d="M9 12h4"></path>
                             </svg>
                         </div>
                         <div class="mode-title">질문</div>
@@ -379,13 +379,15 @@
                     <div class="mode-btn" onclick="selectMode('writing')">
                         <div class="mode-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 4h6v6"></path>
-                                <path d="M10 14 20 4"></path>
-                                <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"></path>
+                                <path d="M7 4.5h8"></path>
+                                <path d="M9 2.5h4"></path>
+                                <path d="M8 8h8l1 11H7L8 8Z"></path>
+                                <path d="M10 11.5h4"></path>
+                                <path d="M10 14.5h4"></path>
                             </svg>
                         </div>
                         <div class="mode-title">역사 인물 글쓰기</div>
-                        <div class="mode-desc">역사 인물을 주제로 한 수행 글쓰기나 수업 관련 글을 제출합니다.</div>
+                        <div class="mode-desc">역사 인물 1명을 선택하여 글을 작성(선택 동기, 인물의 활동, 인물에 대한 자신의 평가가 포함되어야 함. 1000자 이내로 작성할 것)</div>
                         <div class="badge">수행평가용</div>
                     </div>
                 </div>
