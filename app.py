@@ -64,6 +64,10 @@ def logout():
 def dashboard():
     return render_template('dashboard.html', username=session['username'])
 
+@app.route('/history-question')
+def history_question_student():
+    return render_template('history_question_student.html')
+
 @app.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
