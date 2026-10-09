@@ -577,55 +577,134 @@
     .dashboard.is-entering { animation: enterSignal .7s cubic-bezier(.16,1,.3,1); }
     .dashboard:focus-visible { box-shadow: var(--shadow), 0 0 0 3px var(--focus-ring); }
     .dash-top {
-      height: 52px;
-      padding: 0 20px;
+      height: 54px;
+      padding: 0 18px;
       border-bottom: 1px solid var(--dash-line);
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: var(--dash-panel);
     }
-    .dash-title { color: var(--dash-muted); font: 700 9px/1 Manrope, sans-serif; letter-spacing: .14em; }
-    .dash-mark { display: flex; gap: 6px; }
-    .dash-mark i { width: 5px; height: 5px; border-radius: 50%; background: var(--dash-muted); opacity: .5; }
-    .dash-body { display: grid; grid-template-columns: 70px 1fr; height: calc(100% - 52px); }
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--dash-ink);
+      font: 800 9px/1 Manrope, sans-serif;
+      letter-spacing: .12em;
+    }
+    .dash-title::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--dash-accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--dash-accent) 14%, transparent);
+    }
+    .dash-mark { display: flex; align-items: center; gap: 6px; }
+    .dash-mark i { width: 5px; height: 5px; border-radius: 50%; background: var(--dash-muted); opacity: .42; }
+    .dash-body { display: grid; grid-template-columns: 132px 1fr; height: calc(100% - 54px); }
     .rail {
       border-right: 1px solid var(--dash-line);
-      padding: 21px 16px;
+      padding: 19px 12px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 18px;
+      align-items: stretch;
+      gap: 7px;
       background: var(--dash-panel);
     }
+    .rail-label {
+      margin: 0 7px 8px;
+      color: var(--dash-muted);
+      font: 800 7px/1 Manrope, sans-serif;
+      letter-spacing: .15em;
+    }
     .rail-icon {
-      width: 29px;
-      height: 29px;
-      border: 1px solid var(--dash-line);
-      border-radius: 4px;
+      min-height: 38px;
+      padding: 0 9px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--dash-muted);
+      font-size: 8px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .rail-icon.active {
+      background: var(--dash-accent);
+      border-color: var(--dash-accent);
+      color: var(--dash-accent-ink);
+      box-shadow: 0 7px 18px color-mix(in srgb, var(--dash-accent) 20%, transparent);
+    }
+    .rail-icon svg { width: 14px; height: 14px; flex: 0 0 auto; }
+    .rail-note {
+      margin-top: auto;
+      padding: 11px 9px;
+      border-top: 1px solid var(--dash-line);
+      color: var(--dash-muted);
+      font-size: 6px;
+      line-height: 1.55;
+    }
+    .rail-note b { display: block; margin-bottom: 3px; color: var(--dash-ink); font-size: 7px; }
+    .dash-content { min-width: 0; padding: clamp(18px, 2.5vw, 28px); }
+    .dash-head { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+    .dash-head small { display: block; margin-bottom: 5px; color: var(--dash-muted); font-size: 8px; font-weight: 700; }
+    .dash-head strong { font-size: clamp(18px, 1.8vw, 25px); letter-spacing: -.045em; }
+    .avatar {
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      color: var(--dash-muted);
+      background: var(--dash-soft);
+      color: var(--dash-ink);
+      font: 800 8px Manrope, sans-serif;
     }
-    .rail-icon.active { background: var(--dash-accent); border-color: var(--dash-accent); color: var(--dash-accent-ink); }
-    .rail-icon svg { width: 14px; height: 14px; }
-    .dash-content { min-width: 0; padding: clamp(20px, 3vw, 34px); }
-    .dash-head { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
-    .dash-head small { display: block; margin-bottom: 7px; color: var(--dash-muted); font-size: 9px; }
-    .dash-head strong { font-size: clamp(19px, 2vw, 27px); letter-spacing: -.04em; }
-    .avatar { width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center; background: var(--dash-soft); color: var(--dash-ink); font: 800 9px Manrope, sans-serif; }
-    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; margin-top: 27px; }
-    .metric { padding: 16px 14px; background: var(--dash-panel); border: 1px solid var(--dash-line); border-radius: 4px; }
-    .metric span { display: block; color: var(--dash-muted); font-size: 8px; font-weight: 700; }
-    .metric b { display: block; margin-top: 8px; font: 800 clamp(18px, 2vw, 27px) Manrope, sans-serif; letter-spacing: -.05em; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 17px; }
+    .metric {
+      min-width: 0;
+      padding: 10px 11px;
+      background: color-mix(in srgb, var(--dash-panel) 86%, var(--dash-soft));
+      border: 1px solid var(--dash-line);
+      border-radius: 4px;
+    }
+    .metric span { display: block; color: var(--dash-muted); font-size: 7px; font-weight: 700; white-space: nowrap; }
+    .metric b { display: block; margin-top: 4px; font: 800 clamp(15px, 1.65vw, 21px) Manrope, sans-serif; letter-spacing: -.04em; }
     .metric.hot { background: var(--dash-accent); border-color: var(--dash-accent); color: var(--dash-accent-ink); }
     .metric.hot span { color: var(--dash-hot-muted); }
-    .workflow { margin-top: 13px; padding: 18px; border: 1px solid var(--dash-line); border-radius: 4px; background: var(--dash-panel); }
-    .workflow-head { display: flex; justify-content: space-between; font-size: 9px; font-weight: 800; }
-    .workflow-head span:last-child { color: var(--dash-muted); font-family: Manrope, sans-serif; letter-spacing: .08em; }
-    .bars { height: 94px; margin-top: 13px; display: flex; align-items: end; gap: 8px; }
-    .bar { flex: 1; height: var(--h); border-radius: 2px 2px 0 0; background: var(--dash-ink); opacity: .14; transform-origin: bottom; animation: barRise 1.1s var(--delay) cubic-bezier(.16,1,.3,1) both; }
-    .bar.accent { background: var(--dash-accent); opacity: 1; }
+    .system-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 11px; }
+    .system-card {
+      min-width: 0;
+      min-height: 76px;
+      padding: 11px 10px 9px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--dash-line);
+      border-radius: 4px;
+      background: var(--dash-panel);
+    }
+    .system-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 10px 0;
+      height: 2px;
+      background: var(--dash-accent);
+      opacity: .72;
+      transform: scaleX(.32);
+      transform-origin: left;
+    }
+    .system-card small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dash-accent);
+      font-size: 6px;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+    .system-card strong { display: block; font-size: 8px; line-height: 1.32; letter-spacing: -.025em; }
+    .system-card p { margin: 5px 0 0; color: var(--dash-muted); font-size: 6px; line-height: 1.4; }
     .float-tag {
       position: absolute;
       z-index: 3;
@@ -1043,6 +1122,7 @@
     @keyframes barRise { from { transform: scaleY(0); } }
     @keyframes lineIn { from { transform: scaleX(0); } }
     @keyframes scan { 0% { left: -18%; } 100% { left: 102%; } }
+
     /* A single-stage presentation: the dashboard and school-spirit film
        occupy the same visual plane and trade places automatically. */
     .motto-section { display: none; }
@@ -1161,15 +1241,29 @@
       .identity-line { margin-top: 22px; font-size: 8px; letter-spacing: .08em; }
       .stage { min-height: 430px; margin-top: 0; }
       .dashboard { width: 100%; transform: rotateX(2deg) rotateY(-2deg); }
-      .dash-body { grid-template-columns: 47px 1fr; }
-      .rail { padding: 17px 8px; gap: 14px; }
-      .rail-icon { width: 25px; height: 25px; }
-      .dash-content { padding: 17px; }
-      .metrics { gap: 6px; margin-top: 20px; }
-      .metric { padding: 11px 8px; }
-      .metric b { font-size: 17px; }
-      .workflow { padding: 13px; }
-      .bars { height: 61px; gap: 5px; }
+      .dash-top { height: 42px; padding: 0 11px; }
+      .dash-title { font-size: 6px; gap: 6px; }
+      .dash-title::before { width: 7px; height: 7px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--dash-accent) 14%, transparent); }
+      .dash-body { height: calc(100% - 42px); grid-template-columns: 72px 1fr; }
+      .rail { padding: 10px 6px; gap: 3px; }
+      .rail-label { margin: 0 5px 4px; font-size: 5px; }
+      .rail-icon { min-height: 27px; padding: 0 6px; gap: 5px; font-size: 5.5px; }
+      .rail-icon svg { width: 10px; height: 10px; }
+      .rail-note { padding: 6px 5px; font-size: 4.5px; line-height: 1.3; }
+      .rail-note b { font-size: 5px; }
+      .dash-content { padding: 10px; }
+      .dash-head small { margin-bottom: 2px; font-size: 5.5px; }
+      .dash-head strong { font-size: 13px; }
+      .avatar { width: 23px; height: 23px; font-size: 6px; }
+      .metrics { gap: 4px; margin-top: 8px; }
+      .metric { padding: 5px 6px; }
+      .metric span { font-size: 5px; }
+      .metric b { margin-top: 2px; font-size: 10px; }
+      .system-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin-top: 6px; }
+      .system-card { min-height: 39px; padding: 5px 6px 4px; }
+      .system-card small { margin-bottom: 2px; font-size: 4.5px; }
+      .system-card strong { font-size: 5.5px; line-height: 1.2; }
+      .system-card p { display: none; }
       .float-tag { padding: 9px 11px; font-size: 8px; }
       .tag-a { left: -2%; top: 17%; }
       .tag-b { right: -2%; bottom: 7%; }
@@ -1205,6 +1299,248 @@
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+    /* Refined workspace mockup — crisp, cool, and information-led. */
+    .dashboard {
+      --ui-accent: var(--dash-accent);
+      --ui-dark: #151c26;
+      --ui-dark-soft: #202a36;
+      --ui-paper: #f4f6f8;
+      --ui-panel: #ffffff;
+      --ui-ink: #1b2430;
+      --ui-muted: #7a8592;
+      --ui-line: rgba(28, 39, 52, .11);
+      aspect-ratio: 1.31;
+      border-color: rgba(255,255,255,.5);
+      border-radius: 12px;
+      background: var(--ui-paper);
+      color: var(--ui-ink);
+      box-shadow: 0 38px 90px rgba(2, 13, 29, .36), 0 1px 0 rgba(255,255,255,.75) inset;
+    }
+    .dashboard .dash-top {
+      height: 50px;
+      padding: 0 16px 0 18px;
+      border-bottom: 1px solid var(--ui-line);
+      background: rgba(255,255,255,.94);
+    }
+    .dashboard .dash-title { gap: 10px; color: var(--ui-ink); letter-spacing: .08em; }
+    .dashboard .dash-title::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ui-accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--ui-accent) 13%, transparent);
+    }
+    .dash-tools { display: flex; align-items: center; gap: 10px; }
+    .dash-command {
+      min-width: 132px;
+      padding: 7px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--ui-line);
+      border-radius: 6px;
+      color: var(--ui-muted);
+      background: #f7f8fa;
+      font: 700 6px/1 Manrope, sans-serif;
+      letter-spacing: .05em;
+    }
+    .dash-command kbd {
+      padding: 2px 4px;
+      border: 1px solid var(--ui-line);
+      border-radius: 3px;
+      color: var(--ui-muted);
+      background: #fff;
+      font: 700 6px/1 Manrope, sans-serif;
+      box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    }
+    .dash-avatar {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ui-dark);
+      font: 800 7px/1 Manrope, sans-serif;
+    }
+    .dashboard .dash-mark i { width: 4px; height: 4px; background: var(--ui-muted); }
+    .dashboard .dash-body { height: calc(100% - 50px); grid-template-columns: 118px 1fr; }
+    .dashboard .rail {
+      padding: 18px 10px 12px;
+      gap: 5px;
+      border-right: 0;
+      color: rgba(255,255,255,.68);
+      background:
+        radial-gradient(circle at 22% 86%, color-mix(in srgb, var(--ui-accent) 22%, transparent), transparent 34%),
+        var(--ui-dark);
+    }
+    .dashboard .rail-label { margin: 0 9px 9px; color: rgba(255,255,255,.42); font-size: 6px; }
+    .dashboard .rail-icon {
+      min-height: 36px;
+      padding: 0 9px;
+      gap: 8px;
+      border: 0;
+      border-radius: 6px;
+      color: rgba(255,255,255,.58);
+      font-size: 7px;
+      font-weight: 700;
+    }
+    .dashboard .rail-icon.active {
+      border: 0;
+      color: #fff;
+      background: rgba(255,255,255,.1);
+      box-shadow: none;
+    }
+    .dashboard .rail-icon.active::after {
+      content: "";
+      width: 3px;
+      height: 14px;
+      margin-left: auto;
+      border-radius: 3px;
+      background: var(--ui-accent);
+    }
+    .dashboard .rail-icon svg { width: 13px; height: 13px; }
+    .rail-status {
+      margin-top: auto;
+      padding: 10px 9px 0;
+      border-top: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.46);
+      font: 700 5px/1.45 Manrope, sans-serif;
+      letter-spacing: .08em;
+    }
+    .rail-status b { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: rgba(255,255,255,.8); font-size: 6px; }
+    .rail-status b::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #71d8ab; box-shadow: 0 0 0 3px rgba(113,216,171,.12); }
+    .dashboard .dash-content { padding: 18px 20px 16px; background: var(--ui-paper); }
+    .workspace-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+    .workspace-head small { display: block; margin-bottom: 5px; color: var(--ui-muted); font-size: 7px; font-weight: 700; }
+    .workspace-head strong { color: var(--ui-ink); font-size: clamp(18px, 1.65vw, 23px); line-height: 1.05; letter-spacing: -.045em; }
+    .workspace-meta { padding-top: 3px; color: var(--ui-muted); font: 700 6px/1.4 Manrope, sans-serif; text-align: right; letter-spacing: .08em; }
+    .workspace-meta b { display: block; margin-top: 2px; color: var(--ui-ink); font-size: 7px; }
+    .workspace-overview {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 1.5fr .78fr;
+      gap: 9px;
+    }
+    .overview-feature {
+      min-height: 94px;
+      padding: 14px 15px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.05), transparent 50%),
+        var(--ui-dark);
+    }
+    .overview-feature::after {
+      content: "";
+      position: absolute;
+      width: 112px;
+      height: 112px;
+      right: -44px;
+      bottom: -65px;
+      border: 1px solid color-mix(in srgb, var(--ui-accent) 72%, rgba(255,255,255,.15));
+      border-radius: 50%;
+      box-shadow: 0 0 0 19px color-mix(in srgb, var(--ui-accent) 6%, transparent), 0 0 0 42px color-mix(in srgb, var(--ui-accent) 4%, transparent);
+    }
+    .overview-kicker { color: rgba(255,255,255,.48); font: 800 6px/1 Manrope, sans-serif; letter-spacing: .13em; }
+    .overview-feature strong { display: block; margin-top: 8px; font-size: 13px; letter-spacing: -.03em; }
+    .overview-feature p { max-width: 210px; margin: 7px 0 0; color: rgba(255,255,255,.58); font-size: 6px; line-height: 1.5; }
+    .overview-counts { margin-top: 12px; display: flex; gap: 12px; }
+    .overview-counts span { color: rgba(255,255,255,.46); font-size: 5px; }
+    .overview-counts b { margin-right: 3px; color: var(--ui-accent); font: 800 11px/1 Manrope, sans-serif; }
+    .quick-stack { display: grid; gap: 7px; }
+    .quick-stat {
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 1px solid var(--ui-line);
+      border-radius: 7px;
+      background: var(--ui-panel);
+    }
+    .quick-stat span { color: var(--ui-muted); font-size: 6px; font-weight: 700; }
+    .quick-stat b { color: var(--ui-ink); font: 800 15px/1 Manrope, sans-serif; }
+    .quick-stat i { width: 22px; height: 3px; border-radius: 3px; background: var(--ui-accent); opacity: .78; }
+    .system-heading { margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
+    .system-heading strong { color: var(--ui-ink); font-size: 8px; }
+    .system-heading span { color: var(--ui-muted); font: 700 6px/1 Manrope, sans-serif; letter-spacing: .08em; }
+    .dashboard .system-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; margin-top: 6px; }
+    .dashboard .system-card {
+      min-height: 49px;
+      padding: 9px 4px 8px 0;
+      display: grid;
+      grid-template-columns: 25px minmax(0, 1fr) 12px;
+      grid-template-rows: auto auto;
+      align-items: center;
+      column-gap: 8px;
+      border: 0;
+      border-bottom: 1px solid var(--ui-line);
+      border-radius: 0;
+      background: transparent;
+    }
+    .dashboard .system-card::after { display: none; }
+    .app-glyph {
+      grid-row: 1 / 3;
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      color: var(--ui-accent);
+      background: color-mix(in srgb, var(--ui-accent) 11%, #fff);
+      font: 800 7px/1 Manrope, sans-serif;
+    }
+    .dashboard .system-card small { margin: 0; color: var(--ui-muted); font-size: 5px; font-weight: 700; letter-spacing: 0; }
+    .dashboard .system-card strong { margin-top: 2px; color: var(--ui-ink); font-size: 7px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dashboard .system-card p { display: none; }
+    .card-arrow { grid-column: 3; grid-row: 1 / 3; color: var(--ui-muted); font: 700 11px/1 Manrope, sans-serif; opacity: .65; }
+
+    @media (max-width: 640px) {
+      .dashboard { aspect-ratio: 1.23; border-radius: 9px; }
+      .dashboard .dash-top { height: 38px; padding: 0 9px 0 11px; }
+      .dashboard .dash-body { height: calc(100% - 38px); grid-template-columns: 62px 1fr; }
+      .dash-command { min-width: 72px; padding: 5px 6px; font-size: 4px; }
+      .dash-command kbd, .dash-avatar { display: none; }
+      .dashboard .rail { padding: 10px 5px 7px; gap: 2px; }
+      .dashboard .rail-label { margin: 0 5px 4px; font-size: 4px; }
+      .dashboard .rail-icon { min-height: 25px; padding: 0 5px; gap: 4px; font-size: 4.5px; }
+      .dashboard .rail-icon svg { width: 9px; height: 9px; }
+      .dashboard .rail-icon.active::after { width: 2px; height: 9px; }
+      .rail-status { padding: 6px 4px 0; font-size: 3.5px; }
+      .rail-status b { gap: 3px; margin-bottom: 2px; font-size: 4px; }
+      .rail-status b::before { width: 3px; height: 3px; box-shadow: none; }
+      .dashboard .dash-content { padding: 10px 10px 8px; }
+      .workspace-head small { margin-bottom: 2px; font-size: 4.5px; }
+      .workspace-head strong { font-size: 11px; }
+      .workspace-meta { font-size: 3.5px; }
+      .workspace-meta b { font-size: 4.5px; }
+      .workspace-overview { margin-top: 8px; grid-template-columns: 1.45fr .8fr; gap: 5px; }
+      .overview-feature { min-height: 60px; padding: 8px; border-radius: 5px; }
+      .overview-kicker { font-size: 3.5px; }
+      .overview-feature strong { margin-top: 4px; font-size: 7px; }
+      .overview-feature p { margin-top: 3px; font-size: 3.5px; line-height: 1.35; }
+      .overview-counts { margin-top: 6px; gap: 5px; }
+      .overview-counts span { font-size: 3px; }
+      .overview-counts b { font-size: 6px; }
+      .quick-stack { gap: 4px; }
+      .quick-stat { padding: 5px 6px; border-radius: 4px; }
+      .quick-stat span { font-size: 3.5px; }
+      .quick-stat b { font-size: 8px; }
+      .quick-stat i { width: 10px; height: 2px; }
+      .system-heading { margin-top: 7px; }
+      .system-heading strong { font-size: 4.5px; }
+      .system-heading span { font-size: 3.5px; }
+      .dashboard .system-list { gap: 0 7px; margin-top: 2px; }
+      .dashboard .system-card { min-height: 28px; padding: 4px 2px 4px 0; grid-template-columns: 15px minmax(0,1fr) 6px; column-gap: 4px; }
+      .app-glyph { width: 15px; height: 15px; border-radius: 4px; font-size: 4px; }
+      .dashboard .system-card small { font-size: 3px; }
+      .dashboard .system-card strong { margin-top: 1px; font-size: 4px; }
+      .card-arrow { font-size: 7px; }
     }
   </style>
 </head>
@@ -1255,43 +1591,59 @@
           <div class="halo" aria-hidden="true"></div>
           <div class="halo halo-small" aria-hidden="true"></div>
           <div class="dashboard stage-view is-active" id="system-preview" tabindex="-1" aria-hidden="false">
-            <div class="dash-top">
-              <span class="dash-title">KMLA · INTEGRATED WORKSPACE</span>
-              <span class="dash-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-            </div>
+            <header class="dash-top">
+              <span class="dash-title">KMLA · WORKSPACE</span>
+              <span class="dash-tools">
+                <span class="dash-command">업무 검색 <kbd>⌘ K</kbd></span>
+                <span class="dash-avatar" aria-hidden="true">KT</span>
+              </span>
+            </header>
             <div class="dash-body">
-              <aside class="rail" aria-label="업무 메뉴 미리보기">
-                <span class="rail-icon active" title="홈">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <aside class="rail" aria-label="업무 영역 미리보기">
+                <p class="rail-label">NAVIGATION</p>
+                <span class="rail-icon active">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                  대시보드
                 </span>
-                <span class="rail-icon" title="일정">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 3.5v4M16 3.5v4M4 10h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span class="rail-icon">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V8l7-4 7 4v11M9 19v-5h6v5M3 20h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  학교 업무
                 </span>
-                <span class="rail-icon" title="문서">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3.5h7l4 4V20H7V3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V8h4M10 12h5M10 15.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                <span class="rail-icon">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 20v-2.2c0-2 1.7-3.7 3.7-3.7h4.6c2 0 3.7 1.7 3.7 3.7V20M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  학급 업무
                 </span>
+                <span class="rail-icon">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 7 9-4 9 4-9 4-9-4Zm3 2.5V15c3.4 2.7 8.6 2.7 12 0V9.5M21 8v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  교과 업무
+                </span>
+                <div class="rail-status"><b>SYSTEM ONLINE</b>ONE SCHOOL · ONE WORKFLOW</div>
               </aside>
-              <section class="dash-content" aria-label="업무 포털 미리보기">
-                <div class="dash-head">
-                  <div><small>WORKSPACE PREVIEW</small><strong>오늘의 업무 흐름</strong></div>
-                  <span class="avatar" aria-hidden="true">KMLA</span>
+              <section class="dash-content" aria-label="통합 업무 허브 미리보기">
+                <div class="workspace-head">
+                  <div><small>나의 업무 공간</small><strong>통합 업무 허브</strong></div>
+                  <div class="workspace-meta">UNIFIED SYSTEM<b>14 SERVICES</b></div>
                 </div>
-                <div class="metrics" aria-label="주요 업무 영역">
-                  <div class="metric hot"><span>수업 운영</span><b>시간표</b></div>
-                  <div class="metric"><span>업무 관리</span><b>문서함</b></div>
-                  <div class="metric"><span>교내 소통</span><b>알림</b></div>
-                </div>
-                <div class="workflow" aria-label="업무 흐름 그래픽 미리보기">
-                  <div class="workflow-head"><span>통합 업무 흐름</span><span>LIVE VIEW</span></div>
-                  <div class="bars" aria-hidden="true">
-                    <i class="bar" style="--h:31%;--delay:.08s"></i>
-                    <i class="bar" style="--h:52%;--delay:.14s"></i>
-                    <i class="bar accent" style="--h:76%;--delay:.2s"></i>
-                    <i class="bar" style="--h:60%;--delay:.26s"></i>
-                    <i class="bar" style="--h:86%;--delay:.32s"></i>
-                    <i class="bar accent" style="--h:68%;--delay:.38s"></i>
-                    <i class="bar" style="--h:94%;--delay:.44s"></i>
+                <div class="workspace-overview">
+                  <article class="overview-feature">
+                    <span class="overview-kicker">WORKSPACE OVERVIEW</span>
+                    <strong>업무를 하나의 흐름으로</strong>
+                    <p>학교·학급·교과 시스템을 오가며 필요한 업무에 바로 연결합니다.</p>
+                    <div class="overview-counts" aria-label="업무 영역별 시스템 수"><span><b>08</b>학교</span><span><b>05</b>학급</span><span><b>01</b>교과</span></div>
+                  </article>
+                  <div class="quick-stack" aria-label="업무 요약">
+                    <article class="quick-stat"><span>학교 업무</span><b>08</b><i aria-hidden="true"></i></article>
+                    <article class="quick-stat"><span>학급 · 교과</span><b>06</b><i aria-hidden="true"></i></article>
                   </div>
+                </div>
+                <div class="system-heading"><strong>주요 시스템</strong><span>QUICK ACCESS · 06</span></div>
+                <div class="system-list">
+                  <article class="system-card"><span class="app-glyph">AF</span><small>학교 업무</small><strong>자동 발송 시스템</strong><span class="card-arrow">›</span></article>
+                  <article class="system-card"><span class="app-glyph">KL</span><small>학교 업무</small><strong>KMLA 교육과정 체험</strong><span class="card-arrow">›</span></article>
+                  <article class="system-card"><span class="app-glyph">EX</span><small>학교 업무</small><strong>정기시험 시간표</strong><span class="card-arrow">›</span></article>
+                  <article class="system-card"><span class="app-glyph">ST</span><small>학급 업무</small><strong>자습 관리 시스템</strong><span class="card-arrow">›</span></article>
+                  <article class="system-card"><span class="app-glyph">SR</span><small>학급 업무</small><strong>생기부 분석 시스템</strong><span class="card-arrow">›</span></article>
+                  <article class="system-card"><span class="app-glyph">PL</span><small>교과 업무</small><strong>교수학습평가계획서</strong><span class="card-arrow">›</span></article>
                 </div>
               </section>
             </div>
