@@ -36,7 +36,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    return render_template('landing.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
