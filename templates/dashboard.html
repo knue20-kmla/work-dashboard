@@ -1,863 +1,895 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KMLA 통합 업무 시스템</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f7f0e8;
+            --panel: #fffaf4;
+            --card: #ffffff;
+            --ink: #293440;
+            --ink-soft: #3d4a5a;
+            --muted: #7d746c;
+            --muted-2: #9a9089;
+            --line: rgba(97, 67, 48, 0.15);
+            --dark: #151c26;
+            --dark-2: #1d2634;
+            --accent: #e97854;
+            --accent-soft: rgba(233, 120, 84, 0.1);
+            --accent-line: rgba(233, 120, 84, 0.32);
+            --gold: #c9a45c;
+            --soft: #f0e2d4;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f8f9fa;
+            background: var(--bg);
+            color: var(--ink);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
-        .sidebar {
-            position: fixed;
-            left: 0;
+        .micro {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+        }
+
+        /* ============ Top command bar ============ */
+        .ws-top {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: #fffefc;
+            border-bottom: 1px solid var(--line);
+            position: sticky;
             top: 0;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(180deg, #1a1d29 0%, #2d3142 100%);
-            color: white;
-            padding: 0;
-            overflow-y: auto;
-            box-shadow: 4px 0 12px rgba(0,0,0,0.15);
+            z-index: 50;
         }
 
-        .logo-section {
-            padding: 32px 20px 28px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        .ws-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            color: var(--ink);
+            white-space: nowrap;
         }
-
-        .school-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 10px;
-            display: block;
+        .brand-logo {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            background: white;
-            padding: 2px;
-            object-fit: contain;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            object-fit: cover;
+            background: #fff;
         }
 
-        .logo {
-            font-size: 18px;
+        .ws-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ws-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+            padding: 8px 10px;
+            background: #f7f8fa;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .ws-search:focus-within {
+            border-color: var(--accent-line);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+            background: #fff;
+        }
+        .ws-search input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink);
+            min-width: 0;
+        }
+        .ws-search input::placeholder { color: var(--muted-2); font-weight: 500; }
+        .ws-search kbd {
+            font-family: inherit;
+            font-size: 10px;
             font-weight: 700;
-            color: white;
-            margin-bottom: 0;
-            text-align: center;
-            line-height: 1.35;
+            color: var(--muted);
+            background: rgba(28,39,52,0.06);
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 2px 6px;
+            white-space: nowrap;
         }
 
-        .logo-subtitle {
-            display: none;
+        .ws-user {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 12px 5px 5px;
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            background: var(--card);
         }
-
-        .nav-section {
-            padding: 10px 12px;
-            margin: 12px 10px 0;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 14px;
-            background: rgba(255,255,255,0.03);
+        .ws-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--dark);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
         }
+        .ws-uname { font-size: 12.5px; font-weight: 700; line-height: 1.25; }
+        .ws-urole { font-size: 10px; color: var(--muted); }
 
-        .sidebar > .nav-section:first-of-type {
-            margin-top: 36px;
-        }
-
-        .sidebar > .logo-section + .nav-section {
-            margin-top: 36px;
-        }
-
-        .nav-title {
+        .ws-btn {
             font-size: 12px;
             font-weight: 700;
-            color: rgba(255,255,255,0.92);
-            text-transform: none;
-            letter-spacing: 0;
-            margin-bottom: 8px;
-            padding: 0 2px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 9px 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 2px;
+            padding: 8px 14px;
+            border-radius: 8px;
             text-decoration: none;
-            color: rgba(255,255,255,0.78);
+            white-space: nowrap;
+            transition: all 0.18s ease;
+            cursor: pointer;
+        }
+        .ws-btn.ghost {
+            color: var(--ink-soft);
+            border: 1px solid var(--line);
+            background: transparent;
+        }
+        .ws-btn.ghost:hover { background: rgba(28,39,52,0.05); }
+        .ws-btn.solid {
+            color: #fff;
+            background: var(--dark);
+            border: 1px solid var(--dark);
+        }
+        .ws-btn.solid:hover { background: var(--dark-2); }
+
+        /* ============ Body grid ============ */
+        .ws-body {
+            display: grid;
+            grid-template-columns: 190px minmax(0, 1fr);
         }
 
-        .nav-item:hover {
-            background: rgba(255,255,255,0.08);
-            color: white;
-            transform: translateX(4px);
+        /* ============ Rail ============ */
+        .ws-rail {
+            border-right: 1px solid rgba(255,255,255,0.07);
+            background:
+                radial-gradient(220px 180px at 50% 0%, rgba(255,255,255,0.07) 0%, transparent 65%),
+                radial-gradient(500px 600px at 50% 85%, rgba(233,120,84,0.4) 0%, transparent 60%),
+                linear-gradient(180deg, #1c2536 0%, #151c26 45%, #10151e 100%);
+            padding: 16px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: calc(100vh - 58px);
+            position: relative;
         }
 
-        .nav-item.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
-        }
-
-        .nav-item.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .nav-item.disabled:hover {
-            transform: none;
-        }
-
-        .nav-item-icon {
-            width: 20px;
-            margin-right: 10px;
-            font-size: 15px;
-            opacity: 0.9;
-        }
-
-        .nav-item-text {
-            flex: 1;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.2;
-        }
-
-        .nav-badge {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 1px 7px;
-            border-radius: 10px;
+        .rail-label {
+            margin: 0 8px 10px;
             font-size: 9px;
-            font-weight: 600;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.4);
         }
-
-        .nav-badge.new {
-            background: #ff6b6b;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .user-section {
-            display: none;
-        }
-
-        .header-user {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            z-index: 2;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            color: #667eea;
+        .rail-item {
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 38px;
+            padding: 0 8px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            color: rgba(255,255,255,0.72);
+            text-decoration: none;
+            font-size: 12.5px;
             font-weight: 700;
-            margin-right: 12px;
-            font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            transition: all 0.16s ease;
+            position: relative;
         }
-
-        .user-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
+        .rail-item:hover {
+            color: #fff;
+            background: rgba(233, 120, 84, 0.22);
+            transform: none;
         }
-
-        .user-role {
-            font-size: 11px;
-            color: rgba(255,255,255,0.8);
+        .rail-item.active {
+            background: linear-gradient(135deg, #f08a5e 0%, #e97854 100%);
+            border-color: rgba(255,255,255,0.12);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(233, 120, 84, 0.35);
         }
-
-        .logout-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
+        .rail-toggle {
+            width: 100%;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
+            font-family: inherit;
+            justify-content: space-between;
+            background: none;
+            border: none;
+            list-style: none;
+            color: rgba(255,255,255,0.72);
+            font-size: 12.5px;
+        }
+        .rail-toggle:hover {
+            color: #fff;
+            background: rgba(201, 164, 92, 0.28);
+            transform: none;
+        }
+        .rail-toggle:hover .caret { color: #e8c87e; opacity: 1; }
+        .rail-toggle::-webkit-details-marker { display: none; }
+        .rail-toggle .caret {
+            font-size: 10px;
+            opacity: 0.55;
+            transition: transform 0.22s ease;
+        }
+        details[open].rail-group .rail-toggle .caret { transform: rotate(180deg); }
+        .rail-sub {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease;
+        }
+        details[open].rail-group .rail-sub { grid-template-rows: 1fr; }
+        .rail-sub-inner {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding-left: 6px;
+        }
+        .rail-sub a {
+            display: block;
+            padding: 7px 10px;
+            color: rgba(255,255,255,0.58);
             text-decoration: none;
-            display: inline-block;
-        }
-
-        .admin-btn {
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.14);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.28);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
+            font-size: 11.5px;
             font-weight: 600;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
+            border-radius: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.15s ease;
+        }
+        .rail-sub a:hover {
+            color: #ffb48a;
+            background: rgba(233, 120, 84, 0.14);
+            transform: none;
         }
 
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.4);
-            transform: translateY(-2px);
+        /* ============ Content ============ */
+        .ws-content {
+            min-width: 0;
+            padding: clamp(20px, 3vw, 34px);
+            max-width: 1180px;
         }
 
-        .admin-btn:hover {
-            background: rgba(255,255,255,0.24);
-            border-color: rgba(255,255,255,0.38);
-            transform: translateY(-2px);
+        .ws-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 4px;
+        }
+        .ws-head h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+        .ws-head h1 span { color: var(--accent); }
+        .ws-head .sub {
+            margin-top: 6px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .ws-meta {
+            text-align: right;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            line-height: 1.8;
+            color: var(--muted-2);
+            padding-top: 4px;
+            white-space: nowrap;
         }
 
-        .main-content {
-            margin-left: 280px;
-            padding: 0;
-            min-height: 100vh;
-            background: #f8f9fa;
+        /* Overview */
+        .ws-overview {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1.6fr 0.9fr;
+            gap: 12px;
         }
-
-        .header-banner {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 44px 40px 44px 72px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .ov-feature {
             position: relative;
             overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,255,255,.05), transparent 50%), #151c26;
+            color: #fff;
+            padding: 22px 24px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-
-        .header-banner::before {
-            content: '';
+        .ov-feature::after {
+            content: "";
             position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            width: 210px;
+            height: 210px;
+            right: -80px;
+            bottom: -120px;
+            border: 1px solid rgba(233, 120, 84, 0.55);
             border-radius: 50%;
+            box-shadow: 0 0 0 36px rgba(233,120,84,0.06), 0 0 0 80px rgba(233,120,84,0.04);
+            pointer-events: none;
         }
-
-        .header-content {
-            position: relative;
-            z-index: 1;
-            max-width: 640px;
-            padding-left: 28px;
+        .ov-kicker {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
         }
-
-        .header-title {
-            font-size: 32px;
-            font-weight: 700;
+        .ov-feature h2 {
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
             margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-
-        .header-subtitle {
-            font-size: 15px;
-            color: rgba(255,255,255,0.9);
-            max-width: 560px;
+        .ov-feature p {
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: rgba(255,255,255,0.68);
+            max-width: 420px;
         }
-
-        .content-area {
-            padding: 24px 28px 36px;
-            max-width: 1360px;
-            margin: 0 auto;
+        .ov-counts {
+            margin-top: 16px;
+            display: flex;
+            gap: 26px;
         }
+        .ov-counts div { display: flex; align-items: baseline; gap: 8px; }
+        .ov-counts b { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .ov-counts span { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; }
 
-        .content-section {
-            margin-bottom: 20px;
-            background: #ffffff;
-            border: 1px solid #e6ebf2;
-            border-radius: 18px;
-            padding: 22px;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-        }
-
-        .section-header {
+        .ov-stats { display: grid; gap: 12px; }
+        .ov-stat {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 16px 18px;
             display: flex;
             align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid #e5e7eb;
-            position: relative;
+            justify-content: space-between;
+        }
+        .ov-stat .k { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); }
+        .ov-stat .v { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
+        .ov-stat .v em { font-style: normal; font-size: 12px; color: var(--muted-2); font-weight: 600; }
+
+        /* Section headings */
+        .sec-head {
+            margin: 30px 0 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            scroll-margin-top: 70px;
+        }
+        .sec-head h2 {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sec-head h2::before {
+            content: '';
+            width: 5px;
+            height: 18px;
+            border-radius: 3px;
+            background: var(--accent);
+        }
+        .sec-head .tag {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: var(--muted-2);
+        }
+        .sec-head .count {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            background: var(--accent-soft);
+            border: 1px solid var(--accent-line);
+            padding: 4px 11px;
+            border-radius: 20px;
         }
 
-        .section-header::after {
+        /* Quick access zone */
+        .qa-zone {
+            background: linear-gradient(135deg, #26467a 0%, #14263f 60%, #0d1a30 100%);
+            border-radius: 16px;
+            padding: 8px 20px 14px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            animation: glowPulse 2.8s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(233,120,84,0), 0 4px 18px rgba(28,39,52,0.05); }
+            50% { box-shadow: 0 0 28px 6px rgba(233,120,84,0.4), 0 4px 18px rgba(28,39,52,0.05); }
+        }
+        .qa-zone::before {
             content: '';
             position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 60px;
-            height: 2px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(233,120,84,0.45) 0%, transparent 70%);
+            top: -140px;
+            right: -70px;
+            pointer-events: none;
+            animation: orbA 6s ease-in-out infinite alternate;
         }
+        .qa-zone::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(120,170,255,0.4) 0%, transparent 70%);
+            bottom: -140px;
+            left: -50px;
+            pointer-events: none;
+            animation: orbB 7s ease-in-out infinite alternate;
+        }
+        @keyframes orbA {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+            100% { transform: translate(-100px, 70px) scale(1.3); opacity: 1; }
+        }
+        @keyframes orbB {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+            100% { transform: translate(80px, -60px) scale(1.25); opacity: 1; }
+        }
+        .qa-zone .sec-head { margin: 8px 0 10px; position: relative; z-index: 1; }
+        .qa-zone .qa-grid { position: relative; z-index: 1; }
+        .qa-zone .sec-head h2 {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(233, 120, 84, 0.55);
+            background: linear-gradient(90deg, #ffffff 30%, #ffcf9e 50%, #ffffff 70%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: shimmer 6s linear infinite;
+        }
+        .qa-zone .sec-head h2::before { display: none; }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .qa-zone .qa-card { border-bottom-color: rgba(255,255,255,0.1); }
+        .qa-zone .qa-card .idx { color: rgba(255,255,255,0.45); }
+        .qa-zone .qa-card .t2 { color: #fff; }
+        .qa-zone .qa-card .arr { color: rgba(255,255,255,0.4); }
+        .qa-zone .qa-card:hover .t2 { color: var(--accent); }
+        .qa-zone .qa-card:hover .arr { color: var(--accent); }
 
-        .section-title {
-            font-size: 21px;
-            font-weight: 700;
-            color: #1a1d29;
-            letter-spacing: -0.5px;
+        /* Quick access cards */
+        .qa-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0 20px;
+        }
+        .qa-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 2px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+        .qa-card .idx {
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: var(--muted-2);
+            flex: 0 0 auto;
+            min-width: 22px;
+        }
+        .qa-card .t2 { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; flex: 1; }
+        .qa-card .arr { color: var(--muted-2); font-size: 14px; transition: transform 0.18s ease, color 0.18s ease; }
+        .qa-card:hover .arr { transform: translateX(3px); color: var(--accent); }
+        .qa-card:hover .t2 { color: var(--accent); }
+
+        /* Full system lists */
+        .sys-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .sys-card {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .section-title::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 24px;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            border-radius: 2px;
-        }
-
-        .section-count {
-            margin-left: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 16px;
-            font-size: 11px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(102,126,234,0.3);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 14px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 18px 16px;
-            box-shadow: 0 4px 10px rgba(15,23,42,0.05);
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid #e5eaf1;
+            padding: 14px 16px;
+            background: #ffffff;
+            border: 1.5px solid rgba(97, 67, 48, 0.16);
+            border-radius: 10px;
             text-decoration: none;
-            display: block;
+            box-shadow: 0 3px 10px rgba(28,39,52,0.06);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
-            min-height: 132px;
         }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            opacity: 1;
-            transition: opacity 0.3s;
+        .sys-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(233,120,84,0.16);
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #ffffff 0%, #fef0e2 100%);
         }
-
-        .card:hover {
-            box-shadow: 0 12px 24px rgba(15,23,42,0.1);
-            transform: translateY(-2px);
-            border-color: #cfd8ea;
-        }
-
-        .card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .card.disabled:hover {
-            transform: none;
-            box-shadow: 0 4px 10px rgba(15,23,42,0.05);
-            border-color: #e5eaf1;
-        }
-
-        .card-header {
-            display: block;
-            margin-bottom: 0;
-        }
-
-        .card-icon {
-            display: none;
-        }
-
-        .card-icon.school {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .card-icon.class {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .card-icon.subject {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .card-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1a1d29;
-            margin-bottom: 4px;
-        }
-
-        .card-desc {
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        .card-badge {
-            background: #667eea;
-            color: white;
-            padding: 4px 10px;
+        .sys-card .idx {
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #fff;
+            background: linear-gradient(135deg, #c9b8a3, #a89076);
             border-radius: 6px;
-            font-size: 10px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
+            padding: 4px 7px;
+            min-width: 28px;
+            text-align: center;
+            transition: all 0.2s ease;
+            flex: 0 0 auto;
+        }
+        .sys-card:hover .idx {
+            background: linear-gradient(135deg, #f08a5e, #e97854);
+            box-shadow: 0 4px 10px rgba(233,120,84,0.35);
+        }
+        .sys-card .tx { flex: 1; min-width: 0; }
+        .sys-card .n { font-size: 13.5px; font-weight: 650; color: var(--ink); letter-spacing: -0.1px; }
+        .sys-card .go { color: var(--muted-2); font-size: 16px; font-weight: 700; transition: transform 0.2s ease, color 0.2s ease; flex: 0 0 auto; }
+        .sys-card:hover .go { transform: translateX(5px); color: var(--accent); }
+        .sys-card .nb {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #ea580c;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            padding: 3px 7px;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
-        .card-badge.new {
-            background: #ff6b6b;
-            animation: pulse 2s infinite;
+        .hidden { display: none !important; }
+
+        .sys-section { scroll-margin-top: 70px; }
+        .no-result {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            border: 1px dashed var(--line);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.5);
         }
 
-        .card-badge.soon {
-            background: #94a3b8;
+        .ws-foot {
+            margin-top: 44px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--muted-2);
+            letter-spacing: 0.06em;
         }
 
         @media (max-width: 1024px) {
-            .sidebar {
-                width: 240px;
-            }
-            .main-content {
-                margin-left: 240px;
-            }
-            .header-user {
-                right: 24px;
-            }
+            .ws-overview { grid-template-columns: 1fr; }
+            .ov-stats { grid-template-columns: 1fr 1fr; }
+            .qa-grid, .sys-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
-
         @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-            }
-            .header-banner {
-                padding: 32px 20px;
-            }
-            .header-content {
-                padding-left: 0;
-            }
-            .header-user {
+            .ws-body { grid-template-columns: 1fr; }
+            .ws-rail {
                 position: static;
-                transform: none;
-                margin-top: 20px;
-                flex-direction: column;
-                align-items: stretch;
+                height: auto;
+                flex-direction: row;
+                align-items: center;
+                overflow-x: auto;
+                padding: 10px 12px;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
             }
-            .logout-btn {
-                width: 100%;
-                text-align: center;
-            }
-            .content-area {
-                padding: 20px 16px;
-            }
-            .content-section {
-                padding: 18px;
-                border-radius: 16px;
-            }
+            .rail-item { white-space: nowrap; }
+            .ws-top { flex-wrap: wrap; height: auto; padding: 10px 14px; gap: 10px; }
+            .ws-search { flex: 1; min-width: 140px; }
+            .ws-head h1 { font-size: 22px; }
+            .ws-meta { display: none; }
+            .qa-grid, .sys-grid { grid-template-columns: 1fr; }
+            .ws-btn.ghost { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo-section">
-            <img src="https://i.imgur.com/Mo4ogKc.png" alt="KMLA Logo" class="school-logo">
-            <div class="logo">KMLA</div>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-title">학교 업무</div>
-            <a href="https://pdf-email-sender-1.onrender.com" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📧</span>
-                <span class="nav-item-text">자동 발송</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">🎫</span>
-                <span class="nav-item-text">학생증 재발급</span>
-            </a>
-            <a href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" class="nav-item">
-                <span class="nav-item-icon">💰</span>
-                <span class="nav-item-text">예산 관리</span>
-            </a>
-            <a href="https://kmla-curriculum.netlify.app" target="_blank" class="nav-item">
-                <span class="nav-item-icon">🧭</span>
-                <span class="nav-item-text">KMLA 교육과정 체험</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://equipment-manager-redirect.onrender.com" target="_blank" class="nav-item">
-                <span class="nav-item-icon">🧰</span>
-                <span class="nav-item-text">기자재 관리자</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/kmla-exam/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📈</span>
-                <span class="nav-item-text">모의고사 분석(전학년)</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer" class="nav-item">
-                <span class="nav-item-icon">🎓</span>
-                <span class="nav-item-text">입학 내신 계산기</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer" class="nav-item">
-                <span class="nav-item-icon">📅</span>
-                <span class="nav-item-text">정기시험 시간표</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-title">학급 업무</div>
-            <a href="https://knue20-kmla.github.io/STUDY/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📚</span>
-                <span class="nav-item-text">자습 관리</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/creative-activity/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">✨</span>
-                <span class="nav-item-text">창체 관리</span>
-            </a>
-            <a href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📝</span>
-                <span class="nav-item-text">생기부 분석</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📊</span>
-                <span class="nav-item-text">모의고사 분석</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://knue20-kmla.github.io/transcript/" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📋</span>
-                <span class="nav-item-text">학교생활기록부 조회</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-title">교과 업무</div>
-            <a href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer" class="nav-item">
-                <span class="nav-item-icon">📋</span>
-                <span class="nav-item-text">교수학습평가계획서</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://kmla-history.party" target="_blank" class="nav-item">
-                <span class="nav-item-icon">📄</span>
-                <span class="nav-item-text">한국사 수업 DB</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-            <a href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank" class="nav-item">
-                <span class="nav-item-icon">💬</span>
-                <span class="nav-item-text">한국사 질문 DB(2026-1)</span>
-            </a>
-            <a href="https://kmla-history.party/board" target="_blank" class="nav-item">
-                <span class="nav-item-icon">💬</span>
-                <span class="nav-item-text">한국사 질문/수행 DB</span>
-                <span class="nav-badge new">NEW</span>
-            </a>
-        </div>
-
-    </div>
-
-    <div class="main-content">
-        <div class="header-banner">
-            <div class="header-content">
-                <h1 class="header-title">통합 업무 대시보드</h1>
-                <p class="header-subtitle">민족사관고등학교 교사 업무 자동화 플랫폼</p>
+    <!-- Top command bar -->
+    <header class="ws-top">
+        <div class="ws-brand"><img class="brand-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAYAAAA5ZDbSAABf7UlEQVR42u19d3xU1br2s8u0TDpJSEJCIIRQAgEFKaIUAWkqWADxAHpQmg0RGzaKvSOioCKiIiAIShGkBmnSewjpvU3q9LLL+/0xs7czSUA8997vnnPuWb/fEGZmzy7rWW973netBfyn/af9p/2n/af9p/2n/af91xuzYMEClohYIuIyMjJ4IrrmKyMjg9+wYQPn+w0DgPlPN/6TgElErB+I7H/LSRkGRMT5zsktWLCA/ZfupH+lm12wYAE7ePBgdvDgwcQwjNTCIdrXX389OikpqXVkZGTr6OjoVjqdLspgMOgkSQpjGIaXZZnhOM7JsqzZZrO5AJgsFkudyWSq/v3336s//PDD2qYnZVkWkiTxAAiAzDAM/Qfg/35QpSYdq9uwYUNqhw4deoaFhfXU6/XddTpdMs/zseHh4ca/eh273Q5BEOo9Hk+F2+3OsdvtF+vq6s5evHjx/OzZs4v8jyUizvfffymw/6kGns8ucv4ffvTRR+3OnDnzYElJyXc1NTV5NptNphba+vXr6fXXX5eKi4tFIhIkSRKIqMWX6G2SLLd4KjKbzQ6TyXQyNzf3o8OHD4+ePXt2RBOw/9vMw/8Vu8oxzB+K5e2332576tSpR8vKyvZZrVZbCxiIPrBEIpJEUZQzMzMpISGBunTpQkREsizT1QD0a7LvJTU5Z0BraGioLCkp+e7IkSPjunbtGuwHNLthwwbuPyr6Gg6Tn11lMjIyRqSmpj4UGho6Ojg4OMTvWEmWZQBgWJZlamtrmYaGBuTl5WH79u347bffsHHjRly5cgXjx49HfX09QkJCQERgWVYBAwzDwG63Y8GCBQgNDUVsbCxkWUZRURHi4uLw2GOPgeM4EBEBIJZlZQCs7wUAqKmpKayrq9t48eLFNRMmTLioAL1x40ZmwoQJ0n/k1WfP/CRWf+rUqQerqqpOKhLndrsVKRV9EkZERJIkERHR1q1bKTk5mUaNGkXff/89dezYkd588026fPkyAaDLly+3KK6SJJEsy7Rhwwbq0KEDDR06lJ555hkaPnw4AaDMzMyA6/j9TpYkSfRJuqLGPXl5eT9t27ZtsL9E/59W3Uq8qni/J0+enFlbW5vl35cvv/yy2KpVK3nixIkqIAE61fe+uLiYCgsLiYjomWeeoR9//JGIiDiOo3379lFlZSXV19fT9bSlS5dSQkICCYIQcI2mA2vJkiW0ePFiqaysTPD/vry8fHtGRoY/0Jwvvv6/Y2czMjJ45c2RI0fuM5lMZ/1tqsfjkdxuN4miSF988QUBoP3795MsyySKYkBni6JIxcXF1LZtW5o3bx6ZzWayWCz0+++/U2hoKA0ZMoTi4uJo8eLFRETNgMvLyyOr1ap+N3PmTBo2bJj3RvyuJYoiybKsAnz27FkCQK1ataL+/fvL9957r7hq1SpZ0TpFRUU/bdq0qUcLnve/tTpmFTu4YcOG7sXFxTuaOEtSS1LVs2dPGj58OBEReTyeFiXv448/pqioKHriiSfolltuodtuu41atWpFDzzwAOXn51Ntba06KARBIJfLRZIk0RtvvEHJycl0/vx5IiJ64IEHaOnSpc0AVpoy8Hbu3EmTJk0ik8lEa9eupaFDh9KAAQPI6XSqpsRmszkvX7787vjx48P+7aXZT2q5s2fPvmS1Wu1/CKKkhin19fU0adIk+uqrr8hqtZLH46EffviBAFBubm5AZzudTpo1axZFRUVRWFgYjRw5kj7//HO6ePEiERE98sgj9Oijj7aoapXmcDhIq9XSV199RaIo0sqVK8nlcqkSS0RUW1tLCxcupIqKCvV3/fr1o+TkZPrmm28oLy+vJRuvjg6TyZS7d+/eOxWm7J/R2/4vhz4AsHr16rTCwsKDTaQ2QOV6PB569tlnCQBdunRJlZr4+HiaPXs2Pf3005SWlkYWi4VkWaa8vDz68ssv6dChQ1RTU0MZGRlkNptJFEXavHkzrVu3jiRJUpw1On36NL3yyiu0e/duOn/+PJlMJho8eDCdO3fuqs6YKIr00EMPEcdxNGnSJNqzZw9dvHiR3nvvPerTpw8BoM6dO5PT6Wwaksm+cIs8Hg9lZWV9poRW/xYq2+dIMT5b+3e73W72Pbjg7xErTbGPe/bsIQD05ptv0i+//EJERMuWLSMANGnSJNq0aZMKmH+7ePEiabVa1YZKkkQ2m02VYFEUyWQy0fjx40mj0VBaWhqNGjWK+vfvT+PGjaOxY8dSr169qHXr1vThhx82U9MrV66kiRMn0k033UQjRoygjz/+mK5cuULZ2dlXHSCiKJLkNdwSEVFFRcX59evX3/gvD7KfGtJkZmYuJSKqqamhHTt2iL6HpqsBfO+999Lf//53mjlzJgGgU6dOkdPppODgYPruu+8COl4BTvntqVOnaMCAAbRjxw6aPHky9e3bl+x2e7NrVVdXk9vtJkEQyO12U3l5OZ04cYLWrFlDDz74ID3//PPXVO3V1dX04Ycf0m233Ub9+/enGTNm0JUrV67qeVdWVioDm8xms+3gwYNT/MIp5l8S3CeeeCK6sLBwrzKY+/TpI997770BD66EPwrgly9fpltvvZUcDgcREZ07d46qq6uJiGjBggV08803N/Om/aWFiCgjI4O6detGvXr1onXr1pEgCCRJElVVV1FBYRHJskR/tcmyrDpnn376KS1evJhMJhMREW3ZsoW6dOlCDzzwQMB9NDY20po1a4iIaPz48fTll1+qZkmSJDp37txrPpCZf5mslaJ2Pv744w4VFRWXFOFcsGAB9e/fn2w2Gy1fvpyOHz/ebJTX1dXRsmXLKDs7u5nHLMsyWSwWmjhxIlkslmaSoti+ljSD0mY8MpvuHDWSRFFqZiH8NYEyIFoaPPPmzaPOnTvT8OHDKTg4mI4ePaoe4x9rK4N39OjR9Pjjj9Pq1aspPj6e9u/fT5IkyaLvhNnZ2d8D4BiGwT89yIqnvHbt2vSampoKIiK73S48/fTT1KdPH0pJSaHRo0dTr1696Ntvv6WysjIaPHgwbd68mYiILBaLalsV8JpK+K5du1RSoyXywz8UstvtVF9fT1arhfZlHKYpd6bRG092o/UbfiSr1Upms1n1mK8mtcr5lb+pqal09qw3bH/11VfprrvuCjAR/r8zm8301Vdf0eTJk+mee+6hWbNmUWZmJkmSRHPnzqWTJ08Kvlh826BBg4J9uej/VpDZ/07JHTJkiLh27dr0UaNG/RoVFRUHQNq8eTOfn5+PDRs2QKPRIDk5GY888gjGjh2L/v37g+M49OjRA0SEkJAQaLVayLIMhb5kWRYMw4BlWRARbrnlFsTFxQV8JwgCGhsbUVFRgaKiIpSUlKC8vBz19fWw2+0QRREbf9iIwbe60Ctdxq5tG+FwOGG1WmAymVBaWoqioiKUlpaiuroaNptNvQflPiTJSy2PGzcO9913H9auXYvDhw+jU6dO4DhO5biVv7IsY/LkyVi9ejVKS0sxcuRInDt3DqdOnQLLsjhx4gQWL17MAxA6dOhwx/fff7/9zjvvDGFZVv6nk2TF5q5fv75HQ0NDhX8cqEjHyZMnafTo0SohER8fTx9//HEzCvBaNrBpDFxZWUkFBQWUn59PpaWlZDabyePxND/WLdD0v91FJ7d1p/PbutLsh/pQfkFZMxVss9mourqaSkpKKDc3lwoLC6m2tjZAOt1uN82bN4+6d+9OM2bMILvdftVsVUJCAlVXV9P69etp9OjRaty9detWAuDvMHqIiEpLSw+kp6cb/6lssgLukiVLOtbW1lY2DfKVOPL999+nY8eOkdVqpT59+tAPP/xARETDhg2jFStWXBVk/46TJIlMJhPl5+dTfn4+VVdXk8vlCgBdea/YVFmW6UJmNs2edBNdOdqPCk73p/nTu9C2bb+qjtPVmt1up/LycsrLy6OioiIym83X5YxJkkSZmZm0YMECSk1Npe7du9M777xDREQ5OTkEgF544YWmYZiHiCg/P38zAO6fgvVasGABy7IsHnvssVZVVVWXm4KrgFNUVETnz5+nwsJCSkpKok2bNqm0YFpaGgGgM2fOXBVkURSpvLycsrOzqaysjJxOZ8D3NTU1ZLfbafPmzTR+/HgSBIFEUfzDqz54hJ6e3J1yj99MZZm30GvTO9HXX63yj1OJiOjSpUt09OhREkWRMjIymib+qbCwkHJzc1XvuSXNogyY559/nkaPHk179uyh/fv3q9+1bduWJkyYEHCsX/P4HK+VSjHB/1pKl4gUhkpbVFR0wI/AaDH7cuTIEdLr9fTFF18QEdGIESNo6NChREQ0d+5cGj58uCrt/o5NZWUlZWdnK3FkM69XlmU6dOgQ3XDDDfT888/TyJEjA5IHRES79uyj+dPS6PzO7pSb0YM+nNOFvvj8swAJkiSJzp49S927d6cVK1bQiBEjyGq1NlO/TqeTiouL6cqVK9TQ0NAMaOX4hoYGGjNmDI0YMYKysrxJsoULF6oe+O7du1VPu8k5BB/j9pIfyP8rThbHMIx08eLFj5OSkgYBEH2FaWqTZRksy2Lp0qUYMGAApk2bhunTp+PWW29FdnY21q1bByLChx9+iOnTp6O2thYcx4FhGJjNZuTm5kKWZaSkpCA2NhbV1dWQJElN2CvOzS233IInn3wStbW1SEtLwyuvvILvv/9e/V6n1SLECNiqeVTlMAAx0PAa9T7dbjdYlkWbNm1w0003wWQyoX///ggODladLcWB0uv1aNu2LVJTU9HQ0ICCggK43W71GMUxCw8Px/bt2/HEE09g+vTp+Nvf/oZBgwYhKysLN910E9asWaM6jk36jAMgduvW7fVdu3bdzTCM+F9hvJh/1GNmGEbKyMh4aPDgwV8DEBsbG/nw8HAQUUD1BADs2rULBoMBAwcOhNPpRG5uLrp27Qqe59UHVLxVWZZRUlICWZaRkJAArVYLj8eDd999F6dPn0a/fv0wd+5caLVaAIDNZsPhw4dx6dIlGAwGXLlyBaIo4uWXX0br1q3B8zzOX7yMX7+Ygi7REhosIvJNLvQc+y7uufceEBE2bNiAX3/9FbfffjsyMzOxa9curFmzBqmpqapXzLIsHA4HeJ4Hy7IoKChAamoqzGYzqqqqEB4ejtatW/v3EURRhEajwcSJE7Fp0yYIggD/cqRrNBkAYzabLevWrbvp0UcfzZVlmWUYRv4fl2Bfyk/64osv0nr16rUsKytLHjBgABcfH48vvvhCDWmUsAIARowYgYEDB4KIYDAYkJ6eroLr/8BWqxW5ubkwGo1ITk5WQ6aSkhLY7XaYTCbk5ubixIkTEEURHo8HbrcbJ06cQFBQkHoem82GNm3aqOeOiYkDrwmB1SXhZJ4bVRYWiW3bq0DcfffdeOyxxyBJEgoLCzFhwgS89tprOHv2bMDzvPjii1i+fDl4nsf8+fPx22+/ISwsDB07doTb7UZ+fr763JIkQaPRYM2aNdi3bx/OnDkDWZYhy3JA3/iHYCtWrEBubi6IiJUkSQ4LCwsbM2bMN362mPkfBVip/CcifsSIEV+HhIQYc3Jy6K677mKmTJmCmTNn4s4770RVVRU4jlNvXHkofylVwFX+VlVVoaKiAomJiYiOjlY1AcMwkCQJ/fr1w2233YbJkycjLy8PI0aMQFFREVq1aoVXX30Vjz76KLKyslBfX4+4uDg0NDT4VDShdUwErGiDw5fKcbqkGmX2UKR26qhqDq1Wi969e6vqU6vVYvXq1ejatStqa2uxefNmPPXUUzh69ChuvfVWNDQ0IDc3F1FRUaoGatu2LcLDw5GXlwebzQae5+FyuRAWFoZLly4hPT0dLMuCZVml1itA2gHg2LFjmDlzJhiGUVV1YmJi/9OnTy9mGEb6Hy8BUmzB2bNnX27Jqdq5cyfFxcVRWFgYHTx48KpJ86atuLiY8vPzWwyPlL9VVVV04cIFGj58OL366qsqP61QmpIk0YkTJ+jBBx+k6dOnU05Ojkp/WiwW2rTpR3pm3mP03LNP0orPPyebzUZ1dXUkCALJskxut5tefPFFevLJJ+nVV18NuHZjYyNZrVaaPHkylZeX07vvvktz585t8fmcTidlZWWpBQYtxfkFBQUBDplyD1lZWRQfH09vvvmmEnPLRCTa7XZh06ZN/f5Hc8m+qkesXbs23WazuYhIlCRJdrvdtHz5cvr999+JiKiuro6mTp1KWq2WduzYoQJwtayMQlIQERUWFtLixYupuLg4oEymsbGRvvzyS5o2bRodP36c3nzzTVr99de0a/duNWRSzm+qNpHdL0VosVpbDL2UVKLL6SKSZCKZyOlw0L69e5vRpUo7f/485eTkUHJyMp06dSog6bFt2zZ1kEqSRNnZ2eogVK6vnG/w4MFqf61bt44efvhh9bvq6mrq3r07LV++XOkD0ZdmPAtA45Ni5n9MeouLizN8IYgoyzJduHCBAFBwcDCdPHlS7Yz9+/fTzJkzqaSk5KrkRW5ubkD443A46KWXXqIePXpQQ0ODyjVv3LiRHnroIXUgzJgxg958802a9/Q8Kmgi+X9UEsjkcDjJ3NgYQLj4x70Oh4Psbte1WAsiWfZm7X0h1+uvv04TJkygp59+Wh1cH3/8Mc2fP59mz55NRUVF6vn9n89/MIwdO5Y6duxIoihSu3btaMiQIURE9NVXX6lJi969e9Obb77ZNHSa+z+SR1ZOeOjQofFK/ykPvGjRIpo/fz4tW7aMunTpQsuXL1clQKH+VqxYQceOHQsYzXl5eQHgXr58Wa2Feu2112jYsGEtpgVramrog/ffDygJcbrcZGm0UmN1HZnyyqj65BUy7b9A5ZuOUl122R9gNRlgtgYzlew6SdUnrlBtTik1VteRtdFCDpc7sEZX9v7GZKqh+fPnqyr18uXLVFdXRytXrqR33nmHHn30Ubp8+TKtX7+etm/fTj7SQiVGlLi3pKSEBgwYQL169aJJkyaRxWKh9957j3ieV0mV9PR0AqD0pUREUmNjY8M777wT/99NZTJExN5xxx1BJpMpl4hk0Ztvo0uXLtFNN91Ev/76KxER9erViz755JNmNU8AVPaKiKikpITKysrUzq6oqKCHHnqIvv32W5oyZYpa83TPPfeoqloQBJIlifLy8qi2oZ7MdQ1Uevoyle8/S1XbTlDN5uNUv/EYNfxwjOw/nCD3j+fIvv4UNeZUXBVgR72FLD+cIPuG02RZf4xqfzxGpp+OUdW2k1S+5wxVHb9CtSWV5BK9g7mstExNVSqDsk+fPrRv3z5avnw5rVmzhhobGyk1NZW2bNmiXis7O1tNJSoD3G63U9euXWnXrl30888/EwBatGgRlZSUUNu2balLly60Y8cO/2yaSER05cqV5X9FivnrjHnFM2fOPBgdHZ0CQGIYhiMibN68GbIsY8KECRgzZgwiIiIwc+ZM/Prrr3j33Xfx2GOPISMjA5GRkRg5ciQAoKqqCpIkITExUSVClJAiJycH/fr1w7Zt2zBs2DDU1NRgxYoVmDVrls8LZ9E+uQNM5/Mh5tUgQubAcRxYVgOJCOAZsAwLmSFIYCBLsmqsqAXDRQAkDQMNy4NleGiIwBAguyUYSAdnox2uwkbUh1WA79YGbRLaBHi9Xbp0wdKlS/HJJ5/g1ltvxcSJEzFw4EA8/PDDuOuuuyBJEjiOQ0pKCnJycmAwGKDX6yFJEoKCgrBnzx7ccsstMBqNOHv2LIKDg/HSSy9h5syZePbZZ6HRaPzJExaAnJCQ8NC6des+ApDr84vk/0qYxACQJk+ebExKSnoWAMmyzChpuldeeQWnTp3C3r17YbPZcNddd0Gj0eDAgQMICwvDTz/9hJqaGmzfvh1BQUGwWCywWq1o165dANuVkJCAOXPmYMCAAUhNTcU333yDl19+GStWrEBMTAzsdrt3IIBQfvQSgjNrEakJAqfTAjwHEQRDcDB0Gi0ESQBkAkPXOemPABCBfKGbKEswhATjWFEm7CTAaDQiys5APpwHU1GF2ilKiNe3b1+sWbMGRqMRsbGxGDx4MJ577jmIoqiGQwzDICkpCcXFxSppIkkS4uPjsWbNGnAcp06fWbVqFV588UVoNJqA0NJ3WdloNOr79u37rG9WI/NfYrIyMjL4IUOGiCdPnpzVu3fv5QAkAFzT+M0/vvXPoTYN5vPy8tChQwcwDIP8/HyVKRJFETzPIzMzE1OnTsUPP/yAlJQUVQIkSQLDcai5UgT9uWoYgoIgyBJY3z1otTr8cuIA2sclID2lG+zmBnAaHqLLA/mGBIR2jAsgVZT/Oxqs8GRkQ89qQCCIkoSQiGh88tNK7Dl9CN8+8yEMLAeRkaGXGVTLToQM64aQsGCACPDlojUaDZYsWYLz58/j66+/bhbjK62+vh5msxnt27cHEUGSJPA8j+XLl2POnDk4deoU0tPT4fF4oNFoWupHAgC73e7avHlz+pQpU/K93X91Kb6WBDODBw+Wunbtqk1MTJyjSG/AAT4wFSJDkWxZliGKIiRJgiiKICKUlpaiVatW4Hkev/zyC6ZOnYr7778fDQ0N4HkeHo8HwcHByMjIQEpKCohIlQCO4+CwO8FcNsGg10P0gas+McPARQIe+fhV/HRkN4wh4c3Yoj8b5aIkISQ8Euv2b8KRiyex7qVlCOK1EEkCS4CLAyJlDSwXiyD5DXDFtHAcp4Lb0NAAi8WiAnT8+HFUV1cjPDwcPM+jrq5O5dJFUcTs2bORnp6Ojz76KKCQ4Woa1Wg0Gvr06fP49Ugxew3p5RiGoeXLlw9v3bp1Z3hn2LV4vMLO+L9XOFue52GxWEBEiIqKAgDcddddOHbsGPr27YsxY8YgLy8PWq0WSUlJCA0NDRj5yt1bcspgFDjILBPwRCzDwO1yYuLAO/DT4s+weteP+D3rDAxBwZCvS00TJFmGMTgUp7JO4+cje7DqmXegkQmC5PHqRSKwMoHRamCosMBcUwf4AZCUlIQnnnhC1WClpaWYNWsWbDYb8vPzcfz4cSxYsAArV65EYmKimjRR+oqI8OOPP+LFF1/0ZnG4q/tPPoaLYmJi/vbCCy+0YllWulbe+KoADx48WAaA9u3bz/BJL/2DIRZMJhMSEhIAABUVFZg8eTK+/fZbJCcnY9WqVfjss8/wwgsvQJKkgHIdRQ1azRZwhXVgdbz3GHhLYkSF12UAc30d2hgjsXTWS9h0ZCdESQB7HcQ+EbyD0G7DBz99izcemgcda4BH8IAFYNDqoNdovdQpCEGsAa7MckggdaDpdLqArFNaWhpiYmKwYsUKWK1WXLx4ESdPnkRRUZGPG49BRUWFqgEZhkG7du3QsWPHAJN3FWFiAMgRERFREydOvMdnJrm/BPCCBQtYhmHkL774on1kZOTtvotyTYHzzdO9KrAMw6C6uhohISGq0xAZGYl27dph1apVaGxsRKdOnUBEqKysVFWU/3klEKwXixEm8jDodDDyWug1WhiDwxASGoHg8AgYg4IRFh4BEIukuCTc2KEbLuVnI0inB13jHhnvyIU2yIhlW7/BQ8PHISUxBTZ7IziWBafR4nxxDgprKqDR6LyDScMiqNqJhoJKEMN4R4ifWiUi8DyPJUuWICwsDMuXL8f999+P9PR09O7dW9VkgiDA6XQG+C9N+1PpY2pZE1Hr1q0fVNT2XwqTFi5cyC5atEgeMGDAvUajUQ9AZBiGbwpeS46Ev32WJAk2mw0dOnRQvUe9Xo/p06cjKSkJDz74IObMmYOUlBR89NFHKCwshCzLAZkmi6keunIbNMYwnCvMRpBOBx4sLlcWoKquBrVWMy4X5sAtCvj7qAkY2r0vbuzQFfmmctwIBnTNnJyMYJ0BF/MyER4ShpTYRFSbStE6IhYWayMMoRHYdHQXvty5CTlf/oogrRYSEQycFg3Z1RCSWkPLBhbcXbp0Cfn5+QgJCUFERAQ8Hg/q6+vx6KOP4qabblIlPSYmBlVVVarD1dT6+fex/3u/0JXCw8P7bdiwoRvDMBevFjJdTUVLABAeHn6f78aZphe22+3Iy8trEVzlYU0mE5QcsZKoV1Rajx49YDabERsbi4ceegiiKKJ9+/bgeT7A9roKTdDKHDi9HufysnDTnPvw0bZvkVtRAr1OjwFpfTC4Z19sOPgrXvj8HThcTkSHhINjOAiSGGArW5JhQZYQYjBi5sgJ2HrsN3SePhrf7vkJBn0QQBLySgtx+w03IzSuDWob61BvbgB0Ougsbtir631q4A8wunTpgqioKKxfvx6nTp3Chx9+iCVLlqBLly4QRVG1ucHBwV5P3uFo1of+Xnhubi5EUQwoOvAdLxkMBq579+5jr4UlexX1TN99912n8PDwG5V1o/xVZ0FBAfr164euXbti9uzZqu30l15ZluFwONCqVasAp0uSJISHh+PGG29EWFgY5s+fj5CQkIDkv+8kECUJbL0dGq0WosuJYT37IcgQjLcenIu50+Zj8si/4db+w1BdX4eI0AjseGslgvUGMCyLIE4Dga6dH2cYBoIkok14FASXB0+Om4K/D78XBVXF0ISFwVRVgV1njqBTUjvMfHMuhr86Aw9+/BIqGqoQpNHBXdnQvMyF43Drrbdi7NixiImJQUREBL7++mu1D/xbVFQUampqmpXcAoDD4cDYsWPRtWtXDBs2DPX19QHfy7LMEhEiIiLuvJaaZlqQPp5hGPHixYuzu3Xr9hkAUVHlSrz62muv4dVXX4VGo4EgCMjOzkZqampAHFxTUwNBEBAfH49t27YhKysLU6dORWxsbADJoaingFHsc/5dDiesuy4hhNGAYVjYPA4Meu4hTB02FjqNBkXVZbhYmAONRoNuiSl4fcrjECWCTASTuQFxoREQ0+MQmhp/1ThYPJCD0KAQgOEBlgU0HE5fOoU2Ua3x+bb1KK2vxsBuvRGmD0J6+04INQZDp9WCF1lYo7WIGtQV/sGKMtAPHz4MURQxZMgQVeNVVlaqPIAS4xcWFqJNmzZqhYry+d69ezF8+HDodDq43W6sXbsWkyZNUjFQeslutwtr167tNmPGjJyW1DR/lXIRhIeHj/Al3RnFPigd1Lt3bwCAIAjo2rUrYmJimtlim82GxMRE2Gw2ZGVlobi4GHfffTdSUlLwt7/9DSNHjsRVoq4mOJP6jmVYGLU6RASHoke7FPTr3A1f7vwBB979Hr37DAUs9dBJAhxOOxKjW0Nwuq6polmGgcvjwbn8U6iy1KCyxoTDmaeRVZyPGaMnoktKR0TVRmBQWm8kpfUC6qshuFyQSAZAIJK998gEhowAMHDgQHUwSZKEqqoqvPDCC/jxxx+xZs0a1NTUYO7cuQgKCkJdXR3i4uICVHPHjh0RHR2NmpoaBAUFIS0tLeD8fjGxpm/fvgMB5Pg08tUBJiKGYRh58uTJxqCgoD5Np1IoxMOoUaOwY8cOnD9/Hvfff79qZxWAnU6nqpKMRiOmTJkCQRAQGxuL7du3Y/Xq1fj5558xe/ZsdO/evTn75fsvr9NC0nNgXSw4noPotMMYZMTDw8aBNUYAIaGYcOsoHDx3DCW1VTiVfQG3pvfG0G79IUkC/qyqmPHChIuFOTALDqzftwVRYZG49O0+wOFCja0GsZMGwmRtROyZI9h2dBeG9x6Ex+78GwSnBaxB76VEibzS36Tg0L/fYmJikJCQgM8++wxr1qzBhAkT4HQ6ERERgYqKigDiiIiQlJSEvXv34pdffsGgQYOQnp7ekjNGPmEcDGCl8v6qAG/cuJEFIE2ZMqVbaGhoHABimngAyg2MGjUKo0aNauYUKBWRISEh6vG7d+/G1q1b8fLLL+P8+fNYv349ysrKUFFRAZfLFVBP9UcPETQcB7FNOBrPVyLIGASX4AHHssipKEax6SjyTZWotTZg6fbv0S+1J2TIiAyNwLDuN/s9/tWbRAS9VofH7noAaNUamXlZuFiah19/349b0nrjg43f4rM5r2PT4Z2wWi3Y8PJniAkLgzYoGA6HFXKbcO/AVMIlv65iWVZNpvz666/48ccfMWLECOTn52PAgAE4dOgQLl26hJUrV6oFfUo/KH2Znp6O9PT0Zl50Ux9Kr9f3AaBhWVa4ppM1fvx4BgDi4+N7+fS8dK0QSBTFAGJC+avUIilsTXl5OaxWK+bMmYOBAwfC7XYjISEBffr0aRlcIhALmPLKIBfXgeW8nqfT6YKe41FrMyOvugwdomPx7iMvoFtSKpbPWYgNb3yDZ+6ZBknw/In37DeOJAlOtwcFl04jt7II8+6ZhlHz/46vdq7FY/dMwcz7ZqBjdCI6teuA37PPY9pHL2Ly4seRV10Oyq5FxfHLaKw3AwwDf59Okbb8/Hx88803cLvd2L59Ow4dOgSO4zBw4EA899xzAACj0QiLxdKM31co3wDypwUfymg0tl+1alU7Imo2Q7FFI2g0Gm9s6rYrZaDK62qcqcfjUXlWZRR3794d27Ztwx133IG+ffuqzE+LRAkRiGFQdT4P3IkSxIhaGIONCDEYIZIEh+jBzZ3S8dgdUzGi/0h0Tu2O0b0HYMYnrwCCA43mBsgMgWPYP7Xx8HHQhohWeO+nr3B332F4cOR4dEnqCJbhsWTjSsx6+0lsOb4XZ3Ivo6iyBB3jEtGlfQqCdQa0sgNhxTY491+GqaAUvuxHQL/p9XpoNBrExcUhJiYGY8eOhcvlwpw5c9RkS1hYGFwuV4sUsBJdXIVUUuwwn5aW1s3HQLLXcrIkADAYDGk+j47lOA4HDx7EoEGDmrn5/qAqXqDdboderw+4yTvvvFOdmVdTU6PGgM3iP5nAsAzqCiuhuVyL0OAQCCQBogTigXq7GZAJrN4IuJ04cukE2sXEY8a4B7H+4K9YvHoJXn3kWXgaG1BUUw6nzY7OvdpdVVNLsoToqHhs3rMZRZXF+Ozpd/Hbsf0IMRhw/62jkF9dDlkWceLyGcRHxuHmzj1xy6DRQG01RI8LbkkAq9ehFQH1p4pRbzSgVesoNS4mIrRp0wbPPvssEhMTER4eDgDIzs5WY2IFRIZh/D3kZqHXNSIPxQ6nAfhp8ODBLdtgn4NFd911V4hWq23nOxnDcRyWLVuGRx99FF26dEH79u3RoUMHxMbGIjU1FUVFRUhOTkbnzp1V9exvf/3TiO3atfuDyGiqcsgLrluWIWZWIFJngEASGAJEIjB6A8prqwEAB84fw6fbvkPvjmno2i4FslvAdy98gL5PjofD7cLb897A4UO/IFxjQA+tzltF3oKHrtPpsf3kJvxwcAcWTH0aVocDW08eROc27RAd3xbR7VMxdu54PDBoLEb1GYiej43Dttc+x8ibhkB2E1hiAJkgMgwi2WDUnC+GeHsrtVMVkLt37x4QAnXq1KkZqaHRaOBwOBAaGhowK+TChQvYs2cPhg8fjqSkJISFhQVqIN+g0Ov1Xa5JVS5cuJABQBMnTozV6XStAECj0cDpdKJnz54YMGAAampqcOLECWzcuBFBQUGora0FESEzM1M9oSAIARLs79orUt4i488wEGQZteeyEeoERA0gSzJkkqHhNaiqqcD7m77GqZyLsH7uxMIH52B071vhdtjh9jiRFBmLg++twYgXH0HGhWOwO22Yf9/0q1ZzMABsTjtq6+qwas7rMNnNGPrk3TiVl4lDH6yBxWnFCx88D4YhPDF2KnRBQZgy7E6Mmj8NL94/CzNG34/Y0CjIsgAGBNKyMDZ6UJtTitjUtuooUmyp/1SbgGyZ769er4fL5WqWTYuIiEBISAhOnjyJ/fv3Izg4GHq9Hj169EDnzp2h0WhYX98m+2vhZgCnpaUxABAXFxcfFBSk8cVTLM/zePLJJxESEoL6+nrcfvvt6NatG3766SeYzWZs2rRJBU5RH1dT5ddKSthsNjQezUdYo4gggwGchvM6SrwGIKCstgpXSgrw+J1/w7szXoRBq4XdYgbDceBZDnaHDamxbXHm08146ot38O3uH5FXWQKw7FVVtJ7XYvKQMRDdAtrHtcXdtw7DmH5DcEPHHvho/edoExmDJdPng0QJbpsDbz80D1lFhfjsl7XIrSzCW1OfRtvoOAiiAFmWodfpIJ+vREWjHdG9OkLD8UALPHNLDpPBYEBdXV2zYxITEzFjxgwAQH5+Pu644w60bt0aU6ZMwfr16zF8+HAMHjwYHMfFJSUl6RmGcSnaOIDJUqo3Tpw4MfGmm25ar1RvWCwWhISEYPPmzZg0aRLmzJmDESNG4PDhw1i4cKE634bneQiCgKqqKiQmJl41CdESuJZGCyyHrqCVk4M+xIiLpXl46/vPwPIsEmPa4M7eAzGg5y0oryxATEQ0IBFcogc8yzWxqTJ0PA+NMRRZRVcguwW0G9EXQR1iVLvYlMmy7bkEA6cFgWDQ6aHhNbDarOA1PAzBYXBZLZDJq+Q1HAeRZAiSAJ71cgIsw/qpfQILFoLbjYZoDaJvSYPhalqrqbMniqioqEDbtm2b+Tfnz5/Hb7/9hk8//RRPPfUU5syZAwDIzMzEgAEDqKioiNFoNNaFCxemvv/++1ULFixgFy1aJDdNIvAMw4gXLlx4onv37ktlWRZZluUvXLiAadOmIScnB5988gkefPBBAMCqVatgs9kwevRoJCcng2VZ2O12mM1mxMfH/znAPr3pdLlQuzcTrV0sJC0LBoDVYUeRqRIyybhcXoD9548jRGvAa1PnoJUxFFanDRrOW2YTwOOCIMtejzPIoIfodsPdPQ7hqW1apCqdjTYYTlQCvBaQJChxjiS44fZ4IJPXDiolBl5AGTAMq+aHvfG0DBBBq9FCy2sgCCIkhxs1rTnEDuwGDcv9adimVL34A6xUydx9990oLCzEunXr0LVrV7jdbvA8D7vdjtWrV9OMGTMYIpK2bNnSfdKkSVn+lGUzXcrzfLi/kS8oKEBRUREOHjyInj17qiU406ZNw+TJk1FYWIiPPvoIRARBEK5ZjdCskgIM6s7mI9rOQDZwgOyl/sINwbipYzcAQN+03vj78PHYcmw3Hvv8DTx778PoldwFNrsFHMuBY1mvJPsmiYHVABwHsCw0vABGc3UJcgouLN+yGiUV5aioq4ZMhL5de2D8gOFIjIyDR/AEWG+GYbw8IElg4HWgJJIREhQCaHhUVJehqr4GHVu3g96oQ0S1HTUXChB7QyqYPxnw/muBKH2oeMqPPvoobr/9dvVYnU4HURQRFBSEJ598kgFAoihyERERIT7CirkqF80wTKT/+8bGRvzyyy/o2bOn6p4rcfGrr76Ks2fPBpAf1wWwz6myVNYgqMQMXh8CjyypXSmQDI/L4T3UaQMRMLb/CPRO6Y73Nn4FzSge3ROS4XS5YHU60Gi3gJGBeocFNY21KK03wWRuQHFVBSbPnYVB7YdAluVmTo7FbsOLKz+A2+NW2ahNh3fhww2rsP6lJbilay84XQ5wfjZUKSSSZBkajQZBxhD8fu4YVu3djNK6KrQObYU3HpwLvV4LjV4PbW49zAkNiIiOaMZ2tZT79b9PBfTbbrsNb7/9NgoKCqDX61Xma+nSparzxvM8goKCDH+a8NdoNLxPkgEAY8aMQXR0tJrCMhqN6k0lJyejTZs2V60ivBYLLAFw5VUjgtXBAznAy2X8HRFfIYnVXI/4sEi88sAsrN79E2KMoWgdHo3syiLM+vgVnMi5BAAIMQSjS2J7tI9rg9ahrRASZGzm2CilPDERrVC17jAEpxsuWQTJMpyCG063C/GR0RBETwC4aqQgSQgNjYSpvhqvfv46Sutq8dDQcRie3hfhoaFwud0QJQlgGARDi4bcSlB0xJ/WuCoANw2BFi9ejP3792PYsGFwOp3weDyqsPkGg+ybkB/qYySvDnDToDo6OhrLli3DkiVLwDAMevbsiddeew2dO3cGx3EwGo0BedzrkmAGcDuc4OsdYDTagBpmIoIM8g5237EsGPAcB7vLiUhDMCYNGoXLJfmIDAlD96QUbF/8OQ5lnobREIQe7TtBx2kQEd0a4HRwJWgCQPUPmyxOOzILsjA0vb/XZLjdYDgWLMPCI3ggyVKzAEuWZYRGtMKu4wfw4aavcPeA2/HpExPAsTzcDjvsDscfXjMRWA0PTY0NbperWfjYkiT796UyKFu3bo1PP/0UPXr0CFiVQBTFgNDTVxx/fTMblNGzfft2rFy5Em+88QbS0tJQWFiIDRs2YN68eQgKCrpavdCfqmfB4oTGQ4CWVZ0blmGg0+q8oRHLeY+VJZAowi16KxztbieiQyIQ0tEIQRTBAAg3hOCeW0Z5HSWOx6url2DNbz/jxvZd8OjLz+G2dsMgtaCiHQ4Hbn/+IXRPSsWKp17DDcldIDidXkeKDZzEp/zGGByGZZu/xcnsc1gxZyHaJ3SEvbHWCybDNS+9YQHeA7gabdDH6v+ClvuDP5gyZQqee+45JCYmIigoCCzLwmaz4dlnn/3rU1ea1hPn5+dj7969aslrt27dIIoiioqKkJaW1mwi8/XWI5NbAC/Bm9IjgAEDp+BBdmkhShuqYXPYwXEcwkLCEB8RjcRWrRFqDAVkCXa3E7yfphBkEW6bGTIALcfjhQkP49Pt36G4sgJ9OnUHAfAWIzZvWp0Ofbr0QOvQSECWwbTArxMILMeB5Xi8u3ElGIbBN8+8CxIEWOtN4Dn+qtXJBAJLgGh3/elMg6b0rVIY//777+PYsWNwOBwQBAEOhwNarTZg5oRPu0jXA7DHXz106dIFGzZswNix3tKf3bt3Y9OmTeoCKv61Qkpy4a82SZYRZAjGzycysP7gL0iJTUSrkAjodXqU1dfiYkEOwLCIDotEz/Yd0aVNe7Bg4BY8AMuAAeP1qAEIooCQyCg8NHQc1uzfCpIkpWyqWe8KkoivnnoDD4wYD8lihlvytFhqy4KFKMtYe2AL0tqlYEy/obBbvOU6Go7Hdekw6epzpPwFxN/EKRiEhobixx9/REpKSsAsCVEUodPp1KQRy7Jmnxd9dYBlWa5XbKksyxg+fDhOnjyJUaNGoa6uDuHh4fj2228REhLSLI2lLFtwXU3HQ+AIGvIODLfHgTt7D8SEW24HqzN4nSuZvF0iiXDbbSisr0J+RSlyK0uQntwZ7Vq1hiCIAT3GMCzI7cGdN9+GD3/+BnsvnsTdKWMhkwwOgZUpRn0QurfvBEdDLQRfrplhWDAsC5JkEOM1G7yGR2ZxLgZ27oHO7VJha6z7Q91f7/QnHf+nIZISmjb9vHfv3vjmm2/Qp08fcJx3wl1NTQ3uv/9+VchEUYTFYnH9qQSLoljvbwPsdjteeuklvPTSS6ivr0dkZCQyMjLgdDphMBgCbkSj0cBut18XvnyQFk7eG5ooORGO5eByuyC6HGo4omDHsRxS49qic0Iy6i0NOFecC7fbhQ4xbeCRJHAsAyKvSnTYbeiVmo5pw8ciIii4yZn8it5CwpGQ0AHQGQBlhzrBDY/bBa0xBJABp8MKt8eDtIRk8BwHm83SzJG8llSyBMgswBu1f+pgNSnJUQE/fPgwNm/ejOPHj8PlcsFutyMhIQF/+9vfQD5e0uVyiTU1NWYfw0UtAUy+cptqJZPEsizKysrw3nvvged5VFVVoaSkBCUlJdi/fz/S09MDRp1Go1FzxdcYrt4LGwyAlgfcpGalCQSGYaFhWs7jujxuELkQrDdgcNcbIUoStHo99AwLiCLA8T6SgwHA46uXVsCdrG3WcSrR4XFh3b5NqLdaUG+pR3mdCVmlRbC7nEhvn4qJg0ZhZK9bYeANcDodEH02/g8O64+4WLn/AJ/E94+sYWEwBl1z1oL/TMKm64A99dRTGD9+fEAWKicnJyBmliTJfuHChUZf4ogWLVoUCLCit81ms8kHGqskowsLCzFo0CD0798fcXFxOHLkiFrG2YQFazbj8Go6S6fhYQ7VgarcXlCuQ9f5kwEO2YU5y99AnaURY/oMRq+UNJTWVKKysQamxnrU2ywoq67EjJeewtD42wNJGPI6UzanHRsO/QqSCBznpSQjg8OQWZSNzKIcrMvYjt6paXj34WfRr8sNsCrayasqvJAyDBhGmZ/FQ8/xYMBABoFhvDlnychBY9Bd89k8Hk9zzeDry8WLF+Obb77B/v37AQBlZWUYMWKE8j0BYERRrPvggw8am/a9CrAi1pWVleV2u90TEhKiBUChoaHMxo0bERn5B8F17tw5ZGRkYPDgwQH1vMqaUsqUyqvjS2DAgI2LgLuyHDpGA6Lrd84kIuh1eoQHh2DV7s3Ycmw/OiV2wA0pXdEqKByxUa3QLakj+nfsju7JnVW75RftAwASYpOw8921gE7v7SdRAgzB2LPnR4x66RGwLINTOZmoaKhR50BpNBqwYMD5Kvok1lumK4kSPB4PnJITBr3eO58JAAkiEB0JDkyLTJbKizudAX2maMYTJ07AaDTigw8+AMMw6NSpEz7++GOEh4ejb9++kCSJfLMUywF4/DNJTZMNDMMw1KtXr6Ddu3dnR0ZGJsiyTL7JTnC73fj+++9x4cIFxMTE4MEHH2yRxaqoqEBwcLCauPYHFaSoMe9fjyDAtOccYh0aSDoO7F+Ys80C0AcHY9DcSTiSdQYP3TEYN7VPg+AS4BS9RQIRei3M4YCg4yC4ZUgkQ8dxaNfWiMhIAxqq6lF2vgY2M4egEB7hYRwgyWi0iHhz7XrYXS68dP8svD7zRTjqa9V1t5qG/ozCyDBQZ3AQx0AjAfWiA/rh3RAW/kcRBNNCfF1eXo7w8HCVKRQEASzL4vjx4yAiBAUF4YYbbgAA9OzZE88//7xSJy3yPM8XFxd/065du4eUpFEzCWYYRrHXDqfTWQQgwTuQZM7j8WDEiBGQJAnDhw9HZGQkdu/ejXvvvbdZ9UZQUBDsdnsL00AZXx8wfmWxHJIG9IDz9zwY3AzcrHh9qhqAR5KgB4vbew/AwUunEMq1Qu8ut8DaWA+HKOPJT99CfkUZ0tONMDe4YbaKsFqB0GAW819MgazjAC2HDafy0Sl4KJ4b9HdA9MCg1+JKeSFcggcAcFe/wSCH06tyr6JlVE3pS/CDZWBkdBAgoFXvTtBGhP2pBy2KYgDTpUjzzTffjIULF+LQoUMYOnQotm7dCpvNhlGjRgXk3h0OR9b1EB0cANHj8VwAcIssy8TzPLZs2YIrV66guroaNTU1sFqtOHv2LE6cOIFhw4YFOFrBwcEwm81+qgYgkiGKHtQ7raiyN6DW2YgyRw1KbHVwkYDEqHB0rglGf2cMwF8ny+Ozpe1a+9bNQDB6dR4EwVwLTUQkTmRfwrozG/Hk07eiuqIBe3YWIDvXDrCA0xkMPatFI/HgOD26t0/BDZ17Q7BaoAkOR63VCUmSoeF4BOmMIIhgr3NpKgJBBw1W1R3B0ZBq3GjuhjZZYYgNjkFMUBgi9WEI1unB+hZdVaTVn+b9/vvvsWbNGowdOxajR4/GwoULcfDgQezatQtjx47FrFmz1Fp0pSvMZvNFtFAsHADwgQMHlFkJp/09T57n0b59e7XE86WXXsKePXuwZ8+eZnlWZUQJggBew4NlgM9Pbsc7OT/AyTKoc1kgsIKXnmR8ReOcFjricIifjhs1yXCSW41Zr+mNEyEyxLtfc62lDrLbDLvbhuAGGRNvHoMLDceh1ekR1zoGUa3LkFPQAKtZQt5lC2Ijo1BeU4cX730So7vcA6e5DoIogRNcKDFVqh1+PZWZf0wJIegYHhWuejzBbIfD48ZXZw96yRhGg2BOhwheg16Gjvhh1MvgtVovJ26xqCGnUqbTvXt3HDhwAPPnz0enTp0wZswYTJo0CfHx8bDb7QrAxDAMa7VaPefOnbuseNBXLZtVJn3n5+ef8Xg8MsuynCzLGDt2LEaMGIGvv/4aOp0OHTp0wIcffqgyK009Zr1ej8bGRtXW9I1PQ7FgRjWskEJ04HRG8Pow8Lpw8PoI6DQhcPMCVnnOgIMeMjF/ynEzPvUQZvCGH/VWC1hJhoEzotZWj5P2HejYQ0JpZT3crICEhDC4HEDPGyLRq48ROqMH8e10+CrjOzz+6euwOm2+ExPyKou9A5vlwHMcWJmua205gSTwjA4b3Rfg0IjQcaHgjGHgdCFgg3RwaVmUOKvRMTIBGq3Wl8yAatKUdvvtt+Pdd9/Fm2++ieeffx7PPvssqqqqMG3aNCQlJeHIkSNKepZ86jl39uzZpQzDQKnkaBFghmGIYRgsWbLkitlsLoN3E2aZ53ksWrQIffv2xfnz5/H8889j165deO655wImKPsXiimEhyDL6NmmA2a0GwEymRFc6YKs5yCRCFEWIZIEDwngNEZ8w53GTvMphHLh4FkOEmSIkCFBhgwZRDJkEPymK0Gv04FhGDRYzJBkCTIkGA0GtMMNiKjqjz3rLyPzWA6igji0idZCAwa8rMXpIxac2xKKHlGDMaJ3f8RExyM0NAKsRoMDmWe85sYYjEhjCARZhoyAy/peBAnkvUeGEM6FodhdhSXyUTCcBoLkTZTIGga8i6AtqUe8pg2e7T4eBIBjWbWwXa/XB5AdkiRhz549eOihh3Dvvffi008/xYkTJ/Dyyy+rWSWO42QfwMe9jK/M/5kNJlmWOYZhXG63+zARPUBEMsMwbHFxMaZOnYqIiAjcd999mDVrFsrKynDw4EEMGTJEtcPeVW+0akpLq/PWO73Q7V6sLz8CV4kJhgsOeDq3ArEMJLcAcAx09S64wzS437MRL9RX4QHDjUgyRP/hMiupNAbwQPKW5pCMRqsNRASb0+FbdoEDK3Po2zkdxhgL6kJikH5jawTpOchbcgFZhsvmQkmpA71iEzGif3+8u34dNv++H3f2uw25ZWU4fOEkWIZBUlQ8gvQGCJKkTvRWlm5gAHAMB57hwMg8JFHAQfEK5lVtQmmUGaysh8wRtDoebIkdOpMT5kQGb3S+B1HhERBlETzLo6GhQfWcmzpfnTt3xsyZM7Fo0SJ069YNRUVFOHXqFB577DFlIDA+Xnq/v4m9JlV54MABBgBqa2v3JiQkPODzrFFaWoqIiAjs2bMHJ0+ehNVqRUlJCUwmEwYPHtyMRw0NDUVtbS3atGkDSZaQFBWPBR3vxVzmS4RUaGA4WA4hNRRy21CQBEiigKBCO2wdw/Ci51d8WvsbBja2wY0pXdHZE4VYPhh6XgtRFBADIxgZcLhcSGgdB6PBCKfLBZbnwBKP09nH8eXZd0BaG6KDYnDudAlOnzahuFRAaVkjzpyvg1tgcazVz9hbtAXu+lAUlDmxLmO7t+M4FjIRZt0xEWA51JkbYNBowXAsdCwHjmHhIRFW0Y0iTx2OoRy/IB9H6i5Dcrug10bBpeHBmd3gTlWB5TlY0sLQL6g9ZnUbBYlkcEohg9WKpKSkAA2oEDrKCvEjR46E0WhEY2MjnnnmGQQHB0MUReJ5nrNara5jx44d9mEn/+n8YKUi7/PPP2/7wAMPZAUHBwdJkkQsyzI//fQTKioqkJ2djZ9++glJSUn45ptvkJKS0gxgIkJ+fj7at2/vzTKBQIKMEdtfwH45G8FWLeTzFYAgQewSBTklCvoL1ZBZgNqFQ5BEiBfLgXZhQJAOGg+LkEYR5lbAZ+JYzIgYCAvZEGoMxd5zv8PpdGL0TQPhcrmg1Wqx/9Jv2J77ORx8I3ScERcu2PD7yTroOAYuj4yoGC3iowgRTGu8+/AbMBiCcMvTk2C2WQEA8+59BO89PA9utxsyZDg8Lhg5A/aZL+MFeTfIyKPxQjEq22pAkQAEFkGX7RD7xoKxieAumYA6B6hTBIQOEeDMDhwc/Db6JKVBkiVwLAez2QyLxRJQhar8zczMxOnTpzF58mQQEQ4cOICEhAR1TRMikhiG4SoqKg4mJCQMakpwXBVgHzgswzBySUlJRmJi4iBBEGSNRsOtW7cOs2bNwlNPPYUHHngAnTp1wm+//YbWrVsjNTW12bodJpMJsiwjNjbWm3BnWeRXFePmnc+gzihBw2hBpQ3gLtYAPA+hexT4IguEm+NBLKAvsoCrccPZpzVkUYKhyAoXJyApLhG/s7MQaQiBXXAi1BAMsAycTod3EhhkBGnD4ZSqcQ6rUas/DXONFm+/nouiYjduuCEUHTpoESv1w9w7n0DrkEiAZfHrmd+wZt9WTBg4Enf1GwaHww4J3qxSqCYUJkc9RthW4lxoFViTDDavAWL/BHBaDvrztZAZQBY84PMaIbcLh9g1GrxeA2dDDd7r9gie6Xe/F1yGBRgGBQUFaNOmjZLyU21wQ0MDFi1ahJycHGRlZeHuu+/G+PHjIcsybr75ZkU9iwD4rKysuV27dl3SlOC45uQz5fPa2toNABgl6B40aBC2bt2KRYsWoW3btnj77bdxxx134Ntvvw3IBSuqJjo62reLmASOZSGRhA6xSVjVbw7I7gJTZ4FG5iB3iQJT7wD3YzbY3yvAn6gAA4InJQJCrRVkc0MWJNjbh0JvkpBvqcSD7nVwuzwI1YWgwWWH2W4FMQoNysLmbgAjBuMmYR5Q2RMugUdktBHGUA6RYSJS2Jvw9gOvIzIoBDaXDXaHDSN7DsCaFz7AXX2Hwmm3Q8vyCGGNCOVC8HvNFdxuXYFzmgrwjBGa7AawbcOgCdGCL7MBvxWB3VcM/rdSSG3DwUQZoKtxwWmuwdTEoXimz/0QSfbWUfum2HIcB51O578sAxiGwYEDB/D3v/8d27Ztw8svvwydToc777wTGRkZigNGAHi73e45cuTIdl941CIL02IBlZKN6NSpU3m3bt2m63Q6gyRJFBYWxhQWFmLZsmWYO3cunE4nFixYAJZlYTQaERMTEzAnR0kMmM3e4nkGDASS0CWmHdpQGDbXnIDQygDOoIfYLRrUPw5yYjDYC7XgD5QCogSuzg201kOKDwW5JZCBh/F8AzI7CfjNegU93ZFIDkmEnuXVzI4AycsXcyyqLWVwBNegXfe2KM6pgs1iR/feRqQkpCBKkwCDzgAWDIgluCUJOpcMkUSIkoQKwYyDVIx3zm7E86YfUZbMgOUNkPQ8tCcqwLMcmB2FoEsmoFccPKOTIfaNAyKDwIYa4NA5cVdkH3w79AWwGk4lSxiGQVlZGRISEtRdZvynnIqiiMceewwpKSkwGAyYPXs2wsPD8fjjjyvHywzDMCaTaf+QIUOWEhE7ZMgQ+bpKdvxoS45hmMpx48b9EhISMsm3ZjHf0NCA06dPY/369bjxRu8s02+++QbPPfccfvnlF7WWSwE5KioKubl5cLvd0Ol00IKHSBIeufEOGHgtZp76FHatDQxvBCsyoHZhkDpFgiu1gj9UAmZ/MdjCBmhGtgOSWwEdwyHl1MKY5cSRtBoMKFuBKUfbYOyg29GFj0YkghCuCYPICvAwMswOMxo9TjQU1IDVuJDSIQRpXVshjtOhqsGEmLAYeCAhhNUBbgmvUQZ2nz4MJyuhsLMG9Q4bUFIEzbge0IMgF9aDPVEN2pUH6hYD6fYkoHs0BJ4D2QXIBEi8B4LdiSlthuLLwU9Dp9cFhJImkwlGoxFarTbA9irrcmq1WixfvhwJCQmYNm0aVq1aBaPRiJkzZ/r7Okx1dfVXPueq2dIN17TBgHfLugkTJkg7d+4cPGzYsAye52UArMfjQXV1NRITE1FSUoJPPvkE69evx1tvvYXJkycHpOWUm7HZbKiurlbXy2LAwEMitCyPoppyvH3me6w3nYTLbIdc6wLjkQBRBu+RQHY3JKMOTGY1mAY3mI6tQO3DgCIzpAd7QJJFyGdKwFyqReTYXohwAeMoDbOMN6MDHwUYIrAzaxXOSntQnOtBRUkF+twSgqHhM3Bz8p2AxwkwHC7aivEitxfbLx4Gyu3AuFQg1ICgI5VgcxvhiQ0Ce6QErEyQ0yLBaLVgJIIUrAU0DCQtBzZIA4rTo5e+PZ7vORHjOg3wzmz0Y/sEQUBhYWGzVe1kWYbH48H8+fPxyy+/YP/+/YiJicG5c+ewdu1aPPLII+jWrRskSZI5jmNqa2vL586d2/m7775z+E8jvW6A/TJMKC8vPxEfH9/Ld3Lu9OnTePvtt3H+/Hn06dMHzz33nLqGhFIA7/F4YDAY1M9KS0uh1WrRunVrXzzr5bnOlmXj08yt+MF0DA4egMcb7xIDsFoOTDAPcAwYGWCLzOD2F4H9rRhk0IL6xYG6xIC7IQ50vByS1QX3ne2AWisiBQPu09yA9kVOBGvz0KV/NE6fyMNve7LQ9+YwJEf2QoSrF0ISkrDOcQrfBWfDXlODkIN1ECZ2gVxqBptpAnO8HEyBGVxqK4h3pEBKbw0ycmAkgJwiBKcARvbWdDAaFiARN2na4Zm0OzE2ZSA0ei08MkHDQF1lNyYmRk3S+AuCEsf26tULer0eFRUVuHTpEsaMGRNQdAOAz8zMXNCtW7fFV3Ou/rRs1if6HACxpKTkg/j4+HWKZHbq1Aksy2LLli3o0qVLwE0qKnrbtm3o168f2rZtC1mWkZiYiJycHISEhMAQFAS32425v32CFeV7AZ4Bo/FSjqTz0QgsA22tA9IVFyDI4NwSIEmgDq0gpsdCjjeCyaoBc7EKwqkq8Elh0B0sBRcZAqlPNOplEV+4jwFdNOhTZsP9R/JhamQQHqmHgWXxmbYR2bGn0SjuhxwhgnXpYFyZC+oUCfrxMnizC4gOhjitB1hJBqpdYJwimKOlgE4DUcOCC9aASQwBsYw3mUQEhuFxXM7H+NPvosu5DVg/5BmkxXcEwzCorKyETqdT69maFi1aLBbU1tZCmcSdlJSE1157DTfddBOio6MhyzJxHMdZrdbGX375ZSURMVdzrq5Lgr3ahdC7d29+586dp6Ojo7spVfRKTZZSauI/7SIrKwvjxo3DwIED8eWXX6qgu91ur3pKTQXJMj45swmLsjbAzDvBc0bI5F1eUL24TIDk6zgO4GWAa3BAYlgwojfhIDtEaEoawJysgGwVwPWKgxSuAxOlBxcXBh1H6CO48eoN43Di/BF88+WvuOeutjgUH4nfRR6SlQFbboNkdwHZdUCtHegWA7lrNKRWenAEyN71P8EF6eEK1oAEyZvr4BhfeRDUlKiGZb0UpeDAXZG9sfTmx5DUKhYWqxXVVVXo2LFji7XRgiDAZrNh3LhxSE1NxT333IPffvsN+/btw5EjR5TV3yWWZbns7Oz3Onfu/JyyA91fqotuqqUPHDjAnz59WsjOzn47Ojr6e//5rP5zlZQaoh9++AEnT55EVVWVulaUMkp1Oh1iYmJQkF+Ajh1TMLfPRIxI6IXnTq3GL3WnAZ03fQcCZJK9Hch5u458S/STQQfWIYIVZcAtgpNFSO1DIfeMBhthgKhnwdWLYOod8DQ6oAELU3EVvjrzOUKjNbA7GFhtIlrbBQj1BDlCB7ZbBMQIHdg7O0BucIOvc4LcEjirCFnLQNaxYLQaeAwaEAtAx3oJS1/BIMMwYMFBhAcetxXt2FZ4pcc0TOsxxkutegRUlFcgJaWDqulycnJw4MAB9O/fH2lpadBoNIiIiMCuXbswZ84czJs3D61atcKKFSug1WoV5oq1Wq3mPXv2LPFJ759mz69rIpHPFrOVlZW/x8bG9vZWzRDnPwpdLhfefvttJCcno66uDqtXr8b58+cDGC5lIFRWVsLtdiOpXZI34yQDP2Zl4L3Lm3HCngfwHBheB57hIJO3JEYtc1OkhvGlDFl4l/CXAEaQwRCBeBayXoNgkhGTa0K/yhrMmXQ/gsNkPDt3JYI0PHqNjcXPTDjOGoPg4RgwHgIvyZB4FrKG/aNnZF8iXyaQ8n9fnoxlGBAjQ5I9gMeNaLYVpifdhqfSxyE6PNrL3kkycnNzkZiYGDDNp7GxEf369UN9fT1CQ0PRrVs3DB06FDfffLO60JzNZkNwcLDSbxIA7sKFC6/16NHj1euR3uuRYP8KGfHcuXPzhw4dukchPogIOTk5cDgc+PbbbzFs2DCMHj0aERERWL16tboMkLJOpfKbuLg4lJSUoLTEOx9WYgj3pQ3BuJQB2JZ/FF/l78Peuky4YQZ4DuB0YFjOW9ckM96aZZnUanbiGC/JwbOADER5HGhXaEJySSN6xYZhzMMzERUTj30ZX4FxS/j9nA3hYRxm9PKgsFGDo7wB5w1a1BmMAMMCHgJk2ZsmVKraOC8HTSxBIgkkC5AFAZAYpBna4f7UfpiaOgJtW8Wqc4YZAvLy8hAfH6+CqzihERER+OSTT3DhwgXceOON+Pnnn7F48WI1UdOpUyd8+umnSiWlzHEcW19fX7527doPfIvTXVcR23XvoKWMmLy8vA0dOnQYL0mSxHEcd/nyZcyZMwdLly5Fly5d8Nxzz2HXrl04f/781RPjPqkuLi5WnQlRlgJm7F+qLMTOsuPYV3keZ20lMHksANzeO9bovLXMYACSwblkhHs8SLK50L7Wgfg6K7SShK69k9H31qEICWqN+sZMnDy8Czt/MaGwQoLRyKF3DyPaxhkQGcqhViCctnPINOhRGhYGZ7gObl4puGIAuw0Q3ABYGNhgpAbFYnBkGka3vREDE3pAr/cm7EUfz0yyV3Kjo6MRGRnZzO4qrN/LL7+MhQsX4rfffoPRaESPHj3w5ptvIioqCnPnzlXCThEAf/jw4QdvvfXWb69Xev8SwAsWLGAXLlxIX3zxReLEiRMvhIWFhUiSxHAcx1y8eBEpKSlwOp3o0KEDfv75Z6SlpeHSpUuoqKiAyWTCihUrMHToUCxbtiyA6SorK4PH40FycrLaQSzL/lEiQ0CVuRZZ9aXIaixDnqMaRZV5KLlyAbLsgoFExIoyIj0SgngRWh0HiSNwYBAbHIH4Vq1RU2NFfYMVLhcDa4MA0UMQZEK1qR6NTgt00TpExQUhLpRgaRDhYrSo4llU6bQgBnCThL59B6Fn0g3oGBqH9MhkJEe08a4josQusgzWl8v1eDwoKChAXFwcwsLCWnSqlEF+5coVLFiwAGPHjsWkSZPAMAysVitCQkLUpALLslxxcXFGu3btbvsr4P4lgP2l+NixYzP79u27AoDoi8NARHjiiSewbt06zJ8/H06nEx07doTRaMRzzz0HSZLw1FNPYciQIWjbtm3Asn2VlZWw2WxITk5WJ1TJ8NZyBYDta3s2vo913y1GkDEMxAJskAyG5cDrNdAZeUSFa0ASoaSwEcYQBqZaGTlXLBBFQnioBk67Bxa7BFnm4JEkb6mOhoMxiEVCbBASo7QQJYKWZRBs0MNsqcODM5agz9BpzSo4WIK6TocXHAvKyyuQkJDgbz+vWuzOcRwWL16MwYMHY+DAgU2JImJZVrZara4NGzb0mj59evZf3Uf4L29yqIBcUFCwo3379qNkWVY3ytqzZw86dOiAiIgItGrVCpcvX8bYsWORnp6OtWvXQqfT4cqVK5g5cyZ27NgRYJeUjZbj4+MDSAD/OcMyyQDDoKoyB2fPbgfHacHzjHfCmCRCp+eh1WsgeQRYGl1wOwFZ5sBoGLg9LricMgSRgdPpAa81wOFwg2Nl6PU6MJwMnmHQpnUoQsMYiJChD9LA4/JAlkR06T4WEeFJPueK85W/Bi6JVFlZCavVivbt2wdsauU/99c/nFQ+M5vNeOONNzBy5Ej06tVLXTDNR2Dwx48ff6Jfv37L/qr0/kNtwYIFLBEx77zzTnxdXV21b4s/dXvPRt9mkEuWLCGWZWnx4sVERFRaWkqlpaXkdDopOzs7YGdP5f9ut5uys7PVbe9a2gHUvwkC0blzmbRr134ymRrowoUsut52/PgJkiSZZJkoI+M3qq1tIJvNSbt376PGRjsREZ05c5Fqay3+u1UG7l3pt71tXl4eFRUVNduI8mrPoHym7AH53nvv0TPPPKNuoqlsZZefn79FESz8/2rKxXbv3j3at3miIIqiLIoiXbx4kW655RaKjIyk3bt3qw+0evVqio2NVffwa/rQ/u/Ly8spOzs7YJ9A/+9FUSBJEmn37l30yisvU2lpCV28eIEuXrxAhUUF9PvvR6m8vJTsdhsdOnSQzOZGys7OpqysLPJ43CSKAi1atJCuXMmijz/+mHJysunVV1+h115bTFlZWfTRRx/Sl19+QevXr/Ndz9PigFS2g83OzqaGhoarbGDqPbaiooJGjRpF6enp9PXXX6v7GCp7CBcUFJDL5VI+l3znLp0/f370f2Uzyn9oVCxatIiIiE9JScm+5557KC4ubijLsiIRcbGxsTCZTJg2bZrKoR4/fhxTp07FZ599hpCQEHWV86YLkCgtJCQEQUFBqKqqUktKlXJc7/EsGAZITGyLo0d/x/79+3HzzQOwa9duZF/JRnV1NU6fPoOGhkYEBQXh0KFDqKmpwfHjx9G7d2/odHrk5xegU6dOKCkpgdVqRWFhIXieR3BwMPbvz4DHI6BVqyhkZmYiPb2HzynyetSKSSkrKwMRoV27diqrx7Isfv75Z2zduhX9+vVTV+VduXIlwsPDMWTIEDz99NMIDg5Gv379VGcrIiICPM8rdhc2m03cv3//nU8++eSVtLQ07vHHH5f/Eaz+4S1KfVuOczfeeOPi/Pz8HwBoOI4TiQgvvPACevfuDavViuPHj2PUqFFYunQp7rvvPuzYsQMDBgzAiRMnAlguhYtVOFqDwYAOHTogLCzMGzOXlsLlcvntNeRd4umpp55CamonbN68GZGRkdBoNLjxxhvhdruRkZGBjh07wu12o7GxUa2KUK7V0NCARx55BHV1dejcuTNefvllXLhwAYMHD0bbtm3Rp08flJWV+RWlM7BYLCgoKEBdXR3atGmDtm3bBthXAIiMjERcXBw4joNGo8F9992HnTt34o033sCjjz6KQ4cOYcWKFaivrw9YtQjezcckWZbZc+fOzbrvvvuOZGRk8BMmTJDwv9GIiPEF3frS0tLfFNOobKF6/Phxat26Na1atYqIiM6dO0fR0dG0adMmWrVqFU2ZMoXsdjvJskw2m40GDBhAly5dClBfSqurq6O8vDwqLCxU1WFJSQlt2bKFDh48SNnZ2bRlyxbaunUrHT58mHbt2kU7d+6kJUuWUFlZGb333nu0e/dudVfxn376ibKzs6mqqoqOHj1KoihSTk4OnTp1inybMdOuXbvIbDaTIAhkMpnU61ut1qvadn/bu2nTJsrOzqbt27dThw4d6H2/fY8XLlxIx48fb/qsHt9O44t9/cvjf7stWLCAZVkWU6ZMaVVZWXm5Kci7du2i2tpaqq2tpaSkJFq2bJlqu6Kjo6mioiJgu3dlc2l/G+a/RbvFYqHi4mLKzc2l6urqZsdfT7uaPW3aLBYLlZaWUm5uLpWXl6s20v93TqeTPvnkExIEIeA+6+rqqEePHjRmzBgiIsrKyqLIyEj6+uuvqaKigj766CNqbGxUbbACbmZm5jI/cBn8MzRlX4ePP/44obq6WgVZ6YSSkhLq3bs3PfLII6rn2KdPH3r++eeJiOjpp5+md955J6Bz/TvrapJSV1dHhYWFqmRVVFRQY2MjuVyuZjuHX6sJgkBOp5MaGhqorKyMCgoKKC8vj0pLSwMcPX9gFak7efIkRUZG0qeffqo6ky+//DJZrVayWCyUnp5Or776qs8rP0M6nY5mz56tntcf3JycnHU+7p+71n6E/yttw4YNHAC8/fbbCSaTKVPpO6Wj9+/fTwcPHiSXy0UzZsyggQMHkizLVFdXRzExMfT999+rEqH8RhndZ8+epaNHj6qd25LUORwOqq2tpbKyMioqKqLCwkIqKiqikpISKi0tpYqKCvVVXl5OpaWlVFxcrB5bUlJClZWVVF9f36JWaOmaSohz5swZSkxMpF9//ZVefPFFGjp0KN1///3qVvZRUVG0bds2kmWZ9u7dSwkJCXTw4EGqq6sjUfRuL+4DlyUi9p8O3KYgf/zxxwnl5eUXm0qy3W6nBQsWUFxcnBouTZgwgaZNm0ZERB988AE9++yztGLFigD79MILL9ANN9zQTF0r51XsaktS7nK5yOFwkN1uJ6vVSlarlex2OzmdTvJ4PNfUFFeLXxVglZCOiOjFF1+klJQU9fPExETasGGDKtVt27alc+fOERHRl19+SQkJCfLly5dFIqJLly59pmTt/mnBbQryjBkzokpKSvb/MdgFWZHQrVu3EhHRzz//THFxceTxeOitt96ijh07ks1mI5vNRmPHjlWJgxEjRtCXX35Jsiw3k66mAPnZtH/YLl+t+V/L4/HQ1q1bad68ebRs2TJyuVzUvn17+vHHH4mIaOvWrZSUlESXL1+mK1euBDiP+fn50oULF2QiorNnz77h57D+c4PbFGQAupycnK+VPpQkSVIetKGhgaKjo2n37t0kSRLFxMTQtm3b1A68+eabaffu3VReXk5t2rQhm83WIiCXLl2it956i7777jvKz8//h8GVZZkOHz5MP/zwgwqEAqi/PS8tLaXXXnuNPvvsM9WsFBYWEhHRli1bKDExUR2Et99+Oy1YsECVeJ8GEn2snXD48OFH/Iijfw1wm3rXAHDmzJl5FotFJCIaNWqUsHr1apo6dSrNmzdPpTdTU1NVdVdcXEwajYZMJhPNnz+f5s6dS1arlZ566ilatWoVmc3mAHXdpUsXmjp1KpWXlzdzrlqS6KafiaJITqeTnnnmGbrxxhubeclERDabjaZOnUpz5syhZ599lrZv307du3engQMH0rBhw2jhwoWqybn77rspLy+PcnNz/a8hE5FARFRTU1O8cePGwf903vI/GCdzAPDzzz8Pq6mpyffFh+KuXbskf0fl8ccfp++++45MJhMNGjSInnzySSIiSk1NpYceeoiWLl1KO3bsoLy8PLJYLAH8dbt27ejIkSPNpM0fRGUwXCtEqq+vp969e5PD4SBJkujnn3+mF198kSZPnkxXrlyh8ePH01133aUef/bsWdqwYQN98cUXlJaWRocOHaKDBw/SK6+8onrJPk2g3lRJScn2119/vQ3gXWUf/w5NCdjnzZsXU1xc/L1fpwtKuGG322nDhg30/vvv05dffklERBs3bqThw4fTrbfeGqC+/QG7cuWKGk+3JK1ZWVmUlRWYhMjMzFQTGrIsU2NjI61evZo++OADio+Pp5qaGtq5cyetWbOG8vPzKTk5md577z2y2WyUnJxM1dXVJIoiVVdX09GjR0kQBFqyZAmdOnUqIFb2+R2iL6Z2nD179tkWzNi/R/N/oH379k2qrq4u8Xd4m9rF7OxsSk5OprVr19JXX31FDz/8MMmyTB6PJ0BSN27cSKmpqc2IEVmWafXq1bR161Z65plnaP78+WS32+nhhx+mDRs20IQJE2jdOm8yYfbs2bRz506qqqqi9u3b08mTJ2nRokX06quv0s6dOyknJ0f1AYYPH64OQKfTSTNmzKDFixfTxYsXmwKrutplZWUH1q9ff6Oi1f7RxMG/lMqeN29eTHZ29qc2m03pCFkQBFEURRIEgcxmM23ZsoV+//132rx5M8XExKjOixKqKCHUyJEj1RSdAvzJkydpxIgRdPr0aVq3bh1FRETQwYMHVbLliSeeoOnTp1N9fT316dNHBWfy5Mm0atUq+vzzz2ny5Mnq54cOHaLa2lr67rvvqE2bNnT69OmWvGzZXx3X19dXnDp1arby/P82Kvl6040AsHnz5j6lpaXb/GJLRa3J/p7rhx9+SPv27VPVsALkqFGj6PXXX28WxixZsoRmzJhBRUVFdO7cOSooKCAlnbly5Up69NFHadasWVRaWkoxMTEqv/zWW2/RU089RR6Ph8LDw2nKlCn0xhtv0NSpU8ntdtPBgwdp//79qqOnOFCSJAl+FKc9Ozv7wwULFsQ24ez/7zR/aQaAPXv2jCwpKdmnqGBfxwmSH2r+hIYgCHTkyBEKDw+np59+mgoKCshut1N+fj7t2bOHfvzxxwDVXVRURKdOnaLbbrtNTQTcc889REQUHx9PzzzzDImiSO+//z7Fx8dTfn4+nTt3jsaMGUPjxo2jy5cvN4uufANR9Ac2Pz9/xddff925pcH8v9GYfwKgWV/aUAaAvXv3DklNTX0sIiLizuDgYGWJVlkURZnnedY3OR1EpBb0ZWVloaamBhaLBcePH8dbb72FtLQ03HDDDWAYBv369cMNN9yAgQMHYsCAAViyZAkuXbqE1atXY/fu3XC73Zg+fTq6deuGW265BS6XC5MnT1anw/rfrm9ursxxnKpuGxoaqmtra78/fvz4F1OmTMn2A1Zuadb9/8m2YcOGAIJ97dq1aTk5OW/W1NTktSA5QlM1rthmfy/WYrHQkiVL6IsvvlDDsc2bN9PSpUupsrKSduzYQWazOSAD1JTqFARB8ng8or8K9sXFckVFxeEzZ87Mnj9/frS/xP7bOlH/jUD7d5Dh6NGjIwsLC7+oqakpahoGSZIki6IoCF4ERV/Fi9ysgOoadKSPhJCJSBIEQfQ7FzUBVaqqqjp7+fLl1zdt2tR0C97/APsPFPcFeJ2tW7c27t+/f1B2dvbi8vLyjIaGhto/YyFFX/NJveAbDKIXV1FqaSA0yVAVFxUV/XTp0qXHf/rpp+5N/YiMjAz+n5lD/qenyIiI2bhxIzt+/Hg0LRl9+umno0aPHt0lNja2h8Fg6K7T6VJ1Ol2SRqOJ0mg0wUFBQX/6fLIsw+FwiKIomj0eT7XL5Spyu91ZVqv1fElJycVHH300p7Ky0qHWOHnXyOB99lX+Z++/fykO1A9sBt7t51tyYLRvvPFGRGpqalRERESkXq+PNBqNWlmWQ2RZ1gIAz/M2URRdLpfL7nA46mtra+svXrxY+/bbbzeihZnyfskAxWn6j+P0/wtwn83mfa//kg30eecsEfE+1cv+y6Tw/g81JXHObtiwgcvIyFDAUl9+n3GKU+cD8t8OzP8Hzi1b1pcbWtcAAAAASUVORK5CYII=" alt="KMLA">KMLA · WORKSPACE</div>
+        <div class="ws-tools">
+            <label class="ws-search">
+                <input id="sysSearch" type="text" placeholder="업무 검색" autocomplete="off">
+                <kbd>⌘ K</kbd>
+            </label>
+            <div class="ws-user">
+                <div class="ws-avatar">{{ username[0] }}</div>
+                <div class="ws-uname">{{ username }}</div>
             </div>
-            <div class="header-user">
-                <div class="user-info">
-                    <div class="user-avatar">{{ username[0] }}</div>
-                    <div>
-                        <div class="user-name">{{ username }}</div>
-                        <div class="user-role">교사</div>
+            <a href="/change-password" class="ws-btn ghost">관리자 설정</a>
+            <a href="/logout" class="ws-btn solid">로그아웃</a>
+        </div>
+    </header>
+
+    <div class="ws-body">
+        <!-- Narrow rail -->
+        <aside class="ws-rail">
+            <div class="rail-label">NAVIGATION</div>
+            <a href="#top" class="rail-item active">대시보드</a>
+            <details class="rail-group">
+                <summary class="rail-item rail-toggle"><span>학교 업무</span><span class="caret">▾</span></summary>
+                <div class="rail-sub">
+                <div class="rail-sub-inner">
+                    <a href="https://pdf-email-sender-1.onrender.com" target="_blank" rel="noopener noreferrer">자동 발송 시스템</a>
+                    <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" rel="noopener noreferrer">학생증 재발급</a>
+                    <a href="https://knue20-kmla.github.io/budget" target="_blank" rel="noopener noreferrer">프로젝트 예산 관리</a>
+                    <a href="https://kmla-curriculum.netlify.app" target="_blank" rel="noopener noreferrer">KMLA 교육과정 체험</a>
+                    <a href="https://equipment-manager-redirect.onrender.com" target="_blank" rel="noopener noreferrer">프로젝트 기자재 관리자</a>
+                    <a href="https://knue20-kmla.github.io/kmla-exam/" target="_blank" rel="noopener noreferrer">모의고사 분석(전학년)</a>
+                    <a href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer">입학 내신 계산기</a>
+                    <a href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer">정기시험 시간표</a>
+                
+                </div>
+            </div>
+            </details>
+            <details class="rail-group">
+                <summary class="rail-item rail-toggle"><span>학급 업무</span><span class="caret">▾</span></summary>
+                <div class="rail-sub">
+                <div class="rail-sub-inner">
+                    <a href="https://knue20-kmla.github.io/STUDY/" target="_blank" rel="noopener noreferrer">자습 관리 시스템</a>
+                    <a href="https://knue20-kmla.github.io/creative-activity/" target="_blank" rel="noopener noreferrer">창의적 체험활동 관리</a>
+                    <a href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank" rel="noopener noreferrer">생기부 분석 시스템</a>
+                    <a href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank" rel="noopener noreferrer">모의고사 분석 시스템</a>
+                    <a href="https://knue20-kmla.github.io/transcript/" target="_blank" rel="noopener noreferrer">학교생활기록부 조회</a>
+                
+                </div>
+            </div>
+            </details>
+            <details class="rail-group">
+                <summary class="rail-item rail-toggle"><span>교과 업무</span><span class="caret">▾</span></summary>
+                <div class="rail-sub">
+                <div class="rail-sub-inner">
+                    <a href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer">교수학습평가계획서</a>
+                    <a href="https://kmla-history.party" target="_blank" rel="noopener noreferrer">한국사 수업 DB</a>
+                    <a href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank" rel="noopener noreferrer">한국사 질문 DB(2026-1)</a>
+                    <a href="https://kmla-history.party/board" target="_blank" rel="noopener noreferrer">한국사 질문/수행 DB</a>
+                
+                </div>
+            </div>
+            </details>
+        </aside>
+
+        <!-- Content -->
+        <main class="ws-content" id="top">
+            <div class="ws-head">
+                <div>
+                    <h1>나의 업무 공간 <span>·</span></h1>
+                    <p class="sub">통합 업무 허브 — 필요한 시스템에 바로 연결됩니다</p>
+                </div>
+                <div class="ws-meta micro">UNIFIED SYSTEM<br>17 SERVICES</div>
+            </div>
+
+            <div class="ws-overview">
+                <div class="ov-feature">
+                    <div class="ov-kicker micro">WORKSPACE OVERVIEW</div>
+                    <h2>업무를 하나의 흐름으로</h2>
+                    <p>학교·학급·교과 시스템을 오가며 필요한 업무에 바로 연결합니다.</p>
+                    <div class="ov-counts">
+                        <div><b>08</b><span>학교</span></div>
+                        <div><b>05</b><span>학급</span></div>
+                        <div><b>04</b><span>교과</span></div>
                     </div>
                 </div>
-                <a href="/change-password" class="admin-btn">관리자 설정</a>
-                <a href="/logout" class="logout-btn">로그아웃</a>
-            </div>
-        </div>
-
-        <div class="content-area">
-            <div class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">학교 업무 시스템</h2>
-                    <span class="section-count">8</span>
-                </div>
-                <div class="cards-grid">
-                    <a href="https://pdf-email-sender-1.onrender.com" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">📧</div>
-                            <div class="card-info">
-                                <div class="card-title">자동 발송 시스템</div>
-                                <div class="card-desc">성적표 및 문서를 학생 이메일로 자동 발송합니다</div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">🎫</div>
-                            <div class="card-info">
-                                <div class="card-title">학생증 재발급</div>
-                                <div class="card-desc">학생증 재발급 신청 관리 시스템</div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/budget" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">💰</div>
-                            <div class="card-info">
-                                <div class="card-title">프로젝트 예산 관리</div>
-                                <div class="card-desc">학생 프로젝트 예산 신청 및 관리</div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://kmla-curriculum.netlify.app" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">🧭</div>
-                            <div class="card-info">
-                                <div class="card-title">KMLA 교육과정 체험</div>
-                                <div class="card-desc">학생 선택 과목과 진로 연계를 체험하는 교육과정 설계 앱</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://equipment-manager-redirect.onrender.com" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">🧰</div>
-                            <div class="card-info">
-                                <div class="card-title">프로젝트 기자재 관리자</div>
-                                <div class="card-desc">기자재 등록, 대여 승인, 반납 승인, 관리자 권한을 관리합니다</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="https://knue20-kmla.github.io/kmla-exam/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">📈</div>
-                            <div class="card-info">
-                                <div class="card-title">모의고사 분석(전학년)</div>
-                                <div class="card-desc">1~3학년 전체 모의고사 성적 조회 및 분석 시스템</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">🎓</div>
-                            <div class="card-info">
-                                <div class="card-title">입학 내신 계산기</div>
-                                <div class="card-desc">2027학년도 KMLA 1단계 교과성적과 출결 예상 점수 계산</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer" class="card">
-                        <div class="card-header">
-                            <div class="card-icon school">📅</div>
-                            <div class="card-info">
-                                <div class="card-title">정기시험 시간표</div>
-                                <div class="card-desc">수강신청 자료로 중간·기말고사 시간표를 자동 생성하고 학년별로 공유합니다</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
+                <div class="ov-stats">
+                    <div class="ov-stat">
+                        <span class="k micro">전체 시스템</span>
+                        <span class="v">17 <em>services</em></span>
+                    </div>
+                    <div class="ov-stat">
+                        <span class="k micro">신규 업데이트</span>
+                        <span class="v">11 <em>services</em></span>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">학급 업무 시스템</h2>
-                    <span class="section-count">5</span>
+            <div class="qa-zone">
+            <div class="sec-head">
+                <h2>주요 시스템</h2>
+            </div>
+            <div class="qa-grid" data-group="quick">
+                <a class="qa-card" data-search="KMLA 교육과정 체험" href="https://kmla-curriculum.netlify.app" target="_blank"><span class="idx">01</span><span class="t2">KMLA 교육과정 체험</span>
+                    
+                <span class="arr">→</span></a>
+                <a class="qa-card" data-search="학생증 재발급" href="https://knue20-kmla.github.io/Student-ID/" target="_blank"><span class="idx">02</span><span class="t2">학생증 재발급</span>
+                    
+                <span class="arr">→</span></a>
+                <a class="qa-card" data-search="프로젝트 기자재 관리" href="https://equipment-manager-redirect.onrender.com" target="_blank"><span class="idx">03</span><span class="t2">프로젝트 기자재 관리</span>
+                    
+                <span class="arr">→</span></a>
+                <a class="qa-card" data-search="모의고사 분석" href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank"><span class="idx">04</span><span class="t2">모의고사 분석</span>
+                    
+                <span class="arr">→</span></a>
+                <a class="qa-card" data-search="정기시험 시간표" href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer"><span class="idx">05</span><span class="t2">정기시험 시간표</span>
+                    
+                <span class="arr">→</span></a>
+                <a class="qa-card" data-search="한국사 수업DB" href="https://kmla-history.party" target="_blank"><span class="idx">06</span><span class="t2">한국사 수업DB</span>
+                    
+                <span class="arr">→</span></a>
+            </div>
+            </div>
+<div class="sys-section">
+                <div class="sec-head" id="sec-school">
+                    <h2>학교 업무 시스템</h2>
+                    <span class="count">08</span>
                 </div>
-                <div class="cards-grid">
-                    <a href="https://knue20-kmla.github.io/STUDY/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon class">📚</div>
-                            <div class="card-info">
-                                <div class="card-title">자습 관리 시스템</div>
-                                <div class="card-desc">학생 자습 기록, 통계 및 출석 관리 시스템</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/creative-activity/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon class">✨</div>
-                            <div class="card-info">
-                                <div class="card-title">창의적 체험활동 관리</div>
-                                <div class="card-desc">창체 활동 기록, 조회 및 통계 관리</div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon class">📝</div>
-                            <div class="card-info">
-                                <div class="card-title">생기부 분석 시스템</div>
-                                <div class="card-desc">생활기록부 작성 및 분석 도구</div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon class">📊</div>
-                            <div class="card-info">
-                                <div class="card-title">모의고사 분석 시스템</div>
-                                <div class="card-desc">모의고사 성적 분석 및 통계</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://knue20-kmla.github.io/transcript/" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon class">📋</div>
-                            <div class="card-info">
-                                <div class="card-title">학교생활기록부 조회</div>
-                                <div class="card-desc">학생 생기부 조회 및 세특 분석</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
+                <div class="sys-grid" data-group="school">
+                    <a class="sys-card" data-search="자동 발송 시스템 성적표 문서 학생 이메일" href="https://pdf-email-sender-1.onrender.com" target="_blank">
+                        <span class="idx">01</span><span class="tx"><span class="n">자동 발송 시스템</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="학생증 재발급" href="https://knue20-kmla.github.io/Student-ID/" target="_blank">
+                        <span class="idx">02</span><span class="tx"><span class="n">학생증 재발급</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="프로젝트 예산 관리" href="https://knue20-kmla.github.io/budget" target="_blank">
+                        <span class="idx">03</span><span class="tx"><span class="n">프로젝트 예산 관리</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="KMLA 교육과정 체험" href="https://kmla-curriculum.netlify.app" target="_blank">
+                        <span class="idx">04</span><span class="tx"><span class="n">KMLA 교육과정 체험</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="프로젝트 기자재 관리자" href="https://equipment-manager-redirect.onrender.com" target="_blank">
+                        <span class="idx">05</span><span class="tx"><span class="n">프로젝트 기자재 관리자</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="모의고사 분석 전학년" href="https://knue20-kmla.github.io/kmla-exam/" target="_blank">
+                        <span class="idx">06</span><span class="tx"><span class="n">모의고사 분석(전학년)</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="입학 내신 계산기" href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer">
+                        <span class="idx">07</span><span class="tx"><span class="n">입학 내신 계산기</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="정기시험 시간표" href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer">
+                        <span class="idx">08</span><span class="tx"><span class="n">정기시험 시간표</span></span><span class="go">→</span></a>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">교과 업무 시스템 (한국사)</h2>
-                    <span class="section-count">5</span>
+            <div class="sys-section">
+                <div class="sec-head" id="sec-class">
+                    <h2>학급 업무 시스템</h2>
+                    <span class="count">05</span>
                 </div>
-                <div class="cards-grid">
-                    <a href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer" class="card">
-                        <div class="card-header">
-                            <div class="card-icon subject">📋</div>
-                            <div class="card-info">
-                                <div class="card-title">교수학습평가계획서</div>
-                                <div class="card-desc">교과별 교수학습 및 평가계획서를 입력하고 파일로 내보냅니다</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://kmla-history.party" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon subject">📄</div>
-                            <div class="card-info">
-                                <div class="card-title">한국사 수업 DB</div>
-                                <div class="card-desc">한국사 교과서 이북, 수업 프레젠테이션, 게시판을 통합 제공합니다</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon subject">💬</div>
-                            <div class="card-info">
-                                <div class="card-title">한국사 질문 DB(2026-1)</div>
-                                <div class="card-desc">한국사 질문, 수행 글쓰기, 교사 관찰 기록 관리</div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://kmla-history.party/board" target="_blank" class="card">
-                        <div class="card-header">
-                            <div class="card-icon subject">💬</div>
-                            <div class="card-info">
-                                <div class="card-title">한국사 질문/수행 DB</div>
-                                <div class="card-desc">학생 질문과 수행평가 내용을 반·학생별로 확인하고 관리합니다</div>
-                                <span class="card-badge new">NEW</span>
-                            </div>
-                        </div>
-                    </a>
+                <div class="sys-grid" data-group="class">
+                    <a class="sys-card" data-search="자습 관리 시스템" href="https://knue20-kmla.github.io/STUDY/" target="_blank">
+                        <span class="idx">01</span><span class="tx"><span class="n">자습 관리 시스템</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="창의적 체험활동 관리 창체" href="https://knue20-kmla.github.io/creative-activity/" target="_blank">
+                        <span class="idx">02</span><span class="tx"><span class="n">창의적 체험활동 관리</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="생기부 분석 시스템 생활기록부" href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank">
+                        <span class="idx">03</span><span class="tx"><span class="n">생기부 분석 시스템</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="모의고사 분석 시스템" href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank">
+                        <span class="idx">04</span><span class="tx"><span class="n">모의고사 분석 시스템</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="학교생활기록부 조회 세특" href="https://knue20-kmla.github.io/transcript/" target="_blank">
+                        <span class="idx">05</span><span class="tx"><span class="n">학교생활기록부 조회</span></span><span class="go">→</span></a>
                 </div>
             </div>
-        </div>
+
+            <div class="sys-section">
+                <div class="sec-head" id="sec-subject">
+                    <h2>교과 업무 시스템</h2>
+                    <span class="count">04</span>
+                </div>
+                <div class="sys-grid" data-group="subject">
+                    <a class="sys-card" data-search="교수학습평가계획서" href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer">
+                        <span class="idx">01</span><span class="tx"><span class="n">교수학습평가계획서</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="한국사 수업 DB" href="https://kmla-history.party" target="_blank">
+                        <span class="idx">02</span><span class="tx"><span class="n">한국사 수업 DB</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="한국사 질문 DB 2026" href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank">
+                        <span class="idx">03</span><span class="tx"><span class="n">한국사 질문 DB(2026-1)</span></span><span class="go">→</span></a>
+                    <a class="sys-card" data-search="한국사 질문 수행 DB" href="https://kmla-history.party/board" target="_blank">
+                        <span class="idx">04</span><span class="tx"><span class="n">한국사 질문/수행 DB</span></span><span class="go">→</span></a>
+                </div>
+            </div>
+
+            <div class="no-result hidden" id="noResult">검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</div>
+
+            <footer class="ws-foot">
+                <span class="micro">KMLA · WORKSPACE</span>
+                <span>민족사관고등학교 교사 업무 자동화 플랫폼</span>
+            </footer>
+        </main>
     </div>
 
     <script>
-        // 로고 섹션과 헤더 배너의 높이를 동적으로 맞춤
-        function matchHeaderHeight() {
-            const logoSection = document.querySelector('.logo-section');
-            const headerBanner = document.querySelector('.header-banner');
+        // 검색 필터
+        const searchInput = document.getElementById('sysSearch');
+        const noResult = document.getElementById('noResult');
+        const cards = document.querySelectorAll('[data-search]');
+        const sections = document.querySelectorAll('.sys-section');
+        const quickGrid = document.querySelector('[data-group="quick"]');
 
-            if (logoSection && headerBanner) {
-                // 헤더 배너의 실제 높이를 가져옴
-                const headerHeight = headerBanner.offsetHeight;
-                // 로고 섹션의 높이를 헤더 배너와 동일하게 설정
-                logoSection.style.height = headerHeight + 'px';
-                logoSection.style.display = 'flex';
-                logoSection.style.flexDirection = 'column';
-                logoSection.style.justifyContent = 'center';
+        function applyFilter() {
+            const q = searchInput.value.trim().toLowerCase();
+            let totalVisible = 0;
+
+            cards.forEach(card => {
+                const hit = !q || card.dataset.search.toLowerCase().includes(q);
+                card.classList.toggle('hidden', !hit);
+                if (hit) totalVisible++;
+            });
+
+            sections.forEach(sec => {
+                const visible = sec.querySelectorAll('[data-search]:not(.hidden)').length;
+                sec.classList.toggle('hidden', visible === 0);
+            });
+
+            // 빠른 실행 섹션 헤더도 함께 토글
+            const quickHead = quickGrid.previousElementSibling;
+            const quickVisible = quickGrid.querySelectorAll('[data-search]:not(.hidden)').length;
+            const showQuick = !q || quickVisible > 0;
+            quickGrid.classList.toggle('hidden', !showQuick);
+            if (quickHead && quickHead.classList.contains('sec-head')) {
+                quickHead.classList.toggle('hidden', !showQuick);
             }
+
+            noResult.classList.toggle('hidden', totalVisible > 0);
         }
 
-        // 페이지 로드 시 실행
-        window.addEventListener('load', matchHeaderHeight);
-        // 창 크기 변경 시 재조정
-        window.addEventListener('resize', matchHeaderHeight);
+        searchInput.addEventListener('input', applyFilter);
+
+        // ⌘K / Ctrl+K 로 검색 포커스
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        // 레일 활성 상태 (스크롤 위치 반영)
+        const railItems = document.querySelectorAll('.rail-item');
+        railItems.forEach(item => {
+            item.addEventListener('click', () => {
+                railItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
-
