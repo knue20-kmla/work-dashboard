@@ -8,8 +8,10 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'kmla-dashboard-secret-key-2024')
 
 # 사용자 데이터 파일
-USERS_FILE = 'users.json'
-QUICK_FILE = 'quick_menu.json'
+# 데이터 저장 위치 (Render 영구 디스크를 쓰려면 DATA_DIR 환경변수를 디스크 마운트 경로로 지정)
+DATA_DIR = os.getenv('DATA_DIR', '.')
+USERS_FILE = os.path.join(DATA_DIR, 'users.json')
+QUICK_FILE = os.path.join(DATA_DIR, 'quick_menu.json')
 ADMIN_USER = 'admin'
 MAX_QUICK = 8
 
@@ -36,6 +38,34 @@ SYSTEMS = [
 ]
 SYSTEM_BY_ID = {s['id']: s for s in SYSTEMS}
 GROUP_LABELS = [('school', '학교 업무 시스템'), ('class', '학급 업무 시스템'), ('subject', '교과 업무 시스템')]
+
+# 대시보드 카드에 표시할 아이콘과 한 줄 설명
+SYSTEM_META = {
+    'auto-mail': ('📧', '성적표·문서를 학생 이메일로 자동 발송'),
+    'student-id': ('🎫', '학생증 재발급 신청 관리'),
+    'budget': ('💰', '학생 프로젝트 예산 신청 및 관리'),
+    'curriculum': ('🧭', '선택 과목과 진로를 연계해 보는 교육과정 설계 앱'),
+    'equipment': ('🧰', '기자재 등록, 대여·반납 승인 관리'),
+    'exam-all': ('📈', '1~3학년 전체 모의고사 성적 조회·분석'),
+    'minjok-score': ('🎓', '2027학년도 1단계 교과성적·출결 점수 계산'),
+    'test-schedule': ('📅', '중간·기말고사 시간표 자동 생성과 공유'),
+    'budget-gas': ('🧾', '예산 신청·집행 현황 (Apps Script)'),
+    'study': ('📚', '학생 자습 기록, 통계, 출석 관리'),
+    'creative': ('✨', '창체 활동 기록·조회·통계 관리'),
+    'record-analysis': ('📝', '생활기록부 작성·분석 도구'),
+    'exam-class': ('📊', '모의고사 성적 분석과 통계'),
+    'transcript': ('📋', '학생 생기부 조회와 세특 분석'),
+    'eval-plan': ('🗂️', '교과별 교수학습·평가계획서 작성과 내보내기'),
+    'history-db': ('📄', '한국사 교과서 이북, 수업 PPT, 게시판'),
+    'history-question': ('💬', '질문·수행 글쓰기, 교사 관찰 기록 관리'),
+    'history-board': ('🗒️', '반·학생별 질문과 수행평가 확인·관리'),
+}
+for _s in SYSTEMS:
+    _s['icon'], _s['desc'] = SYSTEM_META[_s['id']]
+
+def system_groups():
+    return [{'key': key, 'label': label, 'systems': [s for s in SYSTEMS if s['group'] == key]}
+            for key, label in GROUP_LABELS]
 DEFAULT_QUICK = ['curriculum', 'student-id', 'equipment', 'exam-class', 'test-schedule', 'history-db']
 
 def load_quick_ids():
@@ -49,6 +79,7 @@ def load_quick_ids():
     return list(DEFAULT_QUICK)
 
 def save_quick_ids(ids):
+    os.makedirs(DATA_DIR, exist_ok=True)
     with open(QUICK_FILE, 'w', encoding='utf-8') as f:
         json.dump(ids, f, ensure_ascii=False)
 
@@ -65,6 +96,7 @@ def load_users():
         return users
 
 def save_users(users):
+    os.makedirs(DATA_DIR, exist_ok=True)
     with open(USERS_FILE, 'w') as f:
         json.dump(users, f)
 
@@ -118,7 +150,8 @@ def dashboard():
     quick_systems = [SYSTEM_BY_ID[i] for i in quick_ids]
     return render_template('dashboard.html', username=session['username'],
                            is_admin=session['username'] == ADMIN_USER,
-                           quick_systems=quick_systems)
+                           quick_systems=quick_systems,
+                           groups=system_groups())
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @admin_required
@@ -134,8 +167,7 @@ def admin_settings():
             save_quick_ids(ids)
             success = '주요 시스템 설정이 저장되었습니다.'
     selected = set(load_quick_ids())
-    groups = [{'label': label, 'systems': [s for s in SYSTEMS if s['group'] == key]}
-              for key, label in GROUP_LABELS]
+    groups = system_groups()
     return render_template('admin_settings.html', groups=groups, selected=selected,
                            max_quick=MAX_QUICK, success=success, error=error)
 

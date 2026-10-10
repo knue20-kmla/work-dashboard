@@ -458,11 +458,12 @@
         .ov-feature {
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(255,255,255,.05), transparent 50%), #151c26;
+            border-radius: 18px;
+            background: linear-gradient(145deg, #1b2e50 0%, #112039 100%);
+            box-shadow: 0 18px 36px -22px rgba(14, 27, 53, 0.7);
             color: #fff;
             padding: 22px 24px;
-            min-height: 150px;
+            min-height: 130px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -503,7 +504,8 @@
             display: flex;
             gap: 26px;
         }
-        .ov-counts div { display: flex; align-items: baseline; gap: 8px; }
+        .ov-counts a { display: flex; align-items: baseline; gap: 8px; color: inherit; text-decoration: none; padding: 4px 10px; margin: -4px -10px; border-radius: 10px; transition: background-color 0.2s ease; }
+        .ov-counts a:hover { background: rgba(255,255,255,0.08); }
         .ov-counts b { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
         .ov-counts span { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; }
 
@@ -524,117 +526,56 @@
 
         /* Section headings */
         .sec-head {
-            margin: 30px 0 14px;
+            margin: 34px 0 14px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            scroll-margin-top: 70px;
+            gap: 14px;
+            scroll-margin-top: 90px;
         }
         .sec-head h2 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             letter-spacing: -0.2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--ink);
+            white-space: nowrap;
         }
-        .sec-head h2::before {
-            content: '';
-            width: 5px;
-            height: 18px;
-            border-radius: 3px;
-            background: var(--accent);
-        }
-        .sec-head .tag {
-            font-size: 10px;
+        .sec-head .sec-line { flex: 1; height: 1px; background: var(--line); }
+        .sec-head .count {
+            font-size: 10.5px;
             font-weight: 800;
             letter-spacing: 0.12em;
             color: var(--muted-2);
-        }
-        .sec-head .count {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--accent);
-            background: var(--accent-soft);
-            border: 1px solid var(--accent-line);
-            padding: 4px 11px;
-            border-radius: 20px;
+            white-space: nowrap;
         }
 
         /* Quick access zone */
         .qa-zone {
-            background: linear-gradient(135deg, #26467a 0%, #14263f 60%, #0d1a30 100%);
-            border-radius: 16px;
-            padding: 8px 20px 14px;
-            margin-top: 10px;
+            background: linear-gradient(145deg, #213f6c 0%, #14264a 55%, #0e1b35 100%);
+            border-radius: 18px;
+            padding: 10px 22px 14px;
+            margin-top: 0;
             position: relative;
             overflow: hidden;
-            animation: glowPulse 2.8s ease-in-out infinite;
-        }
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(233,120,84,0), 0 4px 18px rgba(28,39,52,0.05); }
-            50% { box-shadow: 0 0 28px 6px rgba(233,120,84,0.4), 0 4px 18px rgba(28,39,52,0.05); }
+            box-shadow: 0 18px 36px -22px rgba(14, 27, 53, 0.7);
         }
         .qa-zone::before {
             content: '';
             position: absolute;
-            width: 340px;
-            height: 340px;
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(233,120,84,0.45) 0%, transparent 70%);
-            top: -140px;
-            right: -70px;
+            background: radial-gradient(circle, rgba(233,120,84,0.32) 0%, transparent 70%);
+            top: -150px;
+            right: -80px;
             pointer-events: none;
-            animation: orbA 6s ease-in-out infinite alternate;
         }
-        .qa-zone::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(120,170,255,0.4) 0%, transparent 70%);
-            bottom: -140px;
-            left: -50px;
-            pointer-events: none;
-            animation: orbB 7s ease-in-out infinite alternate;
-        }
-        @keyframes orbA {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
-            100% { transform: translate(-100px, 70px) scale(1.3); opacity: 1; }
-        }
-        @keyframes orbB {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
-            100% { transform: translate(80px, -60px) scale(1.25); opacity: 1; }
-        }
-        .qa-zone .sec-head { margin: 8px 0 10px; position: relative; z-index: 1; }
+        .qa-zone .sec-head { margin: 8px 0 8px; position: relative; z-index: 1; }
         .qa-zone .qa-grid { position: relative; z-index: 1; }
-        .qa-zone .sec-head h2 {
-            font-size: 17px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(233, 120, 84, 0.55);
-            background: linear-gradient(90deg, #ffffff 30%, #ffcf9e 50%, #ffffff 70%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-            animation: shimmer 6s linear infinite;
-        }
-        .qa-zone .sec-head h2::before { display: none; }
-        @keyframes shimmer {
-            to { background-position: 200% center; }
-        }
-        .qa-zone .qa-card { border-bottom-color: rgba(255,255,255,0.1); }
-        .qa-zone .qa-card .idx { color: rgba(255,255,255,0.45); }
-        .qa-zone .qa-card .t2 { color: #fff; }
-        .qa-zone .qa-card .arr { color: rgba(255,255,255,0.4); }
-        .qa-zone .qa-card:hover .t2 { color: var(--accent); }
-        .qa-zone .qa-card:hover .arr { color: var(--accent); }
+        .qa-zone .sec-head h2 { font-size: 15px; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .qa-zone .sec-head h2::after { content: ""; width: 22px; height: 2px; border-radius: 2px; background: var(--accent); }
+        .qa-empty { color: rgba(255,255,255,0.6); font-size: 13px; padding: 14px 0; }
 
-        /* Quick access cards */
+        /* Quick access rows */
         .qa-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -643,86 +584,171 @@
         .qa-card {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 2px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--line);
-            border-radius: 0;
+            gap: 12px;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             text-decoration: none;
-            transition: background 0.15s ease;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, padding-left 0.2s ease;
         }
-        .qa-card .idx {
-            font-size: 10.5px;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            color: var(--muted-2);
+        .qa-card .ico {
+            position: relative;
+            width: 30px;
+            height: 30px;
             flex: 0 0 auto;
-            min-width: 22px;
+            display: grid;
+            place-items: center;
+            font-size: 15px;
+            border-radius: 9px;
+            background: rgba(255,255,255,0.1);
         }
-        .qa-card .t2 { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; flex: 1; }
-        .qa-card .arr { color: var(--muted-2); font-size: 14px; transition: transform 0.18s ease, color 0.18s ease; }
+        .qa-card .t2 { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: -0.2px; flex: 1; min-width: 0; }
+        .qa-card .arr { color: rgba(255,255,255,0.4); font-size: 14px; transition: transform 0.2s ease, color 0.2s ease; }
+        .qa-card:hover { background: rgba(255,255,255,0.06); padding-left: 10px; }
         .qa-card:hover .arr { transform: translateX(3px); color: var(--accent); }
-        .qa-card:hover .t2 { color: var(--accent); }
 
-        /* Full system lists */
+        /* 서비스 상태 점 */
+        .stat {
+            position: absolute;
+            right: -3px;
+            bottom: -3px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #b9b1a9;
+            border: 2px solid #fff;
+            transition: background-color 0.3s ease;
+        }
+        .qa-card .stat { border-color: #1a3157; }
+        .stat[data-s="up"] { background: #2fb37c; }
+        .stat[data-s="slow"] { background: #e8a33d; }
+        .stat[data-s="down"] { background: #d4665a; }
+        .stat[data-s="idle"] { animation: statPulse 1.4s ease-in-out infinite; }
+        @keyframes statPulse { 50% { opacity: 0.4; } }
+        .legend { display: flex; align-items: center; gap: 14px; font-size: 11px; color: var(--muted-2); font-weight: 600; padding-top: 6px; }
+        .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+
+        /* 내 바로가기 (즐겨찾기 / 최근 사용) */
+        .my-strip {
+            margin-top: 26px;
+            padding: 14px 18px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.6);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 28px;
+        }
+        .my-strip .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+        .my-strip .lab { font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; color: var(--muted-2); }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-size: 12px;
+            font-weight: 650;
+            color: var(--ink);
+            text-decoration: none;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .chip:hover { border-color: var(--accent-line); transform: translateY(-1px); box-shadow: 0 6px 14px -8px rgba(28,39,52,0.4); }
+
+        /* Full system cards */
         .sys-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
         }
+        .sys-grid[data-group="school"] { --tint: rgba(233,120,84,0.13); }
+        .sys-grid[data-group="class"] { --tint: rgba(64,118,200,0.13); }
+        .sys-grid[data-group="subject"] { --tint: rgba(46,150,120,0.14); }
         .sys-card {
+            grid-column: span 2;
+            position: relative;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: 0 1px 2px rgba(28,39,52,0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .sys-grid.rem-2 .sys-card:nth-last-child(-n+2) { grid-column: span 3; }
+        .sys-grid.rem-1 .sys-card:nth-last-child(-n+4) { grid-column: span 3; }
+        .sys-card:hover, .sys-card.kb-active {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px -16px rgba(28,39,52,0.32);
+            border-color: rgba(233,120,84,0.5);
+        }
+        .sys-main {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: #ffffff;
-            border: 1.5px solid rgba(97, 67, 48, 0.16);
-            border-radius: 10px;
+            gap: 14px;
+            padding: 16px 46px 16px 16px;
             text-decoration: none;
-            box-shadow: 0 3px 10px rgba(28,39,52,0.06);
-            transition: all 0.2s ease;
+            color: inherit;
+            min-width: 0;
+            border-radius: 14px;
+        }
+        .sys-main:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+        .sys-card .ico {
             position: relative;
-            overflow: hidden;
-        }
-        .sys-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 14px 30px rgba(233,120,84,0.16);
-            border-color: var(--accent);
-            background: linear-gradient(135deg, #ffffff 0%, #fef0e2 100%);
-        }
-        .sys-card .idx {
-            font-size: 10.5px;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            color: #fff;
-            background: linear-gradient(135deg, #c9b8a3, #a89076);
-            border-radius: 6px;
-            padding: 4px 7px;
-            min-width: 28px;
-            text-align: center;
-            transition: all 0.2s ease;
+            width: 42px;
+            height: 42px;
             flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            border-radius: 12px;
+            background: var(--tint, rgba(233,120,84,0.13));
+            transition: transform 0.25s ease;
         }
-        .sys-card:hover .idx {
-            background: linear-gradient(135deg, #f08a5e, #e97854);
-            box-shadow: 0 4px 10px rgba(233,120,84,0.35);
-        }
+        .sys-card:hover .ico { transform: scale(1.06) rotate(-3deg); }
         .sys-card .tx { flex: 1; min-width: 0; }
-        .sys-card .n { font-size: 13.5px; font-weight: 650; color: var(--ink); letter-spacing: -0.1px; }
-        .sys-card .go { color: var(--muted-2); font-size: 16px; font-weight: 700; transition: transform 0.2s ease, color 0.2s ease; flex: 0 0 auto; }
-        .sys-card:hover .go { transform: translateX(5px); color: var(--accent); }
-        .sys-card .nb {
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            color: #ea580c;
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            padding: 3px 7px;
-            border-radius: 20px;
-            white-space: nowrap;
+        .sys-card .n { display: block; font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; }
+        .sys-card .d {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: 3px;
+            font-size: 11.5px;
+            line-height: 1.45;
+            color: var(--muted);
         }
+        .sys-card .go {
+            position: absolute;
+            right: 16px;
+            bottom: 12px;
+            color: var(--muted-2);
+            font-size: 15px;
+            font-weight: 700;
+            transition: transform 0.25s ease, color 0.25s ease;
+            pointer-events: none;
+        }
+        .sys-card:hover .go { transform: translateX(4px); color: var(--accent); }
+        .fav {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 26px;
+            height: 26px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted-2);
+            font-size: 15px;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+        .sys-card:hover .fav, .fav:focus-visible, .fav[aria-pressed="true"] { opacity: 1; }
+        .fav:hover { background: rgba(233,120,84,0.12); color: var(--accent); transform: scale(1.1); }
+        .fav[aria-pressed="true"] { color: #e8a33d; }
+        .kb-active.qa-card { background: rgba(255,255,255,0.1); }
 
         .hidden { display: none !important; }
 
@@ -755,6 +781,7 @@
             .hub-main { height: auto; min-height: 0; }
             .hub-main .qa-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .qa-grid, .sys-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .sys-grid .sys-card { grid-column: auto !important; }
         }
         @media (max-width: 768px) {
             .ws-body { grid-template-columns: 1fr; }
@@ -770,11 +797,23 @@
             }
             .rail-item { white-space: nowrap; }
             .ws-top { flex-wrap: wrap; height: auto; padding: 10px 14px; gap: 10px; }
-            .ws-search { flex: 1; min-width: 140px; }
+            .ws-rail { min-height: 0; flex-wrap: nowrap; }
+            .rail-label { display: none; }
+            .ws-tools { flex: 1 1 100%; min-width: 0; }
+            .ws-search { flex: 1; min-width: 0; }
+            .ws-head { flex-wrap: wrap; }
+            .my-strip { padding: 12px 14px; }
             .ws-head h1 { font-size: 22px; }
             .ws-meta { display: none; }
-            .qa-grid, .sys-grid { grid-template-columns: 1fr; }
+            .hub-main .qa-grid, .qa-grid, .sys-grid { grid-template-columns: 1fr; }
             .ws-btn.ghost { display: none; }
+        }
+        @media (max-width: 480px) {
+            .ws-uname { display: none; }
+            .ws-brand { font-size: 14px; gap: 10px; }
+            .brand-logo-wrap { width: 44px; height: 44px; }
+            .brand-logo { width: 40px; height: 40px; }
+            .legend { display: none; }
         }
     </style>
 </head>
@@ -801,48 +840,18 @@
         <aside class="ws-rail">
             <div class="rail-label">NAVIGATION</div>
             <a href="#top" class="rail-item active">대시보드</a>
+            {% for g in groups %}
             <details class="rail-group">
-                <summary class="rail-item rail-toggle"><span>학교 업무</span><span class="caret">▾</span></summary>
+                <summary class="rail-item rail-toggle"><span>{{ g.label|replace(' 시스템', '') }}</span><span class="caret">▾</span></summary>
                 <div class="rail-sub">
                 <div class="rail-sub-inner">
-                    <a href="https://pdf-email-sender-1.onrender.com" target="_blank" rel="noopener noreferrer">자동 발송 시스템</a>
-                    <a href="https://knue20-kmla.github.io/Student-ID/" target="_blank" rel="noopener noreferrer">학생증 재발급</a>
-                    <a href="https://knue20-kmla.github.io/budget" target="_blank" rel="noopener noreferrer">프로젝트 예산 관리</a>
-                    <a href="https://kmla-curriculum.netlify.app" target="_blank" rel="noopener noreferrer">KMLA 교육과정 체험</a>
-                    <a href="https://equipment-manager-redirect.onrender.com" target="_blank" rel="noopener noreferrer">프로젝트 기자재 관리자</a>
-                    <a href="https://knue20-kmla.github.io/kmla-exam/" target="_blank" rel="noopener noreferrer">모의고사 분석(전학년)</a>
-                    <a href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer">입학 내신 계산기</a>
-                    <a href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer">정기시험 시간표</a>
-                    <a href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" rel="noopener noreferrer">예산 관리</a>
-                
+                    {% for s in g.systems %}
+                    <a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.name }}</a>
+                    {% endfor %}
                 </div>
-            </div>
-            </details>
-            <details class="rail-group">
-                <summary class="rail-item rail-toggle"><span>학급 업무</span><span class="caret">▾</span></summary>
-                <div class="rail-sub">
-                <div class="rail-sub-inner">
-                    <a href="https://knue20-kmla.github.io/STUDY/" target="_blank" rel="noopener noreferrer">자습 관리 시스템</a>
-                    <a href="https://knue20-kmla.github.io/creative-activity/" target="_blank" rel="noopener noreferrer">창의적 체험활동 관리</a>
-                    <a href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank" rel="noopener noreferrer">생기부 분석 시스템</a>
-                    <a href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank" rel="noopener noreferrer">모의고사 분석 시스템</a>
-                    <a href="https://knue20-kmla.github.io/transcript/" target="_blank" rel="noopener noreferrer">학교생활기록부 조회</a>
-                
                 </div>
-            </div>
             </details>
-            <details class="rail-group">
-                <summary class="rail-item rail-toggle"><span>교과 업무</span><span class="caret">▾</span></summary>
-                <div class="rail-sub">
-                <div class="rail-sub-inner">
-                    <a href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer">교수학습평가계획서</a>
-                    <a href="https://kmla-history.party" target="_blank" rel="noopener noreferrer">한국사 수업 DB</a>
-                    <a href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank" rel="noopener noreferrer">한국사 질문 DB(2026-1)</a>
-                    <a href="https://kmla-history.party/board" target="_blank" rel="noopener noreferrer">한국사 질문/수행 DB</a>
-                
-                </div>
-            </div>
-            </details>
+            {% endfor %}
         </aside>
 
         <!-- Content -->
@@ -852,6 +861,7 @@
                     <small>나의 업무 공간</small>
                     <h1>통합 업무 허브</h1>
                 </div>
+                <div class="legend" aria-label="서비스 상태 안내"><span><i style="background:#2fb37c"></i>정상</span><span><i style="background:#e8a33d"></i>지연</span><span><i style="background:#d4665a"></i>확인 불가</span></div>
             </div>
 
             <div class="hub-split">
@@ -862,9 +872,9 @@
                     <h2>업무를 하나의 흐름으로</h2>
                     <p>학교·학급·교과 시스템을 오가며 필요한 업무에 바로 연결합니다.</p>
                     <div class="ov-counts">
-                        <div><b>09</b><span>학교</span></div>
-                        <div><b>05</b><span>학급</span></div>
-                        <div><b>04</b><span>교과</span></div>
+                        {% for g in groups %}
+                        <a href="#sec-{{ g.key }}"><b>{{ '%02d' % (g.systems|length) }}</b><span>{{ g.label|replace(' 업무 시스템', '') }}</span></a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -875,7 +885,7 @@
             </div>
             <div class="qa-grid" data-group="quick">
                 {% for s in quick_systems %}
-                <a class="qa-card" data-search="{{ s.name }}" href="{{ s.url }}" target="_blank" rel="noopener noreferrer"><span class="idx">{{ '%02d' % loop.index }}</span><span class="t2">{{ s.name }}</span><span class="arr">→</span></a>
+                <a class="qa-card" data-id="{{ s.id }}" data-url="{{ s.url }}" data-search="{{ s.name }} {{ s.desc }}" href="{{ s.url }}" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">{{ s.icon }}<span class="stat" data-url="{{ s.url }}" data-s="idle" title="상태 확인 중"></span></span><span class="t2">{{ s.name }}</span><span class="arr" aria-hidden="true">→</span></a>
                 {% else %}
                 <div class="qa-empty">관리자 설정에서 주요 시스템을 선택하세요.</div>
                 {% endfor %}
@@ -892,68 +902,33 @@
                 <a class="phone-link" href="https://knue20-kmla.github.io/schedule-hub/" target="_blank" rel="noopener noreferrer">일정 허브 열기 <span aria-hidden="true">↗</span></a>
             </aside>
             </div>
-<div class="sys-section">
-                <div class="sec-head" id="sec-school">
-                    <h2>학교 업무 시스템</h2>
-                    <span class="count">09</span>
-                </div>
-                <div class="sys-grid" data-group="school">
-                    <a class="sys-card" data-search="자동 발송 시스템 성적표 문서 학생 이메일" href="https://pdf-email-sender-1.onrender.com" target="_blank">
-                        <span class="idx">01</span><span class="tx"><span class="n">자동 발송 시스템</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="학생증 재발급" href="https://knue20-kmla.github.io/Student-ID/" target="_blank">
-                        <span class="idx">02</span><span class="tx"><span class="n">학생증 재발급</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="프로젝트 예산 관리" href="https://knue20-kmla.github.io/budget" target="_blank">
-                        <span class="idx">03</span><span class="tx"><span class="n">프로젝트 예산 관리</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="KMLA 교육과정 체험" href="https://kmla-curriculum.netlify.app" target="_blank">
-                        <span class="idx">04</span><span class="tx"><span class="n">KMLA 교육과정 체험</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="프로젝트 기자재 관리자" href="https://equipment-manager-redirect.onrender.com" target="_blank">
-                        <span class="idx">05</span><span class="tx"><span class="n">프로젝트 기자재 관리자</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="모의고사 분석 전학년" href="https://knue20-kmla.github.io/kmla-exam/" target="_blank">
-                        <span class="idx">06</span><span class="tx"><span class="n">모의고사 분석(전학년)</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="입학 내신 계산기" href="https://knue20-kmla.github.io/minjok-score/" target="_blank" rel="noopener noreferrer">
-                        <span class="idx">07</span><span class="tx"><span class="n">입학 내신 계산기</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="정기시험 시간표" href="https://knue20-kmla.github.io/Test-Schedule/" target="_blank" rel="noopener noreferrer">
-                        <span class="idx">08</span><span class="tx"><span class="n">정기시험 시간표</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="예산 관리" href="https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec" target="_blank" rel="noopener noreferrer">
-                        <span class="idx">09</span><span class="tx"><span class="n">예산 관리</span></span><span class="go">→</span></a>
-                </div>
+            <div class="my-strip hidden" id="myStrip" aria-label="내 바로가기">
+                <div class="row" id="favRow"><span class="lab">★ 즐겨찾기</span></div>
+                <div class="row" id="recentRow"><span class="lab">최근 사용</span></div>
             </div>
 
-            <div class="sys-section">
-                <div class="sec-head" id="sec-class">
-                    <h2>학급 업무 시스템</h2>
-                    <span class="count">05</span>
+            {% for g in groups %}
+            {% set n = g.systems|length %}
+            <div class="sys-section" id="sec-{{ g.key }}">
+                <div class="sec-head">
+                    <h2>{{ g.label }}</h2>
+                    <span class="sec-line" aria-hidden="true"></span>
+                    <span class="count micro">{{ '%02d' % n }} SYSTEMS</span>
                 </div>
-                <div class="sys-grid" data-group="class">
-                    <a class="sys-card" data-search="자습 관리 시스템" href="https://knue20-kmla.github.io/STUDY/" target="_blank">
-                        <span class="idx">01</span><span class="tx"><span class="n">자습 관리 시스템</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="창의적 체험활동 관리 창체" href="https://knue20-kmla.github.io/creative-activity/" target="_blank">
-                        <span class="idx">02</span><span class="tx"><span class="n">창의적 체험활동 관리</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="생기부 분석 시스템 생활기록부" href="https://famished-disclose-phonics.ngrok-free.dev/" target="_blank">
-                        <span class="idx">03</span><span class="tx"><span class="n">생기부 분석 시스템</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="모의고사 분석 시스템" href="https://knue20-kmla.github.io/exam-anlysis/login.html" target="_blank">
-                        <span class="idx">04</span><span class="tx"><span class="n">모의고사 분석 시스템</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="학교생활기록부 조회 세특" href="https://knue20-kmla.github.io/transcript/" target="_blank">
-                        <span class="idx">05</span><span class="tx"><span class="n">학교생활기록부 조회</span></span><span class="go">→</span></a>
-                </div>
-            </div>
-
-            <div class="sys-section">
-                <div class="sec-head" id="sec-subject">
-                    <h2>교과 업무 시스템</h2>
-                    <span class="count">04</span>
-                </div>
-                <div class="sys-grid" data-group="subject">
-                    <a class="sys-card" data-search="교수학습평가계획서" href="https://knue20-kmla.github.io/eval-plan-app/" target="_blank" rel="noopener noreferrer">
-                        <span class="idx">01</span><span class="tx"><span class="n">교수학습평가계획서</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="한국사 수업 DB" href="https://kmla-history.party" target="_blank">
-                        <span class="idx">02</span><span class="tx"><span class="n">한국사 수업 DB</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="한국사 질문 DB 2026" href="https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher" target="_blank">
-                        <span class="idx">03</span><span class="tx"><span class="n">한국사 질문 DB(2026-1)</span></span><span class="go">→</span></a>
-                    <a class="sys-card" data-search="한국사 질문 수행 DB" href="https://kmla-history.party/board" target="_blank">
-                        <span class="idx">04</span><span class="tx"><span class="n">한국사 질문/수행 DB</span></span><span class="go">→</span></a>
+                <div class="sys-grid rem-{{ (n % 3) if n >= 4 else 0 }}" data-group="{{ g.key }}">
+                    {% for s in g.systems %}
+                    <div class="sys-card" data-id="{{ s.id }}" data-url="{{ s.url }}" data-search="{{ s.name }} {{ s.desc }}">
+                        <a class="sys-main" href="{{ s.url }}" target="_blank" rel="noopener noreferrer">
+                            <span class="ico" aria-hidden="true">{{ s.icon }}<span class="stat" data-url="{{ s.url }}" data-s="idle" title="상태 확인 중"></span></span>
+                            <span class="tx"><span class="n">{{ s.name }}</span><span class="d">{{ s.desc }}</span></span>
+                            <span class="go" aria-hidden="true">→</span>
+                        </a>
+                        <button class="fav" type="button" aria-pressed="false" aria-label="{{ s.name }} 즐겨찾기" title="즐겨찾기">☆</button>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endfor %}
 
             <div class="no-result hidden" id="noResult">검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</div>
 
@@ -965,13 +940,90 @@
     </div>
 
     <script>
-        // 검색 필터
+    (function () {
         const searchInput = document.getElementById('sysSearch');
         const noResult = document.getElementById('noResult');
+        const strip = document.getElementById('myStrip');
         const cards = document.querySelectorAll('[data-search]');
         const sections = document.querySelectorAll('.sys-section');
+        const quickZone = document.querySelector('.qa-zone');
         const quickGrid = document.querySelector('[data-group="quick"]');
 
+        /* ---------- localStorage helpers ---------- */
+        function load(key) {
+            try { const v = JSON.parse(localStorage.getItem(key)); return Array.isArray(v) ? v : []; }
+            catch (e) { return []; }
+        }
+        function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+        /* ---------- 시스템 정보 (DOM에서 수집) ---------- */
+        const info = {};
+        document.querySelectorAll('.sys-card').forEach(c => {
+            info[c.dataset.id] = {
+                id: c.dataset.id,
+                url: c.dataset.url,
+                name: c.querySelector('.n').textContent,
+                icon: c.querySelector('.ico').firstChild.textContent
+            };
+        });
+
+        /* ---------- 즐겨찾기 / 최근 사용 ---------- */
+        let favs = load('kmla.fav').filter(id => info[id]);
+        let recent = load('kmla.recent').filter(id => info[id]);
+
+        function chip(id) {
+            const s = info[id];
+            const a = document.createElement('a');
+            a.className = 'chip';
+            a.href = s.url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.dataset.id = id;
+            a.textContent = s.icon + ' ' + s.name;
+            return a;
+        }
+        function renderStrip() {
+            const favRow = document.getElementById('favRow');
+            const recentRow = document.getElementById('recentRow');
+            [favRow, recentRow].forEach(r => Array.from(r.querySelectorAll('.chip')).forEach(c => c.remove()));
+            favs.forEach(id => favRow.appendChild(chip(id)));
+            recent.filter(id => favs.indexOf(id) === -1).slice(0, 5).forEach(id => recentRow.appendChild(chip(id)));
+            favRow.classList.toggle('hidden', favs.length === 0);
+            recentRow.classList.toggle('hidden', recentRow.querySelectorAll('.chip').length === 0);
+            const empty = favRow.classList.contains('hidden') && recentRow.classList.contains('hidden');
+            strip.dataset.empty = empty ? '1' : '0';
+            strip.classList.toggle('hidden', empty || searchInput.value.trim() !== '');
+            document.querySelectorAll('.fav').forEach(b => {
+                const on = favs.indexOf(b.closest('.sys-card').dataset.id) !== -1;
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                b.textContent = on ? '★' : '☆';
+            });
+        }
+        document.querySelectorAll('.fav').forEach(b => {
+            b.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = b.closest('.sys-card').dataset.id;
+                favs = favs.indexOf(id) === -1 ? favs.concat(id) : favs.filter(x => x !== id);
+                save('kmla.fav', favs);
+                renderStrip();
+            });
+        });
+        function remember(id) {
+            if (!id || !info[id]) return;
+            recent = [id].concat(recent.filter(x => x !== id)).slice(0, 8);
+            save('kmla.recent', recent);
+            renderStrip();
+        }
+        document.addEventListener('click', e => {
+            const el = e.target.closest('.sys-card .sys-main, .qa-card, .chip');
+            if (!el) return;
+            const holder = el.closest('[data-id]') || el;
+            remember(holder.dataset.id);
+        });
+        renderStrip();
+
+        /* ---------- 검색 필터 ---------- */
         function applyFilter() {
             const q = searchInput.value.trim().toLowerCase();
             let totalVisible = 0;
@@ -979,7 +1031,7 @@
             cards.forEach(card => {
                 const hit = !q || card.dataset.search.toLowerCase().includes(q);
                 card.classList.toggle('hidden', !hit);
-                if (hit) totalVisible++;
+                if (hit && card.classList.contains('sys-card')) totalVisible++;
             });
 
             sections.forEach(sec => {
@@ -987,19 +1039,52 @@
                 sec.classList.toggle('hidden', visible === 0);
             });
 
-            // 빠른 실행 섹션 헤더도 함께 토글
-            const quickHead = quickGrid.previousElementSibling;
-            const quickVisible = quickGrid.querySelectorAll('[data-search]:not(.hidden)').length;
-            const showQuick = !q || quickVisible > 0;
-            quickGrid.classList.toggle('hidden', !showQuick);
-            if (quickHead && quickHead.classList.contains('sec-head')) {
-                quickHead.classList.toggle('hidden', !showQuick);
-            }
+            const quickVisible = quickGrid ? quickGrid.querySelectorAll('[data-search]:not(.hidden)').length : 0;
+            if (quickZone) quickZone.classList.toggle('hidden', !!q && quickVisible === 0);
 
+            strip.classList.toggle('hidden', strip.dataset.empty === '1' || !!q);
             noResult.classList.toggle('hidden', totalVisible > 0);
+            setActive(-1);
         }
-
         searchInput.addEventListener('input', applyFilter);
+
+        /* ---------- 키보드로 검색 결과 이동 / 열기 ---------- */
+        let activeIdx = -1;
+        function navList() {
+            const seen = {};
+            return Array.prototype.filter.call(document.querySelectorAll('.qa-card[data-search], .sys-card[data-search]'), c => {
+                if (c.classList.contains('hidden') || c.offsetParent === null) return false;
+                const url = c.dataset.url || c.getAttribute('href');
+                if (seen[url]) return false;
+                seen[url] = true;
+                return true;
+            });
+        }
+        function setActive(idx) {
+            document.querySelectorAll('.kb-active').forEach(c => c.classList.remove('kb-active'));
+            activeIdx = idx;
+            if (idx < 0) return;
+            const list = navList();
+            if (!list[idx]) { activeIdx = -1; return; }
+            list[idx].classList.add('kb-active');
+            list[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        searchInput.addEventListener('keydown', e => {
+            const list = navList();
+            if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(list.length - 1, activeIdx + 1)); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(0, activeIdx - 1)); }
+            else if (e.key === 'Enter') {
+                const target = list[activeIdx >= 0 ? activeIdx : 0];
+                if (!target || !searchInput.value.trim()) return;
+                e.preventDefault();
+                remember(target.dataset.id);
+                window.open(target.dataset.url || target.getAttribute('href'), '_blank', 'noopener');
+            } else if (e.key === 'Escape') {
+                searchInput.value = '';
+                applyFilter();
+                searchInput.blur();
+            }
+        });
 
         // ⌘K / Ctrl+K 로 검색 포커스
         document.addEventListener('keydown', e => {
@@ -1009,7 +1094,35 @@
             }
         });
 
-        // 레일 활성 상태 (스크롤 위치 반영)
+        /* ---------- 서비스 상태 점 ---------- */
+        const STATUS_TEXT = {
+            up: '정상 응답',
+            slow: '응답 지연 · 서버가 깨어나는 중일 수 있어요',
+            down: '연결 확인 불가'
+        };
+        function probe(url) {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 9000);
+            return fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
+                .then(() => 'up')
+                .catch(() => (ctrl.signal.aborted ? 'slow' : 'down'))
+                .then(r => { clearTimeout(timer); return r; });
+        }
+        const dotsByUrl = {};
+        document.querySelectorAll('.stat[data-url]').forEach(d => {
+            (dotsByUrl[d.dataset.url] = dotsByUrl[d.dataset.url] || []).push(d);
+        });
+        const queue = Object.keys(dotsByUrl);
+        function worker() {
+            const url = queue.shift();
+            if (!url) return Promise.resolve();
+            return probe(url).then(state => {
+                dotsByUrl[url].forEach(d => { d.dataset.s = state; d.title = STATUS_TEXT[state]; });
+            }).then(worker);
+        }
+        for (let i = 0; i < 5; i++) worker();
+
+        /* ---------- 레일 활성 상태 ---------- */
         const railItems = document.querySelectorAll('.rail-item');
         railItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -1017,6 +1130,7 @@
                 item.classList.add('active');
             });
         });
+    })();
     </script>
 </body>
 </html>
