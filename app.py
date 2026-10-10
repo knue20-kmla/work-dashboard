@@ -9,6 +9,48 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', 'kmla-dashboard-secret-key-2024')
 
 # 사용자 데이터 파일
 USERS_FILE = 'users.json'
+QUICK_FILE = 'quick_menu.json'
+ADMIN_USER = 'admin'
+MAX_QUICK = 8
+
+# 전체 시스템 목록 (대시보드 카드 순서와 동일). 관리자 설정에서 주요 시스템으로 선택 가능
+SYSTEMS = [
+    {'id': 'auto-mail', 'group': 'school', 'name': '자동 발송 시스템', 'url': 'https://pdf-email-sender-1.onrender.com'},
+    {'id': 'student-id', 'group': 'school', 'name': '학생증 재발급', 'url': 'https://knue20-kmla.github.io/Student-ID/'},
+    {'id': 'budget', 'group': 'school', 'name': '프로젝트 예산 관리', 'url': 'https://knue20-kmla.github.io/budget'},
+    {'id': 'curriculum', 'group': 'school', 'name': 'KMLA 교육과정 체험', 'url': 'https://kmla-curriculum.netlify.app'},
+    {'id': 'equipment', 'group': 'school', 'name': '프로젝트 기자재 관리자', 'url': 'https://equipment-manager-redirect.onrender.com'},
+    {'id': 'exam-all', 'group': 'school', 'name': '모의고사 분석(전학년)', 'url': 'https://knue20-kmla.github.io/kmla-exam/'},
+    {'id': 'minjok-score', 'group': 'school', 'name': '입학 내신 계산기', 'url': 'https://knue20-kmla.github.io/minjok-score/'},
+    {'id': 'test-schedule', 'group': 'school', 'name': '정기시험 시간표', 'url': 'https://knue20-kmla.github.io/Test-Schedule/'},
+    {'id': 'budget-gas', 'group': 'school', 'name': '예산 관리', 'url': 'https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec'},
+    {'id': 'study', 'group': 'class', 'name': '자습 관리 시스템', 'url': 'https://knue20-kmla.github.io/STUDY/'},
+    {'id': 'creative', 'group': 'class', 'name': '창의적 체험활동 관리', 'url': 'https://knue20-kmla.github.io/creative-activity/'},
+    {'id': 'record-analysis', 'group': 'class', 'name': '생기부 분석 시스템', 'url': 'https://famished-disclose-phonics.ngrok-free.dev/'},
+    {'id': 'exam-class', 'group': 'class', 'name': '모의고사 분석 시스템', 'url': 'https://knue20-kmla.github.io/exam-anlysis/login.html'},
+    {'id': 'transcript', 'group': 'class', 'name': '학교생활기록부 조회', 'url': 'https://knue20-kmla.github.io/transcript/'},
+    {'id': 'eval-plan', 'group': 'subject', 'name': '교수학습평가계획서', 'url': 'https://knue20-kmla.github.io/eval-plan-app/'},
+    {'id': 'history-db', 'group': 'subject', 'name': '한국사 수업 DB', 'url': 'https://kmla-history.party'},
+    {'id': 'history-question', 'group': 'subject', 'name': '한국사 질문 DB(2026-1)', 'url': 'https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher'},
+    {'id': 'history-board', 'group': 'subject', 'name': '한국사 질문/수행 DB', 'url': 'https://kmla-history.party/board'},
+]
+SYSTEM_BY_ID = {s['id']: s for s in SYSTEMS}
+GROUP_LABELS = [('school', '학교 업무 시스템'), ('class', '학급 업무 시스템'), ('subject', '교과 업무 시스템')]
+DEFAULT_QUICK = ['curriculum', 'student-id', 'equipment', 'exam-class', 'test-schedule', 'history-db']
+
+def load_quick_ids():
+    if os.path.exists(QUICK_FILE):
+        try:
+            with open(QUICK_FILE, 'r', encoding='utf-8') as f:
+                ids = json.load(f)
+            return [i for i in ids if i in SYSTEM_BY_ID][:MAX_QUICK]
+        except (ValueError, OSError):
+            pass
+    return list(DEFAULT_QUICK)
+
+def save_quick_ids(ids):
+    with open(QUICK_FILE, 'w', encoding='utf-8') as f:
+        json.dump(ids, f, ensure_ascii=False)
 
 def load_users():
     if os.path.exists(USERS_FILE):
@@ -31,6 +73,16 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if 'username' not in session:
             return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        if session['username'] != ADMIN_USER:
+            return redirect(url_for('dashboard'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -62,7 +114,30 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', username=session['username'])
+    quick_ids = load_quick_ids()
+    quick_systems = [SYSTEM_BY_ID[i] for i in quick_ids]
+    return render_template('dashboard.html', username=session['username'],
+                           is_admin=session['username'] == ADMIN_USER,
+                           quick_systems=quick_systems)
+
+@app.route('/admin/settings', methods=['GET', 'POST'])
+@admin_required
+def admin_settings():
+    success = None
+    error = None
+    if request.method == 'POST':
+        chosen = set(request.form.getlist('quick'))
+        ids = [s['id'] for s in SYSTEMS if s['id'] in chosen]
+        if len(ids) > MAX_QUICK:
+            error = '주요 시스템은 최대 %d개까지 선택할 수 있습니다.' % MAX_QUICK
+        else:
+            save_quick_ids(ids)
+            success = '주요 시스템 설정이 저장되었습니다.'
+    selected = set(load_quick_ids())
+    groups = [{'label': label, 'systems': [s for s in SYSTEMS if s['group'] == key]}
+              for key, label in GROUP_LABELS]
+    return render_template('admin_settings.html', groups=groups, selected=selected,
+                           max_quick=MAX_QUICK, success=success, error=error)
 
 @app.route('/history-question')
 def history_question_student():

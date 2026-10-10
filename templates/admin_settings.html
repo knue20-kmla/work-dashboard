@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 설정 - KMLA 통합 시스템</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            padding: 40px;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .header { margin-bottom: 26px; }
+        h1 { color: #1e3c72; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: 14px; line-height: 1.6; }
+
+        .counter {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: #eef2fa;
+            color: #1e3c72;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .counter.full { background: #fff1e8; color: #c2542d; }
+
+        .group { margin-top: 24px; }
+        .group h2 {
+            font-size: 14px;
+            color: #1e3c72;
+            letter-spacing: 0.04em;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eef2fa;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .item:hover { background: #f5f8fe; }
+        .item input { width: 18px; height: 18px; accent-color: #2a5298; flex: 0 0 auto; }
+        .item .name { font-size: 15px; color: #333; font-weight: 600; }
+        .item input:disabled + .name { color: #aaa; }
+        .item input:disabled { cursor: not-allowed; }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .message.success { background: #e8f5e9; color: #2e7d32; }
+        .message.error { background: #fee; color: #c33; }
+
+        .actions { margin-top: 30px; }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4); }
+
+        .links { display: flex; justify-content: space-between; margin-top: 14px; }
+        .links a { color: #2a5298; text-decoration: none; font-weight: 600; padding: 10px 4px; font-size: 14px; }
+        .links a:hover { color: #1e3c72; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ 관리자 설정</h1>
+            <p class="subtitle">체크한 시스템이 대시보드의 <b>주요 시스템</b>에 자동으로 표시됩니다. 최대 {{ max_quick }}개까지 선택할 수 있고, 표시 순서는 아래 목록 순서를 따릅니다.</p>
+            <span class="counter" id="counter">선택 0 / {{ max_quick }}</span>
+        </div>
+
+        {% if success %}<div class="message success">{{ success }}</div>{% endif %}
+        {% if error %}<div class="message error">{{ error }}</div>{% endif %}
+
+        <form method="POST">
+            {% for group in groups %}
+            <div class="group">
+                <h2>{{ group.label }}</h2>
+                {% for s in group.systems %}
+                <label class="item">
+                    <input type="checkbox" name="quick" value="{{ s.id }}" {% if s.id in selected %}checked{% endif %}>
+                    <span class="name">{{ s.name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button type="submit">저장</button>
+            </div>
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('dashboard') }}">← 대시보드로 돌아가기</a>
+            <a href="{{ url_for('change_password') }}">🔑 비밀번호 변경</a>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var MAX = {{ max_quick }};
+            var boxes = Array.prototype.slice.call(document.querySelectorAll('input[name="quick"]'));
+            var counter = document.getElementById('counter');
+            function update() {
+                var n = boxes.filter(function (b) { return b.checked; }).length;
+                counter.textContent = '선택 ' + n + ' / ' + MAX;
+                counter.classList.toggle('full', n >= MAX);
+                boxes.forEach(function (b) { b.disabled = !b.checked && n >= MAX; });
+            }
+            boxes.forEach(function (b) { b.addEventListener('change', update); });
+            update();
+        })();
+    </script>
+</body>
+</html>
