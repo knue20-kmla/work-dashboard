@@ -127,7 +127,25 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'],
                            is_admin=session['username'] == ADMIN_USER,
                            quick_systems=quick_systems,
+                           quick_ids=quick_ids,
+                           max_quick=MAX_QUICK,
                            groups=system_groups())
+
+@app.route('/api/favorites', methods=['POST'])
+@login_required
+def api_favorites():
+    data = request.get_json(silent=True) or {}
+    ids = data.get('ids')
+    if not isinstance(ids, list):
+        return jsonify(error='bad request'), 400
+    clean = []
+    for i in ids:
+        if i in SYSTEM_BY_ID and i not in clean:
+            clean.append(i)
+    if len(clean) > MAX_QUICK:
+        return jsonify(error='too many', max=MAX_QUICK), 400
+    save_quick_ids(clean)
+    return jsonify(ids=clean)
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @admin_required
