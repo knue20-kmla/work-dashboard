@@ -26,7 +26,7 @@ SYSTEMS = [
     {'id': 'minjok-score', 'group': 'school', 'name': '입학 내신 계산기', 'url': 'https://knue20-kmla.github.io/minjok-score/'},
     {'id': 'test-schedule', 'group': 'school', 'name': '정기시험 시간표', 'url': 'https://knue20-kmla.github.io/Test-Schedule/'},
     {'id': 'budget-gas', 'group': 'school', 'name': '예산 관리', 'url': 'https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec'},
-    {'id': 'field-trip', 'group': 'school', 'name': '교외체험학습 신청·결과보고서', 'url': 'https://knue20-kmla.github.io/field-trip/'},
+    {'id': 'field-trip', 'group': 'school', 'name': '교외체험학습 신청서(결과보고서)', 'url': 'https://knue20-kmla.github.io/field-trip/'},
     {'id': 'study', 'group': 'class', 'name': '자습 관리 시스템', 'url': 'https://knue20-kmla.github.io/STUDY/'},
     {'id': 'creative', 'group': 'class', 'name': '창의적 체험활동 관리', 'url': 'https://knue20-kmla.github.io/creative-activity/'},
     {'id': 'record-analysis', 'group': 'class', 'name': '생기부 분석 시스템', 'url': 'https://famished-disclose-phonics.ngrok-free.dev/'},
