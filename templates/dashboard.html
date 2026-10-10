@@ -270,20 +270,41 @@
             font-weight: 700;
             letter-spacing: 0.02em;
             white-space: nowrap;
-            transition: all 0.16s ease;
+            transition: color 0.22s ease, background-color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        /* 좌측 포인트 바: hover 시 부드럽게 자라남 */
+        .rail-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 16px;
+            margin-top: -8px;
+            border-radius: 0 3px 3px 0;
+            background: #e97854;
+            opacity: 0;
+            transform: scaleY(0.3);
+            transition: opacity 0.22s ease, transform 0.22s ease;
         }
         .rail-item:hover {
             color: #fff;
-            background: rgba(233, 120, 84, 0.22);
+            background: rgba(255, 255, 255, 0.07);
             transform: none;
         }
+        .rail-item:hover::before { opacity: 0.9; transform: scaleY(1); }
+        .rail-item:active { background: rgba(255, 255, 255, 0.11); }
+        .rail-item:focus-visible { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35); }
         .rail-item.active {
             background: linear-gradient(135deg, #f08a5e 0%, #e97854 100%);
             border-color: rgba(255,255,255,0.12);
             color: #fff;
-            box-shadow: 0 6px 16px rgba(233, 120, 84, 0.35);
+            box-shadow: 0 4px 12px -2px rgba(233, 120, 84, 0.4);
         }
+        .rail-item.active::before { opacity: 0; }
         .rail-toggle {
             width: 100%;
             cursor: pointer;
@@ -297,10 +318,10 @@
         }
         .rail-toggle:hover {
             color: #fff;
-            background: rgba(201, 164, 92, 0.28);
+            background: rgba(255, 255, 255, 0.07);
             transform: none;
         }
-        .rail-toggle:hover .caret { color: #e8c87e; opacity: 1; }
+        .rail-toggle:hover .caret { color: #f2a07f; opacity: 1; }
         .rail-toggle::-webkit-details-marker { display: none; }
         .rail-toggle .caret {
             font-size: 10px;
@@ -332,11 +353,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: all 0.15s ease;
+            transition: color 0.2s ease, background-color 0.2s ease, padding-left 0.2s ease;
         }
         .rail-sub a:hover {
-            color: #ffb48a;
-            background: rgba(233, 120, 84, 0.14);
+            color: #ffc2a3;
+            background: rgba(255, 255, 255, 0.06);
+            padding-left: 14px;
             transform: none;
         }
 
