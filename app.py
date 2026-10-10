@@ -13,7 +13,7 @@ DATA_DIR = os.getenv('DATA_DIR', '.')
 USERS_FILE = os.path.join(DATA_DIR, 'users.json')
 QUICK_FILE = os.path.join(DATA_DIR, 'quick_menu.json')
 ADMIN_USER = 'admin'
-MAX_QUICK = 8
+MAX_QUICK = 6
 
 # 전체 시스템 목록 (대시보드 카드 순서와 동일). 관리자 설정에서 주요 시스템으로 선택 가능
 SYSTEMS = [
