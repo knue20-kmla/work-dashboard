@@ -39,30 +39,6 @@ SYSTEMS = [
 SYSTEM_BY_ID = {s['id']: s for s in SYSTEMS}
 GROUP_LABELS = [('school', '학교 업무 시스템'), ('class', '학급 업무 시스템'), ('subject', '교과 업무 시스템')]
 
-# 대시보드 카드에 표시할 아이콘과 한 줄 설명
-SYSTEM_META = {
-    'auto-mail': ('📧', '성적표·문서를 학생 이메일로 자동 발송'),
-    'student-id': ('🎫', '학생증 재발급 신청 관리'),
-    'budget': ('💰', '학생 프로젝트 예산 신청 및 관리'),
-    'curriculum': ('🧭', '선택 과목과 진로를 연계해 보는 교육과정 설계 앱'),
-    'equipment': ('🧰', '기자재 등록, 대여·반납 승인 관리'),
-    'exam-all': ('📈', '1~3학년 전체 모의고사 성적 조회·분석'),
-    'minjok-score': ('🎓', '2027학년도 1단계 교과성적·출결 점수 계산'),
-    'test-schedule': ('📅', '중간·기말고사 시간표 자동 생성과 공유'),
-    'budget-gas': ('🧾', '예산 신청·집행 현황 (Apps Script)'),
-    'study': ('📚', '학생 자습 기록, 통계, 출석 관리'),
-    'creative': ('✨', '창체 활동 기록·조회·통계 관리'),
-    'record-analysis': ('📝', '생활기록부 작성·분석 도구'),
-    'exam-class': ('📊', '모의고사 성적 분석과 통계'),
-    'transcript': ('📋', '학생 생기부 조회와 세특 분석'),
-    'eval-plan': ('🗂️', '교과별 교수학습·평가계획서 작성과 내보내기'),
-    'history-db': ('📄', '한국사 교과서 이북, 수업 PPT, 게시판'),
-    'history-question': ('💬', '질문·수행 글쓰기, 교사 관찰 기록 관리'),
-    'history-board': ('🗒️', '반·학생별 질문과 수행평가 확인·관리'),
-}
-for _s in SYSTEMS:
-    _s['icon'], _s['desc'] = SYSTEM_META[_s['id']]
-
 def system_groups():
     return [{'key': key, 'label': label, 'systems': [s for s in SYSTEMS if s['group'] == key]}
             for key, label in GROUP_LABELS]
