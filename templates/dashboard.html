@@ -44,7 +44,7 @@
 
         /* ============ Top command bar ============ */
         .ws-top {
-            height: 58px;
+            height: 76px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -67,8 +67,8 @@
             white-space: nowrap;
         }
         .brand-logo {
-            width: 30px;
-            height: 30px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             object-fit: cover;
             background: #fff;
@@ -184,7 +184,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            min-height: calc(100vh - 58px);
+            min-height: calc(100vh - 76px);
             position: relative;
         }
 
@@ -283,7 +283,7 @@
         .ws-content {
             min-width: 0;
             padding: clamp(20px, 3vw, 34px);
-            padding-top: 14px;
+            padding-top: 22px;
             max-width: 1180px;
         }
 
@@ -293,6 +293,14 @@
             align-items: flex-start;
             gap: 18px;
             margin-bottom: 4px;
+        }
+        .ws-head small {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
         .ws-head h1 {
             font-size: 26px;
@@ -319,7 +327,7 @@
 
         /* Overview */
         .ws-overview {
-            margin-top: 0;
+            margin-top: 16px;
             display: grid;
             grid-template-columns: 1.6fr 0.9fr;
             gap: 12px;
@@ -714,6 +722,13 @@
 
         <!-- Content -->
         <main class="ws-content" id="top">
+            <div class="ws-head">
+                <div>
+                    <small>나의 업무 공간</small>
+                    <h1>통합 업무 허브</h1>
+                </div>
+            </div>
+
             <div class="ws-overview">
                 <div class="ov-feature">
                     <div class="ov-kicker micro">WORKSPACE OVERVIEW</div>
