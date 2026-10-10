@@ -387,10 +387,40 @@
         }
 
         /* Overview */
-        .ws-overview {
+        .hub-split {
             margin-top: 16px;
             display: grid;
-            grid-template-columns: 1.6fr 0.9fr;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 20px;
+            align-items: stretch;
+        }
+        .hub-main { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+        .hub-main .qa-zone { flex: 1; }
+        .hub-main .qa-grid { grid-template-columns: 1fr; }
+        .hub-phone { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .phone-device {
+            --pw: 372px;
+            --ps: 0.66;
+            position: relative;
+            width: calc(var(--pw) * var(--ps) + 20px);
+            height: calc(800px * var(--ps) + 20px);
+            padding: 10px;
+            border-radius: 40px;
+            background: linear-gradient(155deg, #26605a 0%, #14403c 45%, #0d2d2a 100%);
+            box-shadow: 0 30px 60px rgba(8,36,33,.32), 0 10px 22px rgba(8,36,33,.2), inset 0 0 0 2px rgba(255,255,255,.12), inset 0 0 0 4px rgba(0,0,0,.28);
+            animation: phoneIn 0.8s cubic-bezier(.2,.8,.2,1) both;
+        }
+        .phone-device::after { content: ""; position: absolute; top: 120px; right: -3px; width: 3px; height: 48px; border-radius: 0 3px 3px 0; background: #0d2d2a; box-shadow: 0 -64px 0 0 #0d2d2a; }
+        .phone-notch { position: absolute; z-index: 5; top: 17px; left: 50%; width: 66px; height: 19px; margin-left: -33px; border-radius: 10px; background: #08201e; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); pointer-events: none; }
+        .phone-screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 30px; background: #eaeff8; transform: translateZ(0); }
+        .phone-frame { position: absolute; left: 0; top: 0; width: var(--pw); height: 800px; border: 0; transform-origin: 0 0; transform: scale(var(--ps)); background: #eaeff8; }
+        .phone-link { font-size: 12px; font-weight: 700; color: var(--muted); text-decoration: none; transition: color .2s ease; }
+        .phone-link:hover { color: var(--accent); }
+        @keyframes phoneIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .phone-device { animation: none; } }
+        .ws-overview {
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 12px;
         }
         .ov-feature {
@@ -688,8 +718,9 @@
         }
 
         @media (max-width: 1024px) {
-            .ws-overview { grid-template-columns: 1fr; }
-            .ov-stats { grid-template-columns: 1fr 1fr; }
+            .hub-split { grid-template-columns: 1fr; }
+            .hub-phone { display: none; }
+            .hub-main .qa-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .qa-grid, .sys-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 768px) {
@@ -790,6 +821,8 @@
                 </div>
             </div>
 
+            <div class="hub-split">
+            <div class="hub-main">
             <div class="ws-overview">
                 <div class="ov-feature">
                     <div class="ov-kicker micro">WORKSPACE OVERVIEW</div>
@@ -799,16 +832,6 @@
                         <div><b>09</b><span>학교</span></div>
                         <div><b>05</b><span>학급</span></div>
                         <div><b>04</b><span>교과</span></div>
-                    </div>
-                </div>
-                <div class="ov-stats">
-                    <div class="ov-stat">
-                        <span class="k micro">전체 시스템</span>
-                        <span class="v">18 <em>services</em></span>
-                    </div>
-                    <div class="ov-stat">
-                        <span class="k micro">신규 업데이트</span>
-                        <span class="v">11 <em>services</em></span>
                     </div>
                 </div>
             </div>
@@ -837,6 +860,17 @@
                     
                 <span class="arr">→</span></a>
             </div>
+            </div>
+            </div>
+            <aside class="hub-phone" aria-label="일정 허브 미리보기">
+                <div class="phone-device">
+                    <span class="phone-notch" aria-hidden="true"></span>
+                    <div class="phone-screen">
+                        <iframe class="phone-frame" src="https://knue20-kmla.github.io/schedule-hub/" title="민사고 일정 허브" loading="lazy" referrerpolicy="no-referrer"></iframe>
+                    </div>
+                </div>
+                <a class="phone-link" href="https://knue20-kmla.github.io/schedule-hub/" target="_blank" rel="noopener noreferrer">일정 허브 열기 <span aria-hidden="true">↗</span></a>
+            </aside>
             </div>
 <div class="sys-section">
                 <div class="sec-head" id="sec-school">
