@@ -391,25 +391,25 @@
       position: relative;
       z-index: 5;
     }
-    .school-lockup { display: flex; align-items: center; gap: 14px; }
+    .school-lockup { display: flex; align-items: center; gap: 18px; }
     .school-lockup img {
-      width: 43px;
-      height: 43px;
+      width: 58px;
+      height: 58px;
       object-fit: contain;
       border-radius: 50%;
       background: #fff;
       box-shadow: 0 8px 26px rgba(0,0,0,.24);
     }
-    .school-copy { display: grid; gap: 4px; line-height: 1.1; }
-    .school-copy strong { font-size: 13px; font-weight: 700; letter-spacing: -.02em; }
-    .school-copy span { color: var(--muted); font: 700 9px/1 Manrope, sans-serif; letter-spacing: .13em; }
+    .school-copy { display: grid; gap: 7px; line-height: 1.1; }
+    .school-copy strong { font-size: 21px; font-weight: 800; letter-spacing: -.02em; }
+    .school-copy span { color: var(--muted); font: 700 11.5px/1 Manrope, sans-serif; letter-spacing: .15em; }
     .status {
       display: flex;
       align-items: center;
       gap: 10px;
       color: var(--muted);
-      font: 700 10px/1 Manrope, sans-serif;
-      letter-spacing: .12em;
+      font: 700 12.5px/1 Manrope, sans-serif;
+      letter-spacing: .13em;
     }
     .status i {
       width: 7px;
@@ -427,6 +427,9 @@
       padding: clamp(58px, 7vw, 110px) 0 clamp(44px, 5vw, 78px);
     }
     .hero-copy { position: relative; z-index: 4; top: clamp(-96px, -9vh, -40px); }
+    .stage-col { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0; }
+    .stage-col .stage { width: 100%; }
+    .stage-col .theme-switcher { margin-top: -26px; }
     .motto {
       display: flex;
       align-items: center;
@@ -442,14 +445,14 @@
       margin: 0;
       max-width: 760px;
       font-size: clamp(56px, 5.8vw, 96px);
-      line-height: 1.02;
+      line-height: 1.14;
       letter-spacing: -.064em;
       font-weight: 900;
       text-wrap: balance;
     }
     h1 .latin {
       display: block;
-      margin-bottom: .38em;
+      margin-bottom: .7em;
       color: var(--gold-bright);
       font-family: "Noto Sans KR", sans-serif;
       font-size: .34em;
@@ -478,8 +481,8 @@
     .entry-actions {
       display: flex;
       align-items: center;
-      gap: 18px;
-      margin-top: 38px;
+      gap: 22px;
+      margin-top: 60px;
     }
     .entry-button {
       min-height: 52px;
@@ -503,15 +506,15 @@
     .entry-button:hover { background: var(--button-hover); transform: translateY(-2px); box-shadow: 0 20px 42px rgba(0, 0, 0, .28); }
     .entry-button:hover svg { transform: translateX(3px); }
     .entry-button:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
-    .entry-note { color: var(--muted); font-size: 11px; font-weight: 600; }
+    .entry-note { color: var(--muted); font-size: 12.5px; font-weight: 600; line-height: 1.5; }
     .identity-line {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-top: 24px;
+      gap: 14px;
+      margin-top: 46px;
       color: var(--muted);
-      font: 600 10px/1.4 Manrope, sans-serif;
-      letter-spacing: .12em;
+      font: 600 11.5px/1.5 Manrope, sans-serif;
+      letter-spacing: .14em;
     }
     .identity-line span { width: 5px; height: 5px; border-radius: 50%; }
     .identity-line .pink { background: var(--pink); }
@@ -519,7 +522,7 @@
     .identity-line .gold { background: var(--gold); }
     .stage {
       position: relative;
-      min-height: min(690px, 60vw);
+      min-height: min(610px, 50vw);
       display: grid;
       place-items: center;
       perspective: 1300px;
@@ -1208,6 +1211,7 @@
       .hero-copy { max-width: 760px; top: 0; }
       h1 { font-size: clamp(58px, 12vw, 92px); }
       .stage { min-height: 610px; margin-top: -10px; }
+      .stage-col .theme-switcher { margin-top: 16px; }
     }
     @media (max-width: 640px) {
       .theme-switcher { width: 100%; }
@@ -1215,8 +1219,9 @@
       .theme-option { flex: 1 1 calc(33.333% - 4px); justify-content: center; padding: 0 4px; gap: 5px; font-size: 8px; }
       .swatch { width: 11px; height: 11px; }
       .hero { padding: 20px 18px 82px; }
-      .school-lockup img { width: 37px; height: 37px; }
-      .school-copy strong { font-size: 11px; }
+      .school-lockup img { width: 44px; height: 44px; }
+      .school-lockup { gap: 12px; }
+      .school-copy strong { font-size: 15px; }
       .school-copy span { display: none; }
       .status span { display: none; }
       .hero-main { padding: 78px 0 36px; gap: 34px; }
@@ -1228,7 +1233,7 @@
       .entry-actions { margin-top: 28px; gap: 12px; }
       .entry-button { min-height: 48px; padding: 0 18px 0 20px; font-size: 13px; }
       .entry-note { display: none; }
-      .identity-line { margin-top: 22px; font-size: 8px; letter-spacing: .08em; }
+      .identity-line { margin-top: 30px; font-size: 9px; letter-spacing: .08em; }
       .stage { min-height: 430px; margin-top: 0; }
       .dashboard { width: 100%; transform: rotateX(2deg) rotateY(-2deg); }
       .dash-top { height: 42px; padding: 0 11px; }
@@ -1566,16 +1571,9 @@
             <span class="pink"></span><span class="green"></span><span class="gold"></span>
             <b>KOREAN MINJOK LEADERSHIP ACADEMY</b>
           </div>
-    <nav class="theme-switcher" aria-label="랜딩 페이지 색상 선택 — 8초마다 자동 전환">
-      <button class="theme-option" type="button" data-theme="slate" aria-pressed="false"><i class="swatch swatch-slate" aria-hidden="true"></i><span>슬레이트 코퍼</span></button>
-      <button class="theme-option" type="button" data-theme="blue" aria-pressed="true"><i class="swatch swatch-blue" aria-hidden="true"></i><span>블루 코랄</span></button>
-      <button class="theme-option" type="button" data-theme="gold" aria-pressed="false"><i class="swatch swatch-gold" aria-hidden="true"></i><span>차콜 골드</span></button>
-      <button class="theme-option" type="button" data-theme="mint" aria-pressed="false"><i class="swatch swatch-mint" aria-hidden="true"></i><span>딥 민트</span></button>
-      <button class="theme-option" type="button" data-theme="plum" aria-pressed="false"><i class="swatch swatch-plum" aria-hidden="true"></i><span>플럼 로즈</span></button>
-      <button class="theme-option" type="button" data-theme="cobalt" aria-pressed="false"><i class="swatch swatch-cobalt" aria-hidden="true"></i><span>코발트 선셋</span></button>
-    </nav>
         </div>
 
+        <div class="stage-col">
         <div class="stage" aria-label="통합 업무 시스템 화면 미리보기">
           <div class="core-glow" aria-hidden="true"></div>
           <div class="halo" aria-hidden="true"></div>
@@ -1651,6 +1649,15 @@
           </div>
           <span class="float-tag tag-a dashboard-only">수업 · 행정 연결</span>
           <span class="float-tag tag-b dashboard-only">하나의 업무 화면</span>
+        </div>
+    <nav class="theme-switcher" aria-label="랜딩 페이지 색상 선택 — 8초마다 자동 전환">
+      <button class="theme-option" type="button" data-theme="slate" aria-pressed="false"><i class="swatch swatch-slate" aria-hidden="true"></i><span>슬레이트 코퍼</span></button>
+      <button class="theme-option" type="button" data-theme="blue" aria-pressed="true"><i class="swatch swatch-blue" aria-hidden="true"></i><span>블루 코랄</span></button>
+      <button class="theme-option" type="button" data-theme="gold" aria-pressed="false"><i class="swatch swatch-gold" aria-hidden="true"></i><span>차콜 골드</span></button>
+      <button class="theme-option" type="button" data-theme="mint" aria-pressed="false"><i class="swatch swatch-mint" aria-hidden="true"></i><span>딥 민트</span></button>
+      <button class="theme-option" type="button" data-theme="plum" aria-pressed="false"><i class="swatch swatch-plum" aria-hidden="true"></i><span>플럼 로즈</span></button>
+      <button class="theme-option" type="button" data-theme="cobalt" aria-pressed="false"><i class="swatch swatch-cobalt" aria-hidden="true"></i><span>코발트 선셋</span></button>
+    </nav>
         </div>
       </div>
 
