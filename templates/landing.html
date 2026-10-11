@@ -426,7 +426,7 @@
       gap: clamp(44px, 6vw, 110px);
       padding: clamp(58px, 7vw, 110px) 0 clamp(44px, 5vw, 78px);
     }
-    .hero-copy { position: relative; z-index: 4; top: clamp(-96px, -9vh, -40px); }
+    .hero-copy { position: relative; z-index: 4; top: clamp(-96px, -9vh, -40px); width: max-content; max-width: 100%; }
     .stage-col { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0; }
     .stage-col .stage { width: 100%; }
     .stage-col .theme-switcher { margin-top: -26px; }
@@ -482,32 +482,52 @@
       display: flex;
       align-items: center;
       gap: 22px;
-      margin-top: 60px;
+      margin-top: 52px;
+      justify-content: flex-end;
     }
     .entry-button {
-      min-height: 52px;
-      padding: 0 22px 0 24px;
+      position: relative;
+      min-height: 62px;
+      padding: 0 10px 0 30px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
-      border: 1px solid rgba(176, 216, 255, .45);
-      border-radius: 4px;
-      background: var(--gold);
+      gap: 22px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--button-hover), var(--gold));
       color: var(--button-ink);
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 800;
       letter-spacing: -.02em;
       text-decoration: none;
-      box-shadow: 0 16px 38px rgba(0, 50, 121, .34);
-      transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
+      box-shadow: 0 14px 34px color-mix(in srgb, var(--gold) 45%, transparent), inset 0 1px 0 rgba(255,255,255,.35);
+      transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, filter .3s ease;
+      animation: entryGlow 3.2s ease-in-out infinite;
     }
-    .entry-button svg { width: 18px; height: 18px; transition: transform .25s ease; }
-    .entry-button:hover { background: var(--button-hover); transform: translateY(-2px); box-shadow: 0 20px 42px rgba(0, 0, 0, .28); }
-    .entry-button:hover svg { transform: translateX(3px); }
+    .entry-button svg {
+      width: 42px;
+      height: 42px;
+      padding: 11px;
+      border-radius: 50%;
+      background: var(--button-ink);
+      color: var(--gold);
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+    }
+    .entry-button:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.06);
+      box-shadow: 0 20px 44px color-mix(in srgb, var(--gold) 62%, transparent), inset 0 1px 0 rgba(255,255,255,.4);
+      animation-play-state: paused;
+    }
+    .entry-button:hover svg { transform: translateX(5px); box-shadow: 0 6px 16px rgba(0,0,0,.22); }
+    .entry-button:active { transform: translateY(-1px) scale(.97); }
     .entry-button:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
-    .entry-note { color: var(--muted); font-size: 12.5px; font-weight: 600; line-height: 1.5; }
-    .identity-line {
+    @keyframes entryGlow {
+      0%, 100% { box-shadow: 0 14px 34px color-mix(in srgb, var(--gold) 38%, transparent), inset 0 1px 0 rgba(255,255,255,.35); }
+      50% { box-shadow: 0 16px 44px color-mix(in srgb, var(--gold) 62%, transparent), inset 0 1px 0 rgba(255,255,255,.35); }
+    }
+    @media (prefers-reduced-motion: reduce) { .entry-button { animation: none; } }    .identity-line {
       display: flex;
       align-items: center;
       gap: 14px;
@@ -1208,7 +1228,8 @@
     @media (max-width: 980px) {
       .hero { min-height: auto; }
       .hero-main { grid-template-columns: 1fr; padding-top: 92px; }
-      .hero-copy { max-width: 760px; top: 0; }
+      .hero-copy { max-width: 760px; top: 0; width: auto; }
+      .entry-actions { justify-content: flex-start; }
       h1 { font-size: clamp(58px, 12vw, 92px); }
       .stage { min-height: 610px; margin-top: -10px; }
       .stage-col .theme-switcher { margin-top: 16px; }
@@ -1231,8 +1252,8 @@
       h1 .latin { margin-bottom: .5em; font-size: .32em; letter-spacing: .035em; }
       h1 .system { white-space: normal; letter-spacing: -.06em; }
       .entry-actions { margin-top: 28px; gap: 12px; }
-      .entry-button { min-height: 48px; padding: 0 18px 0 20px; font-size: 13px; }
-      .entry-note { display: none; }
+      .entry-button { min-height: 54px; padding: 0 8px 0 24px; font-size: 14px; gap: 18px; }
+      .entry-button svg { width: 38px; height: 38px; padding: 10px; }
       .identity-line { margin-top: 30px; font-size: 9px; letter-spacing: .08em; }
       .stage { min-height: 430px; margin-top: 0; }
       .dashboard { width: 100%; transform: rotateX(2deg) rotateY(-2deg); }
@@ -1565,7 +1586,6 @@
               <span>시스템 입장</span>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <span class="entry-note">하나의 흐름으로 연결되는 교내 업무</span>
           </div>
           <div class="identity-line" aria-label="민사고 블루 아이덴티티">
             <span class="pink"></span><span class="green"></span><span class="gold"></span>
