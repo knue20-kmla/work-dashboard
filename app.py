@@ -26,6 +26,7 @@ SYSTEMS = [
     {'id': 'exam-all', 'group': 'school', 'name': '모의고사 분석(전학년)', 'url': 'https://knue20-kmla.github.io/kmla-exam/'},
     {'id': 'minjok-score', 'group': 'school', 'name': '입학 내신 계산기', 'url': 'https://knue20-kmla.github.io/minjok-score/'},
     {'id': 'test-schedule', 'group': 'school', 'name': '정기시험 시간표', 'url': 'https://knue20-kmla.github.io/Test-Schedule/'},
+    {'id': 'timetable', 'group': 'school', 'name': '수업 시간표', 'url': 'https://knue20-kmla.github.io/timetable/'},
     {'id': 'budget-gas', 'group': 'school', 'name': '예산 관리', 'url': 'https://script.google.com/macros/s/AKfycbx5SIuP6sB4A_n3hTDaV2SJfhAMjeYeul-VYC3uXCPUPnh4JcWVXFKDtODvZCCLwICF/exec'},
     {'id': 'field-trip', 'group': 'school', 'name': '교외체험학습 신청서(결과보고서)', 'url': 'https://knue20-kmla.github.io/field-trip/'},
     {'id': 'study', 'group': 'class', 'name': '자습 관리 시스템', 'url': 'https://knue20-kmla.github.io/STUDY/'},
