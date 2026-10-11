@@ -32,7 +32,7 @@ SYSTEMS = [
     {'id': 'record-analysis', 'group': 'class', 'name': '생기부 분석 시스템', 'url': 'https://famished-disclose-phonics.ngrok-free.dev/'},
     {'id': 'exam-class', 'group': 'class', 'name': '모의고사 분석 시스템', 'url': 'https://knue20-kmla.github.io/exam-anlysis/login.html'},
     {'id': 'transcript', 'group': 'class', 'name': '학교생활기록부 조회', 'url': 'https://knue20-kmla.github.io/transcript/'},
-    {'id': 'eval-plan', 'group': 'subject', 'name': '교수학습평가계획서', 'url': 'https://knue20-kmla.github.io/eval-plan-app/'},
+    {'id': 'eval-plan', 'group': 'subject', 'name': '교수학습평가계획서', 'url': 'https://knue20-kmla.github.io/Assessment-Plan/'},
     {'id': 'history-db', 'group': 'subject', 'name': '한국사 수업 DB', 'url': 'https://kmla-history.party'},
     {'id': 'history-question', 'group': 'subject', 'name': '한국사 질문 DB(2026-1)', 'url': 'https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher'},
     {'id': 'history-board', 'group': 'subject', 'name': '한국사 질문/수행 DB', 'url': 'https://kmla-history.party/board'},
