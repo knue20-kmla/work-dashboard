@@ -21,6 +21,7 @@ SYSTEMS = [
     {'id': 'student-id', 'group': 'school', 'name': '학생증 재발급', 'url': 'https://knue20-kmla.github.io/Student-ID/'},
     {'id': 'budget', 'group': 'school', 'name': '프로젝트 예산 관리', 'url': 'https://knue20-kmla.github.io/budget'},
     {'id': 'curriculum', 'group': 'school', 'name': 'KMLA 교육과정 체험', 'url': 'https://kmla-curriculum.netlify.app'},
+    {'id': 'curriculum-intro', 'group': 'school', 'name': 'KMLA 교육과정 소개', 'url': 'https://knue20-kmla.github.io/curriculum-kmla/'},
     {'id': 'equipment', 'group': 'school', 'name': '프로젝트 기자재 관리자', 'url': 'https://equipment-manager-redirect.onrender.com'},
     {'id': 'exam-all', 'group': 'school', 'name': '모의고사 분석(전학년)', 'url': 'https://knue20-kmla.github.io/kmla-exam/'},
     {'id': 'minjok-score', 'group': 'school', 'name': '입학 내신 계산기', 'url': 'https://knue20-kmla.github.io/minjok-score/'},
