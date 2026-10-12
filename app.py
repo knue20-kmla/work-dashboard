@@ -57,6 +57,7 @@ SYSTEMS = [
     {'id': 'history-db', 'group': 'subject', 'name': '한국사 수업 DB', 'url': 'https://kmla-history.party'},
     {'id': 'history-question', 'group': 'subject', 'name': '한국사 질문 DB(2026-1)', 'url': 'https://script.google.com/macros/s/AKfycbzaRk2xqq8D8GFPMl6w5m2xWHqGCmsZqOgZsdhF7ARlhkC9bcX8XsaY5yKCyV0kze-1/exec?page=teacher'},
     {'id': 'history-board', 'group': 'subject', 'name': '한국사 질문/수행 DB', 'url': 'https://kmla-history.party/board'},
+    {'id': 'history-presentation', 'group': 'subject', 'name': '한국사 Presentation(web)', 'url': 'https://knue20-kmla.github.io/korean-history-2022/'},
 ]
 SYSTEM_BY_ID = {s['id']: s for s in SYSTEMS}
 GROUP_LABELS = [('school', '학교 업무 시스템'), ('class', '학급 업무 시스템'), ('subject', '교과 업무 시스템')]
