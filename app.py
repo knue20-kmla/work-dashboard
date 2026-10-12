@@ -1,11 +1,29 @@
 import os
 import json
+from urllib.parse import urlparse
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'kmla-dashboard-secret-key-2024')
+
+# 이전 주소로 들어온 접속을 새 주소로 보내려면 REDIRECT_TO 환경변수에 새 주소를 지정
+# 예: REDIRECT_TO=https://kmla-kim.onrender.com (설정하지 않으면 동작하지 않음)
+REDIRECT_TO = os.getenv('REDIRECT_TO', '').strip().rstrip('/')
+
+@app.before_request
+def redirect_to_new_domain():
+    if not REDIRECT_TO:
+        return None
+    target_host = urlparse(REDIRECT_TO).netloc
+    if not target_host or request.host == target_host:
+        return None
+    target = REDIRECT_TO + request.path
+    query = request.query_string.decode('utf-8', 'ignore')
+    if query:
+        target += '?' + query
+    return redirect(target, code=301 if request.method in ('GET', 'HEAD') else 308)
 
 # 사용자 데이터 파일
 # 데이터 저장 위치 (Render 영구 디스크를 쓰려면 DATA_DIR 환경변수를 디스크 마운트 경로로 지정)
